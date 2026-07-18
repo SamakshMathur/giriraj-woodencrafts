@@ -1,0 +1,222 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------ */
+/* Theme 1 — Royal Walnut (default / flagship)                         */
+/* ------------------------------------------------------------------ */
+:root,
+[data-theme="royal-walnut"] {
+  --color-bg: #f8f5f0;
+  --color-bg-secondary: #efe6da;
+  --color-card: #fcfaf7;
+  --color-text: #23201d;
+  --color-text-secondary: #5b5650;
+  --color-text-muted: #8a847d;
+  --color-brand: #5a3926;
+  --color-brand-secondary: #3b2318;
+  --color-accent: #c69c45;
+  --color-accent-2: #61715e;
+  --color-border: #d7c7b4;
+  color-scheme: light;
+}
+
+/* ------------------------------------------------------------------ */
+/* Theme 2 — Divine Marble (light alternative)                         */
+/* ------------------------------------------------------------------ */
+[data-theme="divine-marble"] {
+  --color-bg: #faf8f5;
+  --color-bg-secondary: #f1ece4;
+  --color-card: #ffffff;
+  --color-text: #2e2e2e;
+  --color-text-secondary: #5b5650;
+  --color-text-muted: #8a847d;
+  --color-brand: #92704b;
+  --color-brand-secondary: #bda68b;
+  --color-accent: #d3a64f;
+  --color-accent-2: #6e7c54;
+  --color-border: #e4ddd3;
+  color-scheme: light;
+}
+
+/* ------------------------------------------------------------------ */
+/* Theme 3 — Midnight Sanctum (dark mode)                               */
+/* ------------------------------------------------------------------ */
+[data-theme="midnight-sanctum"] {
+  --color-bg: #111111;
+  --color-bg-secondary: #1b1a18;
+  --color-card: #1c1c1c;
+  --color-text: #f6f2eb;
+  --color-text-secondary: #cfc6bc;
+  --color-text-muted: #8a847d;
+  --color-brand: #8a5b36;
+  --color-brand-secondary: #2c1b13;
+  --color-accent: #d4af37;
+  --color-accent-2: #4d6b55;
+  --color-border: #2c1b13;
+  color-scheme: dark;
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-bg);
+}
+
+.hero-gradient-light {
+  background: linear-gradient(180deg, #f8f5f0 0%, #f3eee7 45%, #efe6da 100%);
+}
+
+.hero-gradient-dark {
+  background: linear-gradient(180deg, #0f0f0f 0%, #1b1a18 60%, #2c1b13 100%);
+}
+
+/* Theme-aware page hero gradient — adapts via CSS vars instead of Tailwind's
+   dark: variant, which has no effect since themes switch via [data-theme]. */
+.page-hero-gradient {
+  background: linear-gradient(
+    180deg,
+    var(--color-bg) 0%,
+    var(--color-bg-secondary) 100%
+  );
+}
+
+.glass {
+  background: rgba(248, 245, 240, 0.92);
+  backdrop-filter: blur(20px) saturate(1.1);
+  -webkit-backdrop-filter: blur(20px) saturate(1.1);
+  border-bottom: 1px solid var(--color-border);
+}
+
+[data-theme="midnight-sanctum"] .glass {
+  background: rgba(17, 17, 17, 0.88);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* ------------------------------------------------------------------ */
+/* Temple hero — animated diya flame, incense smoke, ambient glow      */
+/* ------------------------------------------------------------------ */
+@keyframes diya-flicker {
+  0%,
+  100% {
+    transform: scaleY(1) scaleX(1) rotate(0deg);
+    opacity: 1;
+  }
+  20% {
+    transform: scaleY(1.1) scaleX(0.94) rotate(-2deg);
+    opacity: 0.9;
+  }
+  40% {
+    transform: scaleY(0.92) scaleX(1.06) rotate(1deg);
+    opacity: 1;
+  }
+  60% {
+    transform: scaleY(1.06) scaleX(0.96) rotate(-1deg);
+    opacity: 0.88;
+  }
+  80% {
+    transform: scaleY(0.96) scaleX(1.03) rotate(2deg);
+    opacity: 1;
+  }
+}
+
+.diya-flame {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: diya-flicker 2.6s ease-in-out infinite;
+}
+
+@keyframes smoke-rise {
+  0% {
+    transform: translate(-50%, 0) scale(0.6);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.3;
+  }
+  55% {
+    transform: translate(calc(-50% + 12px), -140px) scale(1.15);
+    opacity: 0.16;
+  }
+  100% {
+    transform: translate(calc(-50% - 8px), -300px) scale(1.5);
+    opacity: 0;
+  }
+}
+
+.smoke-particle {
+  position: absolute;
+  width: 10px;
+  height: 44px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(246, 242, 235, 0.4), transparent 70%);
+  filter: blur(4px);
+  opacity: 0;
+  animation: smoke-rise 9s ease-in infinite;
+}
+
+@keyframes ambient-glow-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.06);
+  }
+}
+
+.ambient-glow {
+  animation: ambient-glow-pulse 6s ease-in-out infinite;
+}
+
+@keyframes door-glow-pulse {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.door-glow {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: door-glow-pulse 4s ease-in-out infinite;
+}
+
+/* Slow-rotating aura sweep — soft conic light bends radiating from the diya,
+   the same idea as shader "bend" backgrounds, built in plain CSS. */
+@keyframes aura-drift {
+  0% {
+    transform: rotate(0deg) scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: rotate(180deg) scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+    opacity: 0.7;
+  }
+}
+
+.aura-sweep {
+  animation: aura-drift 60s linear infinite;
+}
