@@ -120,7 +120,7 @@ export default async function ProductDetailPage({
                 Request Quote
               </Link>
               <a
-                href="https://wa.me/910000000000"
+                href="https://wa.me/918290583377"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="rounded-full border border-accent px-6 py-3 text-sm text-text transition-colors hover:bg-accent hover:text-brand-secondary"

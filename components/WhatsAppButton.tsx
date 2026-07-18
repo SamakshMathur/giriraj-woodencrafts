@@ -1,4 +1,4 @@
-const WHATSAPP_NUMBER = "910000000000";
+const WHATSAPP_NUMBER = "918290583377";
 const DEFAULT_MESSAGE = "Hi Giriraj, I'd like to know more about your mandirs.";
 
 export function WhatsAppButton() {

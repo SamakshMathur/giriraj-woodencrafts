@@ -43,8 +43,8 @@ export function Footer() {
           <div>
             <p className="text-sm font-medium text-text">Reach Us</p>
             <ul className="mt-4 space-y-3 text-sm text-text-secondary">
-              <li>WhatsApp: +91 00000 00000</li>
-              <li>Phone: +91 00000 00000</li>
+              <li>WhatsApp: +91 82905 83377</li>
+              <li>Phone: +91 82905 83377</li>
               <li>hello@giriraj.com</li>
               <li>Instagram: @giriraj.woodencrafts</li>
             </ul>

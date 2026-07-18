@@ -63,15 +63,15 @@ export default function ContactPage() {
               <p>
                 <span className="text-text">Phone</span>
                 <br />
-                +91 00000 00000
+                +91 82905 83377
               </p>
               <p>
                 <span className="text-text">Email</span>
                 <br />
-                hello@girraj.com
+                hello@giriraj.com
               </p>
               <a
-                href="https://wa.me/910000000000"
+                href="https://wa.me/918290583377"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block rounded-full border border-accent px-6 py-2.5 text-sm text-text transition-colors hover:bg-accent hover:text-brand-secondary"
