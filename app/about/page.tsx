@@ -3,12 +3,12 @@ import { Section, SectionHeading } from "@/components/Section";
 import { EditableImage } from "@/components/EditableImage";
 
 const FACTORY_IMAGES = [
-  "/images/mandirs/workshop-wood-selection.jpg",
-  "/images/mandirs/workshop-seasoning.jpg",
-  "/images/mandirs/close-up-carving.jpg",
-  "/images/mandirs/vaikuntha-front.jpg",
-  "/images/mandirs/hero-dark-mahogany.jpg",
-  "/images/mandirs/shreeji-front.jpg",
+  "/images/mandirs/workshop-wood-selection.webp",
+  "/images/mandirs/workshop-seasoning.webp",
+  "/images/mandirs/close-up-carving.webp",
+  "/images/mandirs/vaikuntha-front.webp",
+  "/images/mandirs/hero-dark-mahogany.webp",
+  "/images/mandirs/shreeji-front.webp",
 ];
 
 export default function AboutPage() {
@@ -25,7 +25,7 @@ export default function AboutPage() {
           <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-warm-sm">
             <EditableImage
               id="about-story-photo"
-              src="/images/mandirs/workshop-wood-selection.jpg"
+              src="/images/mandirs/workshop-wood-selection.webp"
               alt="Inside the Giriraj workshop"
               className="object-cover"
             />

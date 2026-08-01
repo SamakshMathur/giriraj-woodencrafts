@@ -34,7 +34,7 @@ export function Header() {
         <Link href="/" className="flex items-center gap-3">
           <span className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full shadow-warm-sm">
             <Image
-              src="/images/logo/giriraj-emblem.jpg"
+              src="/images/logo/giriraj-emblem.webp"
               alt="Giriraj Woodencrafts emblem"
               fill
               className="object-cover"

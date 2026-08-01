@@ -3,6 +3,7 @@
 import { useEffect, useState, type ChangeEvent, type DragEvent, type MouseEvent } from "react";
 import { useAdminMode } from "@/components/AdminModeProvider";
 import { getOverrideState, setOverride, setEmpty, type OverrideState } from "@/lib/imageStore";
+import { convertToWebp } from "@/lib/convertToWebp";
 
 /**
  * Drop-in replacement for a `fill`-style next/image usage — same parent
@@ -55,7 +56,8 @@ export function EditableImage({
 
   const handleFile = async (file: File | undefined) => {
     if (!file || !file.type.startsWith("image/")) return;
-    await setOverride(id, file);
+    const webpFile = await convertToWebp(file);
+    await setOverride(id, webpFile);
     applyState(await getOverrideState(id));
   };
 
