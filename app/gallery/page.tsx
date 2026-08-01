@@ -16,6 +16,7 @@ export default function GalleryPage() {
   return (
     <>
       <PageHero
+        id="gallery-hero"
         eyebrow="Gallery"
         title="Moments Carved in Wood"
         subtitle="Customer homes, close-up carvings, and the workshop behind them."

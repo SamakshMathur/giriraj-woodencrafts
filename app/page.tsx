@@ -4,6 +4,7 @@ import { TempleBackground } from "@/components/TempleBackground";
 import { TempleAura } from "@/components/TempleAura";
 import { TempleSpire } from "@/components/TempleSpire";
 import { EditableImage } from "@/components/EditableImage";
+import { EditableText } from "@/components/EditableText";
 import { PRODUCTS } from "@/lib/products";
 import { CRAFT_STAGES, GALLERY_IMAGES } from "@/lib/craft";
 
@@ -33,15 +34,25 @@ export default function Home() {
           </div>
 
           <div className="flex flex-col justify-end px-6 pb-16 md:px-10 md:pb-32">
-            <p className="mb-5 font-display text-xs uppercase tracking-widest2 text-accent">
-              Handcrafted Divine Spaces
-            </p>
-            <h1 className="font-heading text-5xl font-medium leading-[1.1] md:text-7xl">
-              Every Home Deserves Its Own Temple.
-            </h1>
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-white/80 md:text-lg">
-              Handcrafted wooden mandirs made with generations of craftsmanship.
-            </p>
+            <EditableText
+              id="home-hero-eyebrow"
+              defaultValue="Handcrafted Divine Spaces"
+              as="p"
+              className="mb-5 font-display text-xs uppercase tracking-widest2 text-accent"
+            />
+            <EditableText
+              id="home-hero-title"
+              defaultValue="Every Home Deserves Its Own Temple."
+              as="h1"
+              className="font-heading text-5xl font-medium leading-[1.1] md:text-7xl"
+            />
+            <EditableText
+              id="home-hero-subtitle"
+              defaultValue="Handcrafted wooden mandirs made with generations of craftsmanship."
+              as="p"
+              multiline
+              className="mt-6 max-w-xl text-base leading-relaxed text-white/80 md:text-lg"
+            />
             <div className="mt-10 flex flex-wrap gap-4">
               <Link
                 href="/products"
@@ -72,29 +83,42 @@ export default function Home() {
       {/* Why Giriraj — Trust */}
       <Section className="bg-bg">
         <SectionHeading
+          id="home-why"
           eyebrow="Why Giriraj"
           title="Built on What Cannot Be Rushed"
         />
         <div className="mt-16 grid gap-12 md:grid-cols-3">
           {[
             {
+              slug: "premium-wood",
               title: "Premium Wood",
               copy: "Only selected teak and premium hardwood, sourced with care.",
             },
             {
+              slug: "hand-carved",
               title: "Hand Carved",
               copy: "Every design carved by skilled artisans, never machine-stamped.",
             },
             {
+              slug: "sacred-design",
               title: "Sacred Design",
               copy: "Built according to traditional aesthetics and proportion.",
             },
           ].map((item) => (
             <div key={item.title} className="text-center">
-              <h3 className="font-heading text-2xl text-text">{item.title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-text-secondary">
-                {item.copy}
-              </p>
+              <EditableText
+                id={`home-why-${item.slug}-title`}
+                defaultValue={item.title}
+                as="h3"
+                className="font-heading text-2xl text-text"
+              />
+              <EditableText
+                id={`home-why-${item.slug}-copy`}
+                defaultValue={item.copy}
+                as="p"
+                multiline
+                className="mt-3 text-sm leading-relaxed text-text-secondary"
+              />
             </div>
           ))}
         </div>
@@ -103,6 +127,7 @@ export default function Home() {
       {/* Luxury Showcase */}
       <Section className="bg-bg-secondary">
         <SectionHeading
+          id="home-showcase"
           eyebrow="The Collection"
           title="Luxury Showcase"
           align="left"
@@ -131,7 +156,7 @@ export default function Home() {
 
       {/* Categories */}
       <Section className="bg-bg">
-        <SectionHeading eyebrow="Explore" title="Our Collections" />
+        <SectionHeading id="home-categories" eyebrow="Explore" title="Our Collections" />
         <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {CATEGORIES.map((category) => (
             <div
@@ -156,6 +181,7 @@ export default function Home() {
       {/* Customization teaser */}
       <Section className="bg-brand-secondary text-white">
         <SectionHeading
+          id="home-customize"
           eyebrow="Configure"
           title="Design a Mandir That Is Only Yours"
           subtitle="Choose your polishing, storage and lighting — like configuring a work of art."
@@ -184,7 +210,7 @@ export default function Home() {
 
       {/* Craftsmanship journey */}
       <Section className="bg-bg">
-        <SectionHeading eyebrow="Process" title="Craftsmanship Journey" />
+        <SectionHeading id="home-craft" eyebrow="Process" title="Craftsmanship Journey" />
         <div className="mt-16 flex justify-center gap-8 overflow-x-auto pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           {CRAFT_STAGES.map((stage, i) => (
             <div key={stage.name} className="flex shrink-0 flex-col items-center gap-4 text-center">
@@ -207,7 +233,7 @@ export default function Home() {
 
       {/* Gallery preview */}
       <Section className="bg-bg-secondary">
-        <SectionHeading eyebrow="Moments" title="Gallery" />
+        <SectionHeading id="home-gallery" eyebrow="Moments" title="Gallery" />
         <div className="mt-14 columns-2 gap-4 md:columns-3">
           {GALLERY_IMAGES.slice(0, 6).map((item, i) => (
             <div
@@ -238,28 +264,44 @@ export default function Home() {
       <Section className="bg-bg">
         <div className="relative mx-auto aspect-video max-w-4xl overflow-hidden rounded-2xl bg-brand-secondary shadow-warm">
           <div className="flex h-full items-center justify-center text-white/70">
-            <span className="font-display text-xs uppercase tracking-widest2">
-              Cinematic Film &middot; 60s
-            </span>
+            <EditableText
+              id="home-video-caption"
+              defaultValue="Cinematic Film · 60s"
+              as="span"
+              className="font-display text-xs uppercase tracking-widest2"
+            />
           </div>
         </div>
       </Section>
 
       {/* Testimonials */}
       <Section className="bg-bg-secondary">
-        <SectionHeading eyebrow="Stories" title="Customer Stories" />
+        <SectionHeading id="home-testimonials" eyebrow="Stories" title="Customer Stories" />
         <div className="mt-16 grid gap-8 md:grid-cols-3">
           {[1, 2, 3].map((i) => (
             <div key={i} className="rounded-2xl bg-card p-8 shadow-warm-sm">
-              <p className="text-sm leading-relaxed text-text-secondary">
-                &ldquo;The mandir feels like it has always belonged in our home.
-                The craftsmanship is beyond anything we imagined.&rdquo;
-              </p>
+              <EditableText
+                id={`home-testimonial-${i}-quote`}
+                defaultValue="The mandir feels like it has always belonged in our home. The craftsmanship is beyond anything we imagined."
+                as="p"
+                multiline
+                className="text-sm leading-relaxed text-text-secondary"
+              />
               <div className="mt-6 flex items-center gap-3">
                 <div className="h-10 w-10 rounded-full bg-brand-secondary/20" />
                 <div>
-                  <p className="text-sm font-medium text-text">Customer Name</p>
-                  <p className="text-xs text-muted">City &middot; Royal Collection</p>
+                  <EditableText
+                    id={`home-testimonial-${i}-name`}
+                    defaultValue="Customer Name"
+                    as="p"
+                    className="text-sm font-medium text-text"
+                  />
+                  <EditableText
+                    id={`home-testimonial-${i}-location`}
+                    defaultValue="City · Royal Collection"
+                    as="p"
+                    className="text-xs text-muted"
+                  />
                 </div>
               </div>
             </div>
@@ -269,17 +311,22 @@ export default function Home() {
 
       {/* Promise */}
       <Section className="bg-bg">
-        <SectionHeading eyebrow="Our Promise" title="What You Can Count On" />
+        <SectionHeading id="home-promise" eyebrow="Our Promise" title="What You Can Count On" />
         <div className="mt-16 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           {[
             "Lifetime craftsmanship support",
             "Premium wood",
             "Safe packaging",
             "Nationwide delivery",
-          ].map((item) => (
+          ].map((item, i) => (
             <div key={item} className="text-center">
               <div className="mx-auto mb-4 h-12 w-12 rounded-full border border-accent/40" />
-              <p className="text-sm text-text-secondary">{item}</p>
+              <EditableText
+                id={`home-promise-${i}`}
+                defaultValue={item}
+                as="p"
+                className="text-sm text-text-secondary"
+              />
             </div>
           ))}
         </div>
@@ -287,13 +334,13 @@ export default function Home() {
 
       {/* FAQ */}
       <Section className="bg-bg-secondary">
-        <SectionHeading eyebrow="Questions" title="Frequently Asked" />
+        <SectionHeading id="home-faq" eyebrow="Questions" title="Frequently Asked" />
         <div className="mx-auto mt-14 max-w-2xl divide-y divide-border">
           {[
             "How long does a custom mandir take to craft?",
             "What wood options are available?",
             "Do you deliver and install nationwide?",
-          ].map((q) => (
+          ].map((q, i) => (
             <details key={q} className="group py-5">
               <summary className="flex cursor-pointer list-none items-center justify-between text-sm text-text">
                 {q}
@@ -301,9 +348,13 @@ export default function Home() {
                   +
                 </span>
               </summary>
-              <p className="mt-3 text-sm leading-relaxed text-text-secondary">
-                Answer coming soon.
-              </p>
+              <EditableText
+                id={`home-faq-${i}-answer`}
+                defaultValue="Answer coming soon."
+                as="p"
+                multiline
+                className="mt-3 text-sm leading-relaxed text-text-secondary"
+              />
             </details>
           ))}
         </div>
@@ -312,6 +363,7 @@ export default function Home() {
       {/* Contact CTA */}
       <Section className="bg-bg text-center">
         <SectionHeading
+          id="home-contact"
           eyebrow="Get in Touch"
           title="Begin Your Mandir's Story"
           subtitle="Speak with our design experts or book a showroom visit."

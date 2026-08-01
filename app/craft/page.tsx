@@ -1,12 +1,14 @@
 import { PageHero } from "@/components/PageHero";
 import { Section, SectionHeading } from "@/components/Section";
 import { EditableImage } from "@/components/EditableImage";
+import { EditableText } from "@/components/EditableText";
 import { CRAFT_STAGES } from "@/lib/craft";
 
 export default function CraftPage() {
   return (
     <>
       <PageHero
+        id="craft-hero"
         eyebrow="Our Craft"
         title="A Legacy of Sacred Woodwork"
         subtitle="Every mandir passes through the hands of artisans carrying generations of technique."
@@ -34,9 +36,13 @@ export default function CraftPage() {
                   Stage {String(i + 1).padStart(2, "0")}
                 </span>
                 <h3 className="mt-3 font-heading text-3xl text-text">{stage.name}</h3>
-                <p className="mt-4 max-w-md text-sm leading-relaxed text-text-secondary">
-                  Detail on this stage of the journey coming soon.
-                </p>
+                <EditableText
+                  id={`craft-stage-${stage.slug}-detail`}
+                  defaultValue="Detail on this stage of the journey coming soon."
+                  as="p"
+                  multiline
+                  className="mt-4 max-w-md text-sm leading-relaxed text-text-secondary"
+                />
               </div>
             </div>
           ))}
@@ -45,6 +51,7 @@ export default function CraftPage() {
 
       <Section className="bg-bg-secondary">
         <SectionHeading
+          id="craft-artisans"
           eyebrow="Meet the Artisans"
           title="Hands That Carry Generations"
           subtitle="The craftsmen behind every Giriraj mandir."
@@ -55,8 +62,18 @@ export default function CraftPage() {
               <div className="relative mx-auto aspect-square w-full overflow-hidden rounded-2xl bg-card shadow-warm-sm">
                 <EditableImage id={`craft-artisan-${i}`} alt="Artisan portrait" />
               </div>
-              <p className="mt-4 text-sm font-medium text-text">Artisan Name</p>
-              <p className="text-xs text-muted">Master Carver</p>
+              <EditableText
+                id={`craft-artisan-${i}-name`}
+                defaultValue="Artisan Name"
+                as="p"
+                className="mt-4 text-sm font-medium text-text"
+              />
+              <EditableText
+                id={`craft-artisan-${i}-role`}
+                defaultValue="Master Carver"
+                as="p"
+                className="text-xs text-muted"
+              />
             </div>
           ))}
         </div>

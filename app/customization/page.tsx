@@ -6,6 +6,7 @@ export default function CustomizationPage() {
   return (
     <>
       <PageHero
+        id="customization-hero"
         eyebrow="Configurator"
         title="Design a Mandir That Is Only Yours"
         subtitle="Choose every detail — polishing, storage and lighting — and watch it come together."

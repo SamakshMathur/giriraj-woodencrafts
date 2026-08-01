@@ -1,3 +1,5 @@
+import { EditableText } from "@/components/EditableText";
+
 export function Section({
   id,
   className = "",
@@ -15,11 +17,13 @@ export function Section({
 }
 
 export function SectionHeading({
+  id,
   eyebrow,
   title,
   subtitle,
   align = "center",
 }: {
+  id: string;
   eyebrow?: string;
   title: string;
   subtitle?: string;
@@ -28,17 +32,27 @@ export function SectionHeading({
   return (
     <div className={align === "center" ? "mx-auto max-w-2xl text-center" : "max-w-2xl"}>
       {eyebrow && (
-        <p className="mb-4 font-display text-xs uppercase tracking-widest2 text-accent">
-          {eyebrow}
-        </p>
+        <EditableText
+          id={`${id}-eyebrow`}
+          defaultValue={eyebrow}
+          as="p"
+          className="mb-4 font-display text-xs uppercase tracking-widest2 text-accent"
+        />
       )}
-      <h2 className="font-heading text-4xl font-medium leading-tight text-text md:text-5xl">
-        {title}
-      </h2>
+      <EditableText
+        id={`${id}-title`}
+        defaultValue={title}
+        as="h2"
+        className="font-heading text-4xl font-medium leading-tight text-text md:text-5xl"
+      />
       {subtitle && (
-        <p className="mt-5 text-base leading-relaxed text-text-secondary md:text-lg">
-          {subtitle}
-        </p>
+        <EditableText
+          id={`${id}-subtitle`}
+          defaultValue={subtitle}
+          as="p"
+          multiline
+          className="mt-5 text-base leading-relaxed text-text-secondary md:text-lg"
+        />
       )}
     </div>
   );

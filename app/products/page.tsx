@@ -14,6 +14,7 @@ export default function ProductsPage() {
   return (
     <>
       <PageHero
+        id="products-hero"
         eyebrow="Collection"
         title="Every Mandir, a Work of Art"
         subtitle="Browse our handcrafted collections, or configure one entirely your own."

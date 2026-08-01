@@ -5,6 +5,7 @@ export default function ContactPage() {
   return (
     <>
       <PageHero
+        id="contact-hero"
         eyebrow="Contact"
         title="Begin Your Mandir's Story"
         subtitle="Speak with our design experts or book a showroom visit."

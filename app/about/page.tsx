@@ -1,6 +1,7 @@
 import { PageHero } from "@/components/PageHero";
 import { Section, SectionHeading } from "@/components/Section";
 import { EditableImage } from "@/components/EditableImage";
+import { EditableText } from "@/components/EditableText";
 
 const FACTORY_IMAGES = [
   "/images/mandirs/workshop-wood-selection.webp",
@@ -15,6 +16,7 @@ export default function AboutPage() {
   return (
     <>
       <PageHero
+        id="about-hero"
         eyebrow="About Giriraj"
         title="Where Devotion Meets Craftsmanship"
         subtitle="A family of woodworkers, three generations deep."
@@ -32,6 +34,7 @@ export default function AboutPage() {
           </div>
           <div>
             <SectionHeading
+              id="about-story"
               align="left"
               eyebrow="Our Story"
               title="Three Generations of Sacred Woodwork"
@@ -42,21 +45,25 @@ export default function AboutPage() {
       </Section>
 
       <Section className="bg-bg-secondary">
-        <SectionHeading eyebrow="Values" title="What We Stand For" />
+        <SectionHeading id="about-values" eyebrow="Values" title="What We Stand For" />
         <div className="mt-16 grid gap-10 sm:grid-cols-3">
           {["Authenticity", "Patience", "Reverence"].map((value) => (
             <div key={value} className="text-center">
               <h3 className="font-heading text-2xl text-text">{value}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-text-secondary">
-                Detail on this value coming soon.
-              </p>
+              <EditableText
+                id={`about-value-${value.toLowerCase()}-detail`}
+                defaultValue="Detail on this value coming soon."
+                as="p"
+                multiline
+                className="mt-3 text-sm leading-relaxed text-text-secondary"
+              />
             </div>
           ))}
         </div>
       </Section>
 
       <Section className="bg-bg">
-        <SectionHeading eyebrow="The Workshop" title="Where It All Comes Together" />
+        <SectionHeading id="about-workshop" eyebrow="The Workshop" title="Where It All Comes Together" />
         <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {FACTORY_IMAGES.map((src, i) => (
             <div

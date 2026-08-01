@@ -5,17 +5,20 @@ import { useState } from "react";
 import { useAdminMode } from "@/components/AdminModeProvider";
 import { PasswordGate } from "@/components/admin/PasswordGate";
 import { clearAllOverrides } from "@/lib/imageStore";
+import { clearAllTextOverrides } from "@/lib/textStore";
 
 // TODO: move to a real auth check before this ever holds real content.
 const ADMIN_PASSWORD = "1234";
 
 const EDITABLE_PAGES = [
-  { href: "/", label: "Home", note: "Showcase, categories, craftsmanship journey, gallery preview" },
+  { href: "/", label: "Home", note: "Hero, showcase, categories, craftsmanship journey, gallery preview" },
   { href: "/products", label: "Products", note: "Product card photos" },
   { href: "/products/shreeji", label: "Product Detail", note: "Hero image + gallery grid (any product)" },
-  { href: "/craft", label: "Our Craft", note: "Process stage photos" },
+  { href: "/customization", label: "Customization", note: "Header text" },
+  { href: "/craft", label: "Our Craft", note: "Process stage photos + artisan profiles" },
   { href: "/gallery", label: "Gallery", note: "Full masonry gallery" },
-  { href: "/about", label: "About", note: "Workshop story photo + factory grid" },
+  { href: "/about", label: "About", note: "Story photo, factory grid, values" },
+  { href: "/contact", label: "Contact", note: "Header text" },
 ];
 
 export default function AdminPage() {
@@ -37,6 +40,7 @@ export default function AdminPage() {
   const handleResetAll = async () => {
     setResetting(true);
     await clearAllOverrides();
+    clearAllTextOverrides();
     setResetting(false);
     setResetDone(true);
     setTimeout(() => setResetDone(false), 2500);
@@ -57,7 +61,9 @@ export default function AdminPage() {
               Browse the site using the links below. Every photo now shows a
               &ldquo;click or drop to replace&rdquo; overlay on hover — click
               it to browse your computer, or drag an image file straight onto
-              it. Changes save instantly to this browser.
+              it. Headings, subtext, and other copy get a dashed outline on
+              hover — click directly on the words to edit them. Changes save
+              instantly to this browser.
             </p>
           </div>
           <button
@@ -87,15 +93,15 @@ export default function AdminPage() {
         <div className="mt-16 rounded-2xl border border-border bg-card p-6">
           <p className="text-sm font-medium text-text">Reset</p>
           <p className="mt-2 max-w-xl text-sm text-text-secondary">
-            Removes every image you&rsquo;ve replaced, reverting the whole
-            site back to its default photos in this browser.
+            Removes every image and text edit you&rsquo;ve made, reverting the
+            whole site back to its defaults in this browser.
           </p>
           <button
             onClick={handleResetAll}
             disabled={resetting}
             className="mt-4 rounded-full border border-accent px-6 py-2.5 text-sm text-text transition-colors hover:bg-accent hover:text-brand-secondary disabled:opacity-50"
           >
-            {resetDone ? "Done" : resetting ? "Resetting…" : "Reset all images to default"}
+            {resetDone ? "Done" : resetting ? "Resetting…" : "Reset everything to default"}
           </button>
         </div>
       </div>
