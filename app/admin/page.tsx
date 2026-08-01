@@ -15,7 +15,7 @@ const EDITABLE_PAGES = [
   { href: "/products", label: "Products", note: "Product card photos" },
   { href: "/products/shreeji", label: "Product Detail", note: "Hero image + gallery grid (any product)" },
   { href: "/customization", label: "Customization", note: "Header text" },
-  { href: "/craft", label: "Our Craft", note: "Process stage photos + artisan profiles" },
+  { href: "/craft", label: "Our Craft", note: "Process stage photos" },
   { href: "/gallery", label: "Gallery", note: "Full masonry gallery" },
   { href: "/about", label: "About", note: "Story photo, factory grid, values" },
   { href: "/contact", label: "Contact", note: "Header text" },

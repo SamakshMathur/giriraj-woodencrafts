@@ -1,5 +1,5 @@
 import { PageHero } from "@/components/PageHero";
-import { Section, SectionHeading } from "@/components/Section";
+import { Section } from "@/components/Section";
 import { EditableImage } from "@/components/EditableImage";
 import { EditableText } from "@/components/EditableText";
 import { CRAFT_STAGES } from "@/lib/craft";
@@ -49,36 +49,6 @@ export default function CraftPage() {
                   className="mt-4 max-w-md text-sm leading-relaxed text-text-secondary"
                 />
               </div>
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      <Section className="bg-bg-secondary">
-        <SectionHeading
-          id="craft-artisans"
-          eyebrow="Meet the Artisans"
-          title="Hands That Carry Generations"
-          subtitle="The craftsmen behind every Giriraj mandir."
-        />
-        <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="text-center">
-              <div className="relative mx-auto aspect-square w-full overflow-hidden rounded-2xl bg-card shadow-warm-sm">
-                <EditableImage id={`craft-artisan-${i}`} alt="Artisan portrait" />
-              </div>
-              <EditableText
-                id={`craft-artisan-${i}-name`}
-                defaultValue="Artisan Name"
-                as="p"
-                className="mt-4 text-sm font-medium text-text"
-              />
-              <EditableText
-                id={`craft-artisan-${i}-role`}
-                defaultValue="Master Carver"
-                as="p"
-                className="text-xs text-muted"
-              />
             </div>
           ))}
         </div>
