@@ -2,6 +2,7 @@ import Link from "next/link";
 import { PageHero } from "@/components/PageHero";
 import { Section } from "@/components/Section";
 import { EditableImage } from "@/components/EditableImage";
+import { EditableText } from "@/components/EditableText";
 import { PRODUCTS } from "@/lib/products";
 
 const FILTERS = [
@@ -53,15 +54,24 @@ export default function ProductsPage() {
                 />
               </div>
               <div className="p-6">
-                <p className="text-xs uppercase tracking-widest2 text-accent">
-                  {product.collection}
-                </p>
-                <h3 className="mt-2 font-heading text-2xl text-text">
-                  {product.name}
-                </h3>
-                <p className="mt-1 text-sm text-text-secondary">
-                  {product.dimensions}
-                </p>
+                <EditableText
+                  id={`product-${product.slug}-collection`}
+                  defaultValue={product.collection}
+                  as="p"
+                  className="text-xs uppercase tracking-widest2 text-accent"
+                />
+                <EditableText
+                  id={`product-${product.slug}-name`}
+                  defaultValue={product.name}
+                  as="h3"
+                  className="mt-2 font-heading text-2xl text-text"
+                />
+                <EditableText
+                  id={`product-${product.slug}-dimensions`}
+                  defaultValue={product.dimensions}
+                  as="p"
+                  className="mt-1 text-sm text-text-secondary"
+                />
               </div>
             </Link>
           ))}

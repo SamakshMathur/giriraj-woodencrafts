@@ -146,7 +146,12 @@ export default function Home() {
                 className="object-cover transition-transform duration-700 ease-reverent group-hover:scale-105"
               />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-6 text-white">
-                <p className="font-heading text-xl">{product.name}</p>
+                <EditableText
+                  id={`product-${product.slug}-name`}
+                  defaultValue={product.name}
+                  as="p"
+                  className="font-heading text-xl"
+                />
                 <p className="mt-1 text-xs text-white/70">{product.wood} &middot; Made to order</p>
               </div>
             </Link>
@@ -171,7 +176,12 @@ export default function Home() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
               <div className="absolute inset-x-0 bottom-0 p-6">
-                <p className="font-heading text-lg text-white">{category.name}</p>
+                <EditableText
+                  id={`home-category-${category.slug}-name`}
+                  defaultValue={category.name}
+                  as="p"
+                  className="font-heading text-lg text-white"
+                />
               </div>
             </div>
           ))}
@@ -225,7 +235,12 @@ export default function Home() {
                   {String(i + 1).padStart(2, "0")}
                 </div>
               </div>
-              <p className="w-32 text-sm text-text-secondary">{stage.name}</p>
+              <EditableText
+                id={`craft-stage-${stage.slug}-name`}
+                defaultValue={stage.name}
+                as="p"
+                className="w-32 text-sm text-text-secondary"
+              />
             </div>
           ))}
         </div>

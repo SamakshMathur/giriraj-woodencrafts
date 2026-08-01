@@ -35,7 +35,12 @@ export default function CraftPage() {
                 <span className="font-display text-xs uppercase tracking-widest2 text-accent">
                   Stage {String(i + 1).padStart(2, "0")}
                 </span>
-                <h3 className="mt-3 font-heading text-3xl text-text">{stage.name}</h3>
+                <EditableText
+                  id={`craft-stage-${stage.slug}-name`}
+                  defaultValue={stage.name}
+                  as="h3"
+                  className="mt-3 font-heading text-3xl text-text"
+                />
                 <EditableText
                   id={`craft-stage-${stage.slug}-detail`}
                   defaultValue="Detail on this stage of the journey coming soon."

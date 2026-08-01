@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type KeyboardEvent } from "react";
+import { useEffect, useState, type KeyboardEvent, type MouseEvent } from "react";
 import { useAdminMode } from "@/components/AdminModeProvider";
 import { getTextOverride, setTextOverride } from "@/lib/textStore";
 
@@ -60,6 +60,13 @@ export function EditableText({
     return <Element className={className}>{value}</Element>;
   }
 
+  // Stops clicks from bubbling to a wrapping <Link>/<a> (e.g. product cards)
+  // so entering edit mode never also triggers navigation.
+  const stop = (e: MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   if (editing) {
     const fieldClassName = `${className} block w-full resize-none rounded-md border border-dashed border-accent !bg-card !text-text px-2 py-1 outline-none`;
     return multiline ? (
@@ -67,6 +74,7 @@ export function EditableText({
         autoFocus
         rows={3}
         value={draft}
+        onClick={stop}
         onChange={(e) => setDraft(e.target.value)}
         onBlur={save}
         onKeyDown={onKeyDown}
@@ -76,6 +84,7 @@ export function EditableText({
       <input
         autoFocus
         value={draft}
+        onClick={stop}
         onChange={(e) => setDraft(e.target.value)}
         onBlur={save}
         onKeyDown={onKeyDown}
@@ -86,7 +95,8 @@ export function EditableText({
 
   return (
     <Element
-      onClick={() => {
+      onClick={(e: MouseEvent) => {
+        stop(e);
         setDraft(value);
         setEditing(true);
       }}

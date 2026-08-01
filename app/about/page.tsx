@@ -49,7 +49,12 @@ export default function AboutPage() {
         <div className="mt-16 grid gap-10 sm:grid-cols-3">
           {["Authenticity", "Patience", "Reverence"].map((value) => (
             <div key={value} className="text-center">
-              <h3 className="font-heading text-2xl text-text">{value}</h3>
+              <EditableText
+                id={`about-value-${value.toLowerCase()}-title`}
+                defaultValue={value}
+                as="h3"
+                className="font-heading text-2xl text-text"
+              />
               <EditableText
                 id={`about-value-${value.toLowerCase()}-detail`}
                 defaultValue="Detail on this value coming soon."
