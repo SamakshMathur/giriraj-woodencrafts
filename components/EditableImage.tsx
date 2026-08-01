@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useState, type ChangeEvent, type DragEvent } from "react";
+import { useEffect, useState, type ChangeEvent, type DragEvent, type MouseEvent } from "react";
 import { useAdminMode } from "@/components/AdminModeProvider";
-import { getOverrideUrl, setOverride } from "@/lib/imageStore";
+import { getOverrideState, setOverride, setEmpty, type OverrideState } from "@/lib/imageStore";
 
 /**
  * Drop-in replacement for a `fill`-style next/image usage — same parent
  * requirements (a sized, position:relative ancestor). Automatically shows
  * any admin-uploaded override, and — only while admin mode is on — an
- * overlay to replace the image by clicking or dragging a file onto it.
+ * overlay to replace the image (click or drag a file onto it) and a small
+ * remove button to explicitly blank the slot, even if a default photo exists.
  */
 export function EditableImage({
   id,
@@ -23,20 +24,20 @@ export function EditableImage({
   className?: string;
 }) {
   const { isAdmin } = useAdminMode();
-  const [overrideUrl, setOverrideUrlState] = useState<string | null>(null);
+  const [state, setState] = useState<OverrideState>({ kind: "none" });
   const [dragOver, setDragOver] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
     let currentUrl: string | null = null;
 
-    getOverrideUrl(id).then((url) => {
+    getOverrideState(id).then((next) => {
       if (cancelled) {
-        if (url) URL.revokeObjectURL(url);
+        if (next.kind === "image") URL.revokeObjectURL(next.url);
         return;
       }
-      currentUrl = url;
-      setOverrideUrlState(url);
+      if (next.kind === "image") currentUrl = next.url;
+      setState(next);
     });
 
     return () => {
@@ -45,14 +46,24 @@ export function EditableImage({
     };
   }, [id]);
 
+  const applyState = (next: OverrideState) => {
+    setState((prev) => {
+      if (prev.kind === "image") URL.revokeObjectURL(prev.url);
+      return next;
+    });
+  };
+
   const handleFile = async (file: File | undefined) => {
     if (!file || !file.type.startsWith("image/")) return;
     await setOverride(id, file);
-    const url = await getOverrideUrl(id);
-    setOverrideUrlState((prev) => {
-      if (prev) URL.revokeObjectURL(prev);
-      return url;
-    });
+    applyState(await getOverrideState(id));
+  };
+
+  const handleRemove = async (e: MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    await setEmpty(id);
+    applyState({ kind: "empty" });
   };
 
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -66,7 +77,7 @@ export function EditableImage({
     handleFile(e.dataTransfer.files?.[0]);
   };
 
-  const effectiveSrc = overrideUrl ?? src;
+  const effectiveSrc = state.kind === "image" ? state.url : state.kind === "empty" ? undefined : src;
 
   return (
     <>
@@ -109,6 +120,18 @@ export function EditableImage({
             className="hidden"
             onChange={onInputChange}
           />
+
+          {effectiveSrc && (
+            <button
+              type="button"
+              onClick={handleRemove}
+              title="Remove image"
+              aria-label="Remove image"
+              className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/70 text-sm leading-none text-white transition-colors hover:bg-red-500/90"
+            >
+              &times;
+            </button>
+          )}
         </label>
       )}
     </>

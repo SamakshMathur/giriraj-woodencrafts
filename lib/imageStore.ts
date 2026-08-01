@@ -2,6 +2,15 @@ const DB_NAME = "giriraj-admin";
 const DB_VERSION = 1;
 const STORE_NAME = "image-overrides";
 
+/** Sentinel stored instead of a Blob to mean "explicitly cleared — show no
+ *  image at all", as opposed to "no entry" which falls back to the default. */
+const EMPTY_MARKER = "__EMPTY__";
+
+export type OverrideState =
+  | { kind: "none" }
+  | { kind: "image"; url: string }
+  | { kind: "empty" };
+
 function openDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(DB_NAME, DB_VERSION);
@@ -15,18 +24,29 @@ function openDB(): Promise<IDBDatabase> {
   });
 }
 
-/** Replace (or set) the override image for a given editable-image id. */
-export async function setOverride(id: string, file: File): Promise<void> {
-  const db = await openDB();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE_NAME, "readwrite");
-    tx.objectStore(STORE_NAME).put(file, id);
-    tx.oncomplete = () => resolve();
-    tx.onerror = () => reject(tx.error);
-  });
+function put(id: string, value: Blob | string): Promise<void> {
+  return openDB().then(
+    (db) =>
+      new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, "readwrite");
+        tx.objectStore(STORE_NAME).put(value, id);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+      })
+  );
 }
 
-/** Remove the override for an id, reverting it back to its default image. */
+/** Replace (or set) the override image for a given editable-image id. */
+export async function setOverride(id: string, file: File): Promise<void> {
+  await put(id, file);
+}
+
+/** Explicitly blank the slot — shows an empty container even if a default photo exists. */
+export async function setEmpty(id: string): Promise<void> {
+  await put(id, EMPTY_MARKER);
+}
+
+/** Remove the stored entry entirely, reverting it back to its default image. */
 export async function clearOverride(id: string): Promise<void> {
   const db = await openDB();
   return new Promise((resolve, reject) => {
@@ -37,7 +57,7 @@ export async function clearOverride(id: string): Promise<void> {
   });
 }
 
-/** Remove every stored override. */
+/** Remove every stored override/empty marker. */
 export async function clearAllOverrides(): Promise<void> {
   const db = await openDB();
   return new Promise((resolve, reject) => {
@@ -48,20 +68,28 @@ export async function clearAllOverrides(): Promise<void> {
   });
 }
 
-/** A blob: URL for the stored override, or null if none is set. Caller owns revoking it. */
-export async function getOverrideUrl(id: string): Promise<string | null> {
-  if (typeof indexedDB === "undefined") return null;
+/**
+ * The current state for an id: an uploaded image (with a blob: URL the
+ * caller owns and must revoke), explicitly emptied, or no entry at all
+ * (meaning "use the default").
+ */
+export async function getOverrideState(id: string): Promise<OverrideState> {
+  if (typeof indexedDB === "undefined") return { kind: "none" };
   const db = await openDB();
-  const blob = await new Promise<Blob | null>((resolve, reject) => {
+  const raw = await new Promise<Blob | string | undefined>((resolve, reject) => {
     const tx = db.transaction(STORE_NAME, "readonly");
     const req = tx.objectStore(STORE_NAME).get(id);
-    req.onsuccess = () => resolve((req.result as Blob | undefined) ?? null);
+    req.onsuccess = () => resolve(req.result);
     req.onerror = () => reject(req.error);
   });
-  return blob ? URL.createObjectURL(blob) : null;
+
+  if (raw === undefined) return { kind: "none" };
+  if (raw === EMPTY_MARKER) return { kind: "empty" };
+  if (raw instanceof Blob) return { kind: "image", url: URL.createObjectURL(raw) };
+  return { kind: "none" };
 }
 
-/** Every id that currently has a stored override. */
+/** Every id that currently has a stored entry (override or empty marker). */
 export async function listOverrideIds(): Promise<string[]> {
   if (typeof indexedDB === "undefined") return [];
   const db = await openDB();
