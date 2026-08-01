@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Cinzel, Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { AdminModeProvider } from "@/components/AdminModeProvider";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
@@ -42,10 +43,12 @@ export default function RootLayout({
         className={`${cormorant.variable} ${cinzel.variable} ${inter.variable} font-body antialiased`}
       >
         <ThemeProvider>
-          <Header />
-          <main>{children}</main>
-          <Footer />
-          <WhatsAppButton />
+          <AdminModeProvider>
+            <Header />
+            <main>{children}</main>
+            <Footer />
+            <WhatsAppButton />
+          </AdminModeProvider>
         </ThemeProvider>
       </body>
     </html>

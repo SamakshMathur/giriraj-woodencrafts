@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { PageHero } from "@/components/PageHero";
 import { Section } from "@/components/Section";
+import { EditableImage } from "@/components/EditableImage";
 import { GALLERY_IMAGES } from "@/lib/craft";
 
 const CATEGORIES = [
@@ -44,11 +44,10 @@ export default function GalleryPage() {
               className="relative mb-4 overflow-hidden break-inside-avoid rounded-2xl bg-card shadow-warm-sm"
               style={{ aspectRatio: ["4/5", "1/1", "3/4"][i % 3] }}
             >
-              <Image
+              <EditableImage
+                id={`gallery-${i}`}
                 src={item.src}
                 alt={item.label}
-                fill
-                sizes="(min-width: 768px) 33vw, 50vw"
                 className="object-cover"
               />
             </div>

@@ -1,7 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 import { PageHero } from "@/components/PageHero";
 import { Section } from "@/components/Section";
+import { EditableImage } from "@/components/EditableImage";
 import { PRODUCTS } from "@/lib/products";
 
 const FILTERS = [
@@ -44,11 +44,10 @@ export default function ProductsPage() {
               className="group block overflow-hidden rounded-2xl bg-card shadow-warm-sm transition-transform duration-500 ease-reverent hover:-translate-y-1"
             >
               <div className="relative aspect-[3/4] overflow-hidden">
-                <Image
+                <EditableImage
+                  id={`products-card-${product.slug}`}
                   src={product.image}
                   alt={product.name}
-                  fill
-                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                   className="object-cover transition-transform duration-500 ease-reverent group-hover:scale-[1.03]"
                 />
               </div>

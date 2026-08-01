@@ -1,19 +1,19 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Section, SectionHeading } from "@/components/Section";
 import { TempleBackground } from "@/components/TempleBackground";
 import { TempleAura } from "@/components/TempleAura";
 import { TempleSpire } from "@/components/TempleSpire";
+import { EditableImage } from "@/components/EditableImage";
 import { PRODUCTS } from "@/lib/products";
 import { CRAFT_STAGES, GALLERY_IMAGES } from "@/lib/craft";
 
 const CATEGORIES = [
-  { name: "Traditional Collection", image: "/images/mandirs/traditional-collection.jpg" },
-  { name: "Royal Collection", image: "/images/mandirs/vaikuntha-front.jpg" },
-  { name: "Modern Collection", image: "/images/mandirs/ananta-front.jpg" },
-  { name: "Compact Apartments", image: "/images/mandirs/shreeji-front.jpg" },
-  { name: "Wall Mounted", image: "/images/mandirs/suvarna-front.jpg" },
-  { name: "Luxury Maharaja Series", image: "/images/mandirs/close-up-carving.jpg" },
+  { slug: "traditional", name: "Traditional Collection", image: "/images/mandirs/traditional-collection.jpg" },
+  { slug: "royal", name: "Royal Collection", image: "/images/mandirs/vaikuntha-front.jpg" },
+  { slug: "modern", name: "Modern Collection", image: "/images/mandirs/ananta-front.jpg" },
+  { slug: "compact", name: "Compact Apartments", image: "/images/mandirs/shreeji-front.jpg" },
+  { slug: "wall-mounted", name: "Wall Mounted", image: "/images/mandirs/suvarna-front.jpg" },
+  { slug: "maharaja", name: "Luxury Maharaja Series", image: "/images/mandirs/close-up-carving.jpg" },
 ];
 
 export default function Home() {
@@ -114,11 +114,10 @@ export default function Home() {
               href={`/products/${product.slug}`}
               className="group relative aspect-[3/4] w-[280px] shrink-0 overflow-hidden rounded-2xl bg-card shadow-warm-sm md:w-[360px]"
             >
-              <Image
+              <EditableImage
+                id={`home-showcase-${product.slug}`}
                 src={product.image}
                 alt={product.name}
-                fill
-                sizes="(min-width: 768px) 360px, 280px"
                 className="object-cover transition-transform duration-700 ease-reverent group-hover:scale-105"
               />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-6 text-white">
@@ -139,11 +138,10 @@ export default function Home() {
               key={category.name}
               className="group relative aspect-square overflow-hidden rounded-2xl bg-card shadow-warm-sm"
             >
-              <Image
+              <EditableImage
+                id={`home-category-${category.slug}`}
                 src={category.image}
                 alt={category.name}
-                fill
-                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                 className="object-cover transition-transform duration-500 ease-reverent group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
@@ -191,7 +189,12 @@ export default function Home() {
           {CRAFT_STAGES.map((stage, i) => (
             <div key={stage.name} className="flex shrink-0 flex-col items-center gap-4 text-center">
               <div className="relative h-20 w-20 overflow-hidden rounded-full border border-border shadow-warm-sm">
-                <Image src={stage.image} alt={stage.name} fill className="object-cover" />
+                <EditableImage
+                  id={`craft-stage-${stage.slug}`}
+                  src={stage.image}
+                  alt={stage.name}
+                  className="object-cover"
+                />
                 <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-sm font-heading text-white">
                   {String(i + 1).padStart(2, "0")}
                 </div>
@@ -212,11 +215,10 @@ export default function Home() {
               className="relative mb-4 overflow-hidden break-inside-avoid rounded-2xl bg-card shadow-warm-sm"
               style={{ aspectRatio: i % 2 === 0 ? "4/5" : "1/1" }}
             >
-              <Image
+              <EditableImage
+                id={`gallery-${i}`}
                 src={item.src}
                 alt={item.label}
-                fill
-                sizes="(min-width: 768px) 33vw, 50vw"
                 className="object-cover"
               />
             </div>

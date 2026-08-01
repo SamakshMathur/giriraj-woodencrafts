@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { PageHero } from "@/components/PageHero";
 import { Section, SectionHeading } from "@/components/Section";
+import { EditableImage } from "@/components/EditableImage";
 
 const FACTORY_IMAGES = [
   "/images/mandirs/workshop-wood-selection.jpg",
@@ -23,11 +23,10 @@ export default function AboutPage() {
       <Section className="bg-bg pt-0">
         <div className="grid items-center gap-14 md:grid-cols-2">
           <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-warm-sm">
-            <Image
+            <EditableImage
+              id="about-story-photo"
               src="/images/mandirs/workshop-wood-selection.jpg"
               alt="Inside the Giriraj workshop"
-              fill
-              sizes="(min-width: 768px) 50vw, 100vw"
               className="object-cover"
             />
           </div>
@@ -59,16 +58,15 @@ export default function AboutPage() {
       <Section className="bg-bg">
         <SectionHeading eyebrow="The Workshop" title="Where It All Comes Together" />
         <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {FACTORY_IMAGES.map((src) => (
+          {FACTORY_IMAGES.map((src, i) => (
             <div
               key={src}
               className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-warm-sm"
             >
-              <Image
+              <EditableImage
+                id={`about-factory-${i}`}
                 src={src}
                 alt="Giriraj workshop"
-                fill
-                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                 className="object-cover"
               />
             </div>

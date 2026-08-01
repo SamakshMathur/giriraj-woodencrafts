@@ -1,7 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Section } from "@/components/Section";
+import { EditableImage } from "@/components/EditableImage";
 import { PRODUCTS, getProductBySlug } from "@/lib/products";
 import { GALLERY_IMAGES } from "@/lib/craft";
 
@@ -57,12 +57,10 @@ export default async function ProductDetailPage({
 
       {/* Hero image */}
       <div className="relative mx-auto mt-8 aspect-[16/9] max-w-content overflow-hidden px-6 md:mx-10 md:rounded-2xl">
-        <Image
+        <EditableImage
+          id={`product-hero-${product.slug}`}
           src={product.image}
           alt={product.name}
-          fill
-          priority
-          sizes="100vw"
           className="object-cover"
         />
       </div>
@@ -75,11 +73,10 @@ export default async function ProductDetailPage({
               key={label}
               className="relative aspect-square overflow-hidden rounded-xl bg-card shadow-warm-sm"
             >
-              <Image
+              <EditableImage
+                id={`product-gallery-${product.slug}-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
                 src={GALLERY_IMAGES[i % GALLERY_IMAGES.length].src}
                 alt={`${product.name} — ${label}`}
-                fill
-                sizes="(min-width: 768px) 20vw, 50vw"
                 className="object-cover"
               />
               <span className="absolute bottom-2 left-2 rounded-full bg-black/50 px-2 py-0.5 text-[10px] uppercase tracking-widest2 text-white">

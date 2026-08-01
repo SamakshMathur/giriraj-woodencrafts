@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { PageHero } from "@/components/PageHero";
 import { Section, SectionHeading } from "@/components/Section";
+import { EditableImage } from "@/components/EditableImage";
 import { CRAFT_STAGES } from "@/lib/craft";
 
 export default function CraftPage() {
@@ -22,11 +22,10 @@ export default function CraftPage() {
               }`}
             >
               <div className="relative aspect-video overflow-hidden rounded-2xl shadow-warm-sm">
-                <Image
+                <EditableImage
+                  id={`craft-stage-${stage.slug}`}
                   src={stage.image}
                   alt={stage.name}
-                  fill
-                  sizes="(min-width: 768px) 50vw, 100vw"
                   className="object-cover"
                 />
               </div>
@@ -53,8 +52,8 @@ export default function CraftPage() {
         <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="text-center">
-              <div className="mx-auto flex aspect-square w-full items-center justify-center rounded-2xl bg-card font-display text-xs uppercase tracking-widest2 text-muted shadow-warm-sm">
-                Image
+              <div className="relative mx-auto aspect-square w-full overflow-hidden rounded-2xl bg-card shadow-warm-sm">
+                <EditableImage id={`craft-artisan-${i}`} alt="Artisan portrait" />
               </div>
               <p className="mt-4 text-sm font-medium text-text">Artisan Name</p>
               <p className="text-xs text-muted">Master Carver</p>
