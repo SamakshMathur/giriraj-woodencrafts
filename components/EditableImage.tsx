@@ -1,16 +1,25 @@
 "use client";
 
-import { useEffect, useState, type ChangeEvent, type DragEvent, type MouseEvent } from "react";
+import { useState, type ChangeEvent, type DragEvent, type MouseEvent } from "react";
 import { useAdminMode } from "@/components/AdminModeProvider";
-import { getOverrideState, setOverride, setEmpty, type OverrideState } from "@/lib/imageStore";
+import { useOverrides } from "@/components/OverridesProvider";
 import { convertToWebp } from "@/lib/convertToWebp";
+
+type ImageState = { kind: "none" } | { kind: "image"; url: string } | { kind: "empty" };
+
+function resolveInitialState(raw: string | null | undefined): ImageState {
+  if (raw === undefined) return { kind: "none" };
+  if (raw === null) return { kind: "empty" };
+  return { kind: "image", url: raw };
+}
 
 /**
  * Drop-in replacement for a `fill`-style next/image usage — same parent
- * requirements (a sized, position:relative ancestor). Automatically shows
- * any admin-uploaded override, and — only while admin mode is on — an
- * overlay to replace the image (click or drag a file onto it) and a small
- * remove button to explicitly blank the slot, even if a default photo exists.
+ * requirements (a sized, position:relative ancestor). Its current image
+ * comes from the server-fetched overrides map (see OverridesProvider), so
+ * every visitor sees the latest uploaded photo on first paint. While admin
+ * mode is on, an overlay lets you replace it (click or drag a file onto it)
+ * or remove it entirely via the small × button.
  */
 export function EditableImage({
   id,
@@ -25,47 +34,43 @@ export function EditableImage({
   className?: string;
 }) {
   const { isAdmin } = useAdminMode();
-  const [state, setState] = useState<OverrideState>({ kind: "none" });
+  const { images } = useOverrides();
+  const [state, setState] = useState<ImageState>(() => resolveInitialState(images[id]));
   const [dragOver, setDragOver] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    let currentUrl: string | null = null;
-
-    getOverrideState(id).then((next) => {
-      if (cancelled) {
-        if (next.kind === "image") URL.revokeObjectURL(next.url);
-        return;
-      }
-      if (next.kind === "image") currentUrl = next.url;
-      setState(next);
-    });
-
-    return () => {
-      cancelled = true;
-      if (currentUrl) URL.revokeObjectURL(currentUrl);
-    };
-  }, [id]);
-
-  const applyState = (next: OverrideState) => {
-    setState((prev) => {
-      if (prev.kind === "image") URL.revokeObjectURL(prev.url);
-      return next;
-    });
-  };
+  const [uploading, setUploading] = useState(false);
 
   const handleFile = async (file: File | undefined) => {
     if (!file || !file.type.startsWith("image/")) return;
-    const webpFile = await convertToWebp(file);
-    await setOverride(id, webpFile);
-    applyState(await getOverrideState(id));
+    setUploading(true);
+    try {
+      const webpFile = await convertToWebp(file);
+      const form = new FormData();
+      form.append("id", id);
+      form.append("file", webpFile);
+      const res = await fetch("/api/admin/image", { method: "POST", body: form });
+      if (res.ok) {
+        const data = await res.json();
+        setState({ kind: "image", url: data.url });
+      }
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleRemove = async (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    await setEmpty(id);
-    applyState({ kind: "empty" });
+    setState({ kind: "empty" });
+    try {
+      await fetch("/api/admin/image", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+    } catch {
+      // Local state already reflects the removal; a failed request just
+      // means it won't have persisted server-side.
+    }
   };
 
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -110,7 +115,9 @@ export function EditableImage({
           } ${dragOver ? "bg-black/75 opacity-100" : "bg-black/60"}`}
         >
           <span className="rounded-full border border-white/40 bg-black/40 px-3 py-1.5">
-            {dragOver
+            {uploading
+              ? "Uploading…"
+              : dragOver
               ? "Drop to replace"
               : effectiveSrc
               ? "Click or drop to replace"
@@ -120,10 +127,10 @@ export function EditableImage({
             type="file"
             accept="image/*"
             className="hidden"
+            disabled={uploading}
             onChange={onInputChange}
           />
-
-          {effectiveSrc && (
+          {effectiveSrc && !uploading && (
             <button
               type="button"
               onClick={handleRemove}

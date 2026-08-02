@@ -1,15 +1,17 @@
 "use client";
 
-import { useEffect, useState, type KeyboardEvent, type MouseEvent } from "react";
+import { useState, type KeyboardEvent, type MouseEvent } from "react";
 import { useAdminMode } from "@/components/AdminModeProvider";
-import { getTextOverride, setTextOverride } from "@/lib/textStore";
+import { useOverrides } from "@/components/OverridesProvider";
 
 type Tag = "h1" | "h2" | "h3" | "p" | "span";
 
 /**
  * Drop-in replacement for static copy — renders exactly like plain text for
- * everyone. While admin mode is on, clicking it swaps in a text field; the
- * edit is saved on blur/Enter and persisted (localStorage) from then on.
+ * everyone. Its current value comes from the server-fetched overrides map
+ * (see OverridesProvider), so every visitor sees the latest saved copy on
+ * first paint. While admin mode is on, clicking it swaps in a text field;
+ * the edit is saved to the server on blur/Enter.
  */
 export function EditableText({
   id,
@@ -25,20 +27,27 @@ export function EditableText({
   multiline?: boolean;
 }) {
   const { isAdmin } = useAdminMode();
-  const [value, setValue] = useState(defaultValue);
+  const { text } = useOverrides();
+  const initial = text[id] ?? defaultValue;
+
+  const [value, setValue] = useState(initial);
   const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState(defaultValue);
+  const [draft, setDraft] = useState(initial);
 
-  useEffect(() => {
-    const stored = getTextOverride(id);
-    if (stored !== null) setValue(stored);
-  }, [id]);
-
-  const save = () => {
+  const save = async () => {
     const next = draft.trim() === "" ? value : draft;
     setValue(next);
-    setTextOverride(id, next);
     setEditing(false);
+    try {
+      await fetch("/api/admin/text", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, value: next }),
+      });
+    } catch {
+      // Best-effort — the field already reflects the new value locally;
+      // a failed save just means it won't have persisted server-side.
+    }
   };
 
   const cancel = () => {
@@ -54,18 +63,18 @@ export function EditableText({
     }
   };
 
-  const Element = as;
-
-  if (!isAdmin) {
-    return <Element className={className}>{value}</Element>;
-  }
-
   // Stops clicks from bubbling to a wrapping <Link>/<a> (e.g. product cards)
   // so entering edit mode never also triggers navigation.
   const stop = (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
   };
+
+  const Element = as;
+
+  if (!isAdmin) {
+    return <Element className={className}>{value}</Element>;
+  }
 
   if (editing) {
     const fieldClassName = `${className} block w-full resize-none rounded-md border border-dashed border-accent !bg-card !text-text px-2 py-1 outline-none`;

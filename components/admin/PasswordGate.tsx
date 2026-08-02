@@ -3,33 +3,30 @@
 import { useState, type FormEvent } from "react";
 
 /**
- * Generic password form. Doesn't know or care what it's protecting or how
- * the "unlocked" state should persist — the caller decides that (e.g. by
- * only rendering this when some auth flag is false, and flipping that flag
- * in onUnlock). Reusable for any password-gated area, not just /admin.
+ * Generic password form. Delegates the actual check to `onUnlock` — it
+ * doesn't know or store the real password itself, so it's reusable for any
+ * password-gated area, not just /admin, and never ships the password to the
+ * client bundle.
  */
 export function PasswordGate({
-  password,
   onUnlock,
   title = "Restricted Area",
   description = "Enter the password to continue.",
 }: {
-  password: string;
-  onUnlock: () => void;
+  onUnlock: (password: string) => Promise<boolean>;
   title?: string;
   description?: string;
 }) {
   const [value, setValue] = useState("");
   const [error, setError] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (value === password) {
-      setError(false);
-      onUnlock();
-    } else {
-      setError(true);
-    }
+    setSubmitting(true);
+    const ok = await onUnlock(value).catch(() => false);
+    setSubmitting(false);
+    setError(!ok);
   };
 
   return (
@@ -60,9 +57,10 @@ export function PasswordGate({
 
         <button
           type="submit"
-          className="mt-6 w-full rounded-full bg-brand py-3 text-sm text-white transition-colors hover:bg-brand-secondary"
+          disabled={submitting}
+          className="mt-6 w-full rounded-full bg-brand py-3 text-sm text-white transition-colors hover:bg-brand-secondary disabled:opacity-50"
         >
-          Unlock
+          {submitting ? "Checking…" : "Unlock"}
         </button>
       </form>
     </div>

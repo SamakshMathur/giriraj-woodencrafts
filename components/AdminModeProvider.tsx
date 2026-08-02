@@ -2,11 +2,12 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 
-const STORAGE_KEY = "giriraj-admin-mode";
-
 type AdminModeContextValue = {
   isAdmin: boolean;
-  unlock: () => void;
+  /** True until the initial session check finishes. */
+  loading: boolean;
+  /** Verifies the password against the server and sets the admin cookie on success. */
+  unlock: (password: string) => Promise<boolean>;
   logout: () => void;
 };
 
@@ -14,23 +15,36 @@ const AdminModeContext = createContext<AdminModeContextValue | null>(null);
 
 export function AdminModeProvider({ children }: { children: React.ReactNode }) {
   const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setIsAdmin(window.localStorage.getItem(STORAGE_KEY) === "true");
+    fetch("/api/admin/session")
+      .then((res) => res.json())
+      .then((data) => setIsAdmin(!!data.isAdmin))
+      .catch(() => setIsAdmin(false))
+      .finally(() => setLoading(false));
   }, []);
 
-  const unlock = () => {
-    window.localStorage.setItem(STORAGE_KEY, "true");
-    setIsAdmin(true);
+  const unlock = async (password: string) => {
+    const res = await fetch("/api/admin/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password }),
+    });
+    if (res.ok) {
+      setIsAdmin(true);
+      return true;
+    }
+    return false;
   };
 
   const logout = () => {
-    window.localStorage.removeItem(STORAGE_KEY);
     setIsAdmin(false);
+    fetch("/api/admin/logout", { method: "POST" }).catch(() => {});
   };
 
   return (
-    <AdminModeContext.Provider value={{ isAdmin, unlock, logout }}>
+    <AdminModeContext.Provider value={{ isAdmin, loading, unlock, logout }}>
       {children}
     </AdminModeContext.Provider>
   );

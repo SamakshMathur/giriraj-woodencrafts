@@ -4,11 +4,6 @@ import Link from "next/link";
 import { useState } from "react";
 import { useAdminMode } from "@/components/AdminModeProvider";
 import { PasswordGate } from "@/components/admin/PasswordGate";
-import { clearAllOverrides } from "@/lib/imageStore";
-import { clearAllTextOverrides } from "@/lib/textStore";
-
-// TODO: move to a real auth check before this ever holds real content.
-const ADMIN_PASSWORD = "1234";
 
 const EDITABLE_PAGES = [
   { href: "/", label: "Home", note: "Hero, showcase, categories, craftsmanship journey, gallery preview" },
@@ -22,14 +17,17 @@ const EDITABLE_PAGES = [
 ];
 
 export default function AdminPage() {
-  const { isAdmin, unlock, logout } = useAdminMode();
+  const { isAdmin, loading, unlock, logout } = useAdminMode();
   const [resetting, setResetting] = useState(false);
   const [resetDone, setResetDone] = useState(false);
+
+  if (loading) {
+    return <div className="min-h-screen bg-bg" />;
+  }
 
   if (!isAdmin) {
     return (
       <PasswordGate
-        password={ADMIN_PASSWORD}
         onUnlock={unlock}
         title="Giriraj Admin"
         description="Enter the admin password to continue."
@@ -39,11 +37,12 @@ export default function AdminPage() {
 
   const handleResetAll = async () => {
     setResetting(true);
-    await clearAllOverrides();
-    clearAllTextOverrides();
+    await fetch("/api/admin/reset", { method: "POST" }).catch(() => {});
     setResetting(false);
     setResetDone(true);
-    setTimeout(() => setResetDone(false), 2500);
+    setTimeout(() => {
+      window.location.reload();
+    }, 1200);
   };
 
   return (
@@ -63,7 +62,7 @@ export default function AdminPage() {
               it to browse your computer, or drag an image file straight onto
               it. Headings, subtext, and other copy get a dashed outline on
               hover — click directly on the words to edit them. Changes save
-              instantly to this browser.
+              to the live site immediately — every visitor sees them.
             </p>
           </div>
           <button
@@ -94,14 +93,14 @@ export default function AdminPage() {
           <p className="text-sm font-medium text-text">Reset</p>
           <p className="mt-2 max-w-xl text-sm text-text-secondary">
             Removes every image and text edit you&rsquo;ve made, reverting the
-            whole site back to its defaults in this browser.
+            whole live site back to its defaults for everyone.
           </p>
           <button
             onClick={handleResetAll}
             disabled={resetting}
             className="mt-4 rounded-full border border-accent px-6 py-2.5 text-sm text-text transition-colors hover:bg-accent hover:text-brand-secondary disabled:opacity-50"
           >
-            {resetDone ? "Done" : resetting ? "Resetting…" : "Reset everything to default"}
+            {resetDone ? "Done — reloading…" : resetting ? "Resetting…" : "Reset everything to default"}
           </button>
         </div>
       </div>
