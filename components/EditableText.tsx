@@ -3,6 +3,7 @@
 import { useState, type KeyboardEvent, type MouseEvent } from "react";
 import { useAdminMode } from "@/components/AdminModeProvider";
 import { useOverrides } from "@/components/OverridesProvider";
+import { useSaveStatus } from "@/components/SaveStatusToast";
 
 type Tag = "h1" | "h2" | "h3" | "p" | "span";
 
@@ -28,6 +29,7 @@ export function EditableText({
 }) {
   const { isAdmin } = useAdminMode();
   const { text } = useOverrides();
+  const { notify } = useSaveStatus();
   const initial = text[id] ?? defaultValue;
 
   const [value, setValue] = useState(initial);
@@ -36,17 +38,21 @@ export function EditableText({
 
   const save = async () => {
     const next = draft.trim() === "" ? value : draft;
-    setValue(next);
     setEditing(false);
+    if (next === value) return; // no actual change — nothing to save
+
+    setValue(next);
+    notify("saving");
     try {
-      await fetch("/api/admin/text", {
+      const res = await fetch("/api/admin/text", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, value: next }),
       });
+      if (!res.ok) throw new Error("save failed");
+      notify("saved");
     } catch {
-      // Best-effort — the field already reflects the new value locally;
-      // a failed save just means it won't have persisted server-side.
+      notify("error");
     }
   };
 

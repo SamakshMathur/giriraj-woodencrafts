@@ -3,6 +3,7 @@
 import { useState, type ChangeEvent, type DragEvent, type MouseEvent } from "react";
 import { useAdminMode } from "@/components/AdminModeProvider";
 import { useOverrides } from "@/components/OverridesProvider";
+import { useSaveStatus } from "@/components/SaveStatusToast";
 import { convertToWebp } from "@/lib/convertToWebp";
 
 type ImageState = { kind: "none" } | { kind: "image"; url: string } | { kind: "empty" };
@@ -35,6 +36,7 @@ export function EditableImage({
 }) {
   const { isAdmin } = useAdminMode();
   const { images } = useOverrides();
+  const { notify } = useSaveStatus();
   const [state, setState] = useState<ImageState>(() => resolveInitialState(images[id]));
   const [dragOver, setDragOver] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -42,16 +44,19 @@ export function EditableImage({
   const handleFile = async (file: File | undefined) => {
     if (!file || !file.type.startsWith("image/")) return;
     setUploading(true);
+    notify("saving", "Uploading…");
     try {
       const webpFile = await convertToWebp(file);
       const form = new FormData();
       form.append("id", id);
       form.append("file", webpFile);
       const res = await fetch("/api/admin/image", { method: "POST", body: form });
-      if (res.ok) {
-        const data = await res.json();
-        setState({ kind: "image", url: data.url });
-      }
+      if (!res.ok) throw new Error("upload failed");
+      const data = await res.json();
+      setState({ kind: "image", url: data.url });
+      notify("saved");
+    } catch {
+      notify("error");
     } finally {
       setUploading(false);
     }
@@ -61,15 +66,17 @@ export function EditableImage({
     e.preventDefault();
     e.stopPropagation();
     setState({ kind: "empty" });
+    notify("saving", "Removing…");
     try {
-      await fetch("/api/admin/image", {
+      const res = await fetch("/api/admin/image", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id }),
       });
+      if (!res.ok) throw new Error("remove failed");
+      notify("saved", "Removed — live for everyone now");
     } catch {
-      // Local state already reflects the removal; a failed request just
-      // means it won't have persisted server-side.
+      notify("error");
     }
   };
 

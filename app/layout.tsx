@@ -3,6 +3,7 @@ import { Cormorant_Garamond, Cinzel, Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AdminModeProvider } from "@/components/AdminModeProvider";
 import { OverridesProvider } from "@/components/OverridesProvider";
+import { SaveStatusProvider } from "@/components/SaveStatusToast";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
@@ -53,10 +54,12 @@ export default async function RootLayout({
         <ThemeProvider>
           <AdminModeProvider>
             <OverridesProvider text={text} images={images}>
-              <Header />
-              <main>{children}</main>
-              <Footer />
-              <WhatsAppButton />
+              <SaveStatusProvider>
+                <Header />
+                <main>{children}</main>
+                <Footer />
+                <WhatsAppButton />
+              </SaveStatusProvider>
             </OverridesProvider>
           </AdminModeProvider>
         </ThemeProvider>
