@@ -1,6 +1,7 @@
 import { PageHero } from "@/components/PageHero";
 import { Section } from "@/components/Section";
 import { EditableImage } from "@/components/EditableImage";
+import { Reveal } from "@/components/Reveal";
 import { GALLERY_IMAGES } from "@/lib/craft";
 
 const CATEGORIES = [
@@ -40,10 +41,11 @@ export default function GalleryPage() {
 
         <div className="columns-2 gap-4 md:columns-3">
           {GALLERY_IMAGES.map((item, i) => (
-            <div
+            <Reveal
               key={item.src}
               className="relative mb-4 overflow-hidden break-inside-avoid rounded-2xl bg-card shadow-warm-sm"
               style={{ aspectRatio: ["4/5", "1/1", "3/4"][i % 3] }}
+              delay={(i % 6) * 0.06}
             >
               <EditableImage
                 id={`gallery-${i}`}
@@ -51,7 +53,7 @@ export default function GalleryPage() {
                 alt={item.label}
                 className="object-cover"
               />
-            </div>
+            </Reveal>
           ))}
         </div>
       </Section>

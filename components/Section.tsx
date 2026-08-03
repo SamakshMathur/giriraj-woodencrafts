@@ -1,4 +1,5 @@
 import { EditableText } from "@/components/EditableText";
+import { Reveal } from "@/components/Reveal";
 
 export function Section({
   id,
@@ -30,7 +31,7 @@ export function SectionHeading({
   align?: "center" | "left";
 }) {
   return (
-    <div className={align === "center" ? "mx-auto max-w-2xl text-center" : "max-w-2xl"}>
+    <Reveal className={align === "center" ? "mx-auto max-w-2xl text-center" : "max-w-2xl"}>
       {eyebrow && (
         <EditableText
           id={`${id}-eyebrow`}
@@ -54,6 +55,6 @@ export function SectionHeading({
           className="mt-5 text-base leading-relaxed text-text-secondary md:text-lg"
         />
       )}
-    </div>
+    </Reveal>
   );
 }

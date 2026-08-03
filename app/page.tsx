@@ -5,6 +5,7 @@ import { TempleAura } from "@/components/TempleAura";
 import { TempleSpire } from "@/components/TempleSpire";
 import { EditableImage } from "@/components/EditableImage";
 import { EditableText } from "@/components/EditableText";
+import { Reveal } from "@/components/Reveal";
 import { PRODUCTS } from "@/lib/products";
 import { CRAFT_STAGES, GALLERY_IMAGES } from "@/lib/craft";
 
@@ -56,13 +57,13 @@ export default function Home() {
             <div className="mt-10 flex flex-wrap gap-4">
               <Link
                 href="/products"
-                className="rounded-full bg-accent px-7 py-3.5 text-sm text-brand-secondary transition-transform duration-300 ease-reverent hover:scale-[1.02]"
+                className="rounded-full bg-accent px-7 py-3.5 text-sm text-brand-secondary transition-all duration-300 ease-reverent hover:scale-[1.02] hover:shadow-[0_0_28px_rgba(198,156,69,0.5)]"
               >
                 Explore Collection
               </Link>
               <Link
                 href="/customization"
-                className="rounded-full border border-white/40 px-7 py-3.5 text-sm text-white transition-colors duration-300 hover:bg-white/10"
+                className="rounded-full border border-white/40 px-7 py-3.5 text-sm text-white transition-all duration-300 hover:bg-white/10 hover:shadow-[0_0_24px_rgba(198,156,69,0.35)]"
               >
                 Customize Yours
               </Link>
@@ -104,8 +105,8 @@ export default function Home() {
               title: "Sacred Design",
               copy: "Built according to traditional aesthetics and proportion.",
             },
-          ].map((item) => (
-            <div key={item.title} className="text-center">
+          ].map((item, i) => (
+            <Reveal key={item.title} className="text-center" delay={i * 0.1}>
               <EditableText
                 id={`home-why-${item.slug}-title`}
                 defaultValue={item.title}
@@ -119,7 +120,7 @@ export default function Home() {
                 multiline
                 className="mt-3 text-sm leading-relaxed text-text-secondary"
               />
-            </div>
+            </Reveal>
           ))}
         </div>
       </Section>
@@ -145,6 +146,7 @@ export default function Home() {
                 alt={product.name}
                 className="object-cover transition-transform duration-700 ease-reverent group-hover:scale-105"
               />
+              <div className="pointer-events-none absolute inset-0 -translate-x-full skew-x-12 bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 ease-reverent group-hover:translate-x-full" />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-6 text-white">
                 <EditableText
                   id={`product-${product.slug}-name`}
@@ -163,10 +165,11 @@ export default function Home() {
       <Section className="bg-bg">
         <SectionHeading id="home-categories" eyebrow="Explore" title="Our Collections" />
         <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {CATEGORIES.map((category) => (
-            <div
+          {CATEGORIES.map((category, i) => (
+            <Reveal
               key={category.name}
               className="group relative aspect-square overflow-hidden rounded-2xl bg-card shadow-warm-sm"
+              delay={i * 0.08}
             >
               <EditableImage
                 id={`home-category-${category.slug}`}
@@ -174,6 +177,10 @@ export default function Home() {
                 alt={category.name}
                 className="object-cover transition-transform duration-500 ease-reverent group-hover:scale-105"
               />
+              {/* Polish-sweep: a soft light band passing over the photo on
+                  hover, clipped by the card's own overflow-hidden — it can
+                  never bleed past this card's edges. */}
+              <div className="pointer-events-none absolute inset-0 -translate-x-full skew-x-12 bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 ease-reverent group-hover:translate-x-full" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
               <div className="absolute inset-x-0 bottom-0 p-6">
                 <EditableText
@@ -183,7 +190,7 @@ export default function Home() {
                   className="font-heading text-lg text-white"
                 />
               </div>
-            </div>
+            </Reveal>
           ))}
         </div>
       </Section>
@@ -211,7 +218,7 @@ export default function Home() {
         <div className="mt-12 text-center">
           <Link
             href="/customization"
-            className="inline-block rounded-full bg-accent px-8 py-3.5 text-sm text-brand-secondary transition-transform duration-300 ease-reverent hover:scale-[1.02]"
+            className="inline-block rounded-full bg-accent px-8 py-3.5 text-sm text-brand-secondary transition-all duration-300 ease-reverent hover:scale-[1.02] hover:shadow-[0_0_28px_rgba(198,156,69,0.5)]"
           >
             Start Customizing
           </Link>
@@ -251,10 +258,11 @@ export default function Home() {
         <SectionHeading id="home-gallery" eyebrow="Moments" title="Gallery" />
         <div className="mt-14 columns-2 gap-4 md:columns-3">
           {GALLERY_IMAGES.slice(0, 6).map((item, i) => (
-            <div
+            <Reveal
               key={item.src}
               className="relative mb-4 overflow-hidden break-inside-avoid rounded-2xl bg-card shadow-warm-sm"
               style={{ aspectRatio: i % 2 === 0 ? "4/5" : "1/1" }}
+              delay={i * 0.06}
             >
               <EditableImage
                 id={`gallery-${i}`}
@@ -262,7 +270,7 @@ export default function Home() {
                 alt={item.label}
                 className="object-cover"
               />
-            </div>
+            </Reveal>
           ))}
         </div>
         <div className="mt-10 text-center">
@@ -294,7 +302,7 @@ export default function Home() {
         <SectionHeading id="home-testimonials" eyebrow="Stories" title="Customer Stories" />
         <div className="mt-16 grid gap-8 md:grid-cols-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="rounded-2xl bg-card p-8 shadow-warm-sm">
+            <Reveal key={i} className="rounded-2xl bg-card p-8 shadow-warm-sm" delay={(i - 1) * 0.1}>
               <EditableText
                 id={`home-testimonial-${i}-quote`}
                 defaultValue="The mandir feels like it has always belonged in our home. The craftsmanship is beyond anything we imagined."
@@ -319,7 +327,7 @@ export default function Home() {
                   />
                 </div>
               </div>
-            </div>
+            </Reveal>
           ))}
         </div>
       </Section>
@@ -334,7 +342,7 @@ export default function Home() {
             "Safe packaging",
             "Nationwide delivery",
           ].map((item, i) => (
-            <div key={item} className="text-center">
+            <Reveal key={item} className="text-center" delay={i * 0.08}>
               <div className="mx-auto mb-4 h-12 w-12 rounded-full border border-accent/40" />
               <EditableText
                 id={`home-promise-${i}`}
@@ -342,7 +350,7 @@ export default function Home() {
                 as="p"
                 className="text-sm text-text-secondary"
               />
-            </div>
+            </Reveal>
           ))}
         </div>
       </Section>
@@ -386,13 +394,13 @@ export default function Home() {
         <div className="mt-10 flex flex-wrap justify-center gap-4">
           <Link
             href="/contact"
-            className="rounded-full bg-brand px-8 py-3.5 text-sm text-white transition-colors duration-300 hover:bg-brand-secondary"
+            className="rounded-full bg-brand px-8 py-3.5 text-sm text-white transition-all duration-300 hover:bg-brand-secondary hover:shadow-[0_0_28px_rgba(198,156,69,0.4)]"
           >
             Talk to Our Expert
           </Link>
           <Link
             href="/customization"
-            className="rounded-full border border-accent px-8 py-3.5 text-sm text-text transition-colors duration-300 hover:bg-accent hover:text-brand-secondary"
+            className="rounded-full border border-accent px-8 py-3.5 text-sm text-text transition-all duration-300 hover:bg-accent hover:text-brand-secondary hover:shadow-[0_0_28px_rgba(198,156,69,0.4)]"
           >
             Request Quote
           </Link>

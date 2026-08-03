@@ -3,6 +3,7 @@ import { PageHero } from "@/components/PageHero";
 import { Section } from "@/components/Section";
 import { EditableImage } from "@/components/EditableImage";
 import { EditableText } from "@/components/EditableText";
+import { Reveal } from "@/components/Reveal";
 import { PRODUCTS } from "@/lib/products";
 
 const FILTERS = [
@@ -39,21 +40,22 @@ export default function ProductsPage() {
         </div>
 
         <div className="mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
-          {PRODUCTS.map((product) => (
-            <Link
-              key={product.slug}
-              href={`/products/${product.slug}`}
-              className="group block overflow-hidden rounded-2xl bg-card shadow-warm-sm transition-transform duration-500 ease-reverent hover:-translate-y-1"
-            >
-              <div className="relative aspect-[3/4] overflow-hidden">
-                <EditableImage
-                  id={`products-card-${product.slug}`}
-                  src={product.image}
-                  alt={product.name}
-                  className="object-cover transition-transform duration-500 ease-reverent group-hover:scale-[1.03]"
-                />
-              </div>
-              <div className="p-6">
+          {PRODUCTS.map((product, i) => (
+            <Reveal key={product.slug} delay={i * 0.08}>
+              <Link
+                href={`/products/${product.slug}`}
+                className="group block overflow-hidden rounded-2xl bg-card shadow-warm-sm transition-transform duration-500 ease-reverent hover:-translate-y-1"
+              >
+                <div className="relative aspect-[3/4] overflow-hidden">
+                  <EditableImage
+                    id={`products-card-${product.slug}`}
+                    src={product.image}
+                    alt={product.name}
+                    className="object-cover transition-transform duration-500 ease-reverent group-hover:scale-[1.03]"
+                  />
+                  <div className="pointer-events-none absolute inset-0 -translate-x-full skew-x-12 bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 ease-reverent group-hover:translate-x-full" />
+                </div>
+                <div className="p-6">
                 <EditableText
                   id={`product-${product.slug}-collection`}
                   defaultValue={product.collection}
@@ -66,14 +68,15 @@ export default function ProductsPage() {
                   as="h3"
                   className="mt-2 font-heading text-2xl text-text"
                 />
-                <EditableText
-                  id={`product-${product.slug}-dimensions`}
-                  defaultValue={product.dimensions}
-                  as="p"
-                  className="mt-1 text-sm text-text-secondary"
-                />
-              </div>
-            </Link>
+                  <EditableText
+                    id={`product-${product.slug}-dimensions`}
+                    defaultValue={product.dimensions}
+                    as="p"
+                    className="mt-1 text-sm text-text-secondary"
+                  />
+                </div>
+              </Link>
+            </Reveal>
           ))}
         </div>
       </Section>

@@ -1,5 +1,10 @@
 import { EditableText } from "@/components/EditableText";
 
+// No scroll-reveal here on purpose — PageHero is always the first thing
+// visible on page load (no scrolling required), so a whileInView animation
+// would risk a flash of invisible/dim text on the page's main heading
+// while JS hydrates, on slower connections. Reveal is reserved for
+// below-the-fold content where that risk doesn't apply.
 export function PageHero({
   id,
   eyebrow,

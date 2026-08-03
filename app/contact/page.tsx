@@ -45,7 +45,7 @@ export default function ContactPage() {
             />
             <button
               type="submit"
-              className="w-full rounded-full bg-brand py-3.5 text-sm text-white transition-colors hover:bg-brand-secondary sm:w-auto sm:px-10"
+              className="w-full rounded-full bg-brand py-3.5 text-sm text-white transition-all hover:bg-brand-secondary hover:shadow-[0_0_24px_rgba(198,156,69,0.4)] sm:w-auto sm:px-10"
             >
               Send Enquiry
             </button>
@@ -75,7 +75,7 @@ export default function ContactPage() {
                 href="https://wa.me/918290583377"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block rounded-full border border-accent px-6 py-2.5 text-sm text-text transition-colors hover:bg-accent hover:text-brand-secondary"
+                className="inline-block rounded-full border border-accent px-6 py-2.5 text-sm text-text transition-all hover:bg-accent hover:text-brand-secondary hover:shadow-[0_0_24px_rgba(198,156,69,0.4)]"
               >
                 Chat on WhatsApp
               </a>

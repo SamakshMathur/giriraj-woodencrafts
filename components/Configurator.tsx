@@ -214,7 +214,7 @@ export function Configurator() {
           <button
             onClick={handleSubmit}
             disabled={submitting}
-            className="mt-10 w-full rounded-full bg-brand py-4 text-sm text-white transition-colors hover:bg-brand-secondary disabled:opacity-50 sm:w-auto sm:px-10"
+            className="mt-10 w-full rounded-full bg-brand py-4 text-sm text-white transition-all hover:bg-brand-secondary hover:shadow-[0_0_24px_rgba(198,156,69,0.4)] disabled:opacity-50 sm:w-auto sm:px-10"
           >
             {submitting ? "Sending…" : "Get Quote"}
           </button>

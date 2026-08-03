@@ -130,7 +130,7 @@ export default async function ProductDetailPage({
             <div className="mt-4 flex flex-wrap gap-3">
               <Link
                 href="/contact"
-                className="rounded-full bg-brand px-6 py-3 text-sm text-white transition-colors hover:bg-brand-secondary"
+                className="rounded-full bg-brand px-6 py-3 text-sm text-white transition-all hover:bg-brand-secondary hover:shadow-[0_0_24px_rgba(198,156,69,0.4)]"
               >
                 Request Quote
               </Link>
@@ -138,7 +138,7 @@ export default async function ProductDetailPage({
                 href="https://wa.me/918290583377"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full border border-accent px-6 py-3 text-sm text-text transition-colors hover:bg-accent hover:text-brand-secondary"
+                className="rounded-full border border-accent px-6 py-3 text-sm text-text transition-all hover:bg-accent hover:text-brand-secondary hover:shadow-[0_0_24px_rgba(198,156,69,0.4)]"
               >
                 WhatsApp
               </a>
