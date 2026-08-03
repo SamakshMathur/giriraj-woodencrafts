@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAdminMode } from "@/components/AdminModeProvider";
 import { PasswordGate } from "@/components/admin/PasswordGate";
 
@@ -20,6 +20,21 @@ export default function AdminPage() {
   const { isAdmin, loading, unlock, logout } = useAdminMode();
   const [resetting, setResetting] = useState(false);
   const [resetDone, setResetDone] = useState(false);
+  const [newRequestCount, setNewRequestCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!isAdmin) return;
+    fetch("/api/admin/submissions")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (!data) return;
+        const count = (data.submissions ?? []).filter(
+          (s: { status: string }) => s.status === "new"
+        ).length;
+        setNewRequestCount(count);
+      })
+      .catch(() => {});
+  }, [isAdmin]);
 
   if (loading) {
     return <div className="min-h-screen bg-bg" />;
@@ -73,7 +88,28 @@ export default function AdminPage() {
           </button>
         </div>
 
-        <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <Link
+          href="/admin/submissions"
+          className="mt-10 flex items-center justify-between rounded-2xl border border-accent bg-accent/10 p-6 shadow-warm-sm transition-transform duration-300 ease-reverent hover:-translate-y-0.5"
+        >
+          <div>
+            <p className="font-heading text-xl text-text">Custom Design Requests</p>
+            <p className="mt-2 text-sm text-text-secondary">
+              Photos, descriptions, and contact info customers submit from the
+              Customization page.
+            </p>
+          </div>
+          <div className="flex shrink-0 items-center gap-3">
+            {newRequestCount !== null && newRequestCount > 0 && (
+              <span className="rounded-full bg-accent px-3 py-1 text-xs font-medium text-brand-secondary">
+                {newRequestCount} new
+              </span>
+            )}
+            <span className="text-xs uppercase tracking-widest2 text-accent">Open &rarr;</span>
+          </div>
+        </Link>
+
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {EDITABLE_PAGES.map((page) => (
             <Link
               key={page.href}

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { put } from "@vercel/blob";
+import { del, put } from "@vercel/blob";
 import { isAdminRequest } from "@/lib/adminAuth";
-import { setImageOverride, setImageOverrideEmpty } from "@/lib/content";
+import { getImageOverrides, setImageOverride, setImageOverrideEmpty } from "@/lib/content";
 
 const MAX_FILE_BYTES = 8 * 1024 * 1024; // 8MB
 
@@ -26,17 +26,27 @@ export async function POST(req: NextRequest) {
 
   const safeId = id.replace(/[^a-zA-Z0-9_-]/g, "-");
   const extension = file.type === "image/webp" ? "webp" : file.type.split("/")[1] || "bin";
-  const pathname = `images/${safeId}.${extension}`;
+  // A unique pathname per upload, not a fixed one — reusing the same URL
+  // across replacements let browsers/CDN keep serving the old cached image
+  // even after the content changed underneath, since nothing about the URL
+  // ever changed to signal that.
+  const pathname = `images/${safeId}-${Date.now()}.${extension}`;
+
+  const previousUrl = (await getImageOverrides())[id];
 
   const blob = await put(pathname, file, {
     access: "public",
     addRandomSuffix: false,
-    allowOverwrite: true,
     contentType: file.type,
     token: process.env.BLOB_READ_WRITE_TOKEN,
   });
 
   await setImageOverride(id, blob.url);
+
+  if (previousUrl) {
+    await del(previousUrl, { token: process.env.BLOB_READ_WRITE_TOKEN }).catch(() => {});
+  }
+
   return NextResponse.json({ ok: true, url: blob.url });
 }
 
