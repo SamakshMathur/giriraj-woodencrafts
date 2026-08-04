@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { del, put } from "@vercel/blob";
+import { put } from "@vercel/blob";
 import { isAdminRequest } from "@/lib/adminAuth";
-import { getImageOverrides, setImageOverride, setImageOverrideEmpty } from "@/lib/content";
+import { setImageOverride, setImageOverrideEmpty } from "@/lib/content";
 
 const MAX_FILE_BYTES = 8 * 1024 * 1024; // 8MB
 
@@ -32,8 +32,6 @@ export async function POST(req: NextRequest) {
   // ever changed to signal that.
   const pathname = `images/${safeId}-${Date.now()}.${extension}`;
 
-  const previousUrl = (await getImageOverrides())[id];
-
   const blob = await put(pathname, file, {
     access: "public",
     addRandomSuffix: false,
@@ -41,11 +39,10 @@ export async function POST(req: NextRequest) {
     token: process.env.BLOB_READ_WRITE_TOKEN,
   });
 
-  await setImageOverride(id, blob.url);
-
-  if (previousUrl) {
-    await del(previousUrl, { token: process.env.BLOB_READ_WRITE_TOKEN }).catch(() => {});
-  }
+  // Cleans up this id's older entries (previous image or removal marker) —
+  // safe even under concurrency, since it only ever touches blobs whose
+  // pathname starts with "images/{safeId}-", never any other id's data.
+  await setImageOverride(id, blob.pathname);
 
   return NextResponse.json({ ok: true, url: blob.url });
 }
