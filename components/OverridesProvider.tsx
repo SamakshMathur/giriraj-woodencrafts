@@ -11,9 +11,10 @@ type OverridesContextValue = {
 const OverridesContext = createContext<OverridesContextValue>({ text: {}, images: {} });
 
 /**
- * Holds the site's current text/image overrides, fetched server-side once
- * per request (see app/layout.tsx) so the first paint already shows live
- * content — no flash of default copy before a client fetch resolves.
+ * Holds the site's current text/image overrides, fetched server-side fresh
+ * on every navigation (see app/template.tsx — a template, not a layout, so
+ * this re-fetches on client-side route changes too, not just hard reloads)
+ * so the first paint always shows live content with no flash of stale copy.
  */
 export function OverridesProvider({
   text,
