@@ -4,6 +4,10 @@ import { Section } from "@/components/Section";
 import { EditableImage } from "@/components/EditableImage";
 import { EditableText } from "@/components/EditableText";
 import { Reveal } from "@/components/Reveal";
+
+// See app/about/page.tsx for why this is explicit here rather than relied
+// on cascading from app/template.tsx.
+export const dynamic = "force-dynamic";
 import { PRODUCTS } from "@/lib/products";
 
 const FILTERS = [

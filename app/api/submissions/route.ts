@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { put } from "@vercel/blob";
+import { uploadImage, imageUrl as toImageUrl } from "@/lib/images";
 import { addSubmission } from "@/lib/submissions";
 
 // Public endpoint — any site visitor can submit a custom design request.
@@ -56,15 +56,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: false, error: "Image is too large (max 8MB)" }, { status: 400 });
     }
 
-    const id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-    const extension = file.type === "image/webp" ? "webp" : file.type.split("/")[1] || "bin";
-    const blob = await put(`submissions/${id}.${extension}`, file, {
-      access: "public",
-      addRandomSuffix: false,
-      contentType: file.type,
-      token: process.env.BLOB_READ_WRITE_TOKEN,
-    });
-    imageUrl = blob.url;
+    const id = `submission-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    const fileId = await uploadImage(file, id, file.type);
+    imageUrl = toImageUrl(fileId);
   }
 
   const submission = await addSubmission({

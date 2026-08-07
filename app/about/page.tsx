@@ -3,6 +3,17 @@ import { Section, SectionHeading } from "@/components/Section";
 import { EditableImage } from "@/components/EditableImage";
 import { EditableText } from "@/components/EditableText";
 
+// Explicit per-page, not just relying on app/template.tsx's
+// dynamic = "force-dynamic": that alone was NOT reliably cascading once
+// the data layer moved off Vercel Blob's fetch()-based SDK to MongoDB's
+// raw TCP driver — Next.js's static analyzer previously also picked up
+// the uncached fetch() calls as its own independent dynamic-rendering
+// signal, which masked the fact the template-level setting alone wasn't
+// enough. Confirmed directly (same pattern as the /products/[slug] fix):
+// without this, `next build` prerenders this page once at build time and
+// freezes it, so admin edits never appear until the next deploy.
+export const dynamic = "force-dynamic";
+
 const FACTORY_IMAGES = [
   "/images/mandirs/workshop-wood-selection.webp",
   "/images/mandirs/workshop-seasoning.webp",

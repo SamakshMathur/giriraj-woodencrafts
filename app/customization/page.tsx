@@ -2,6 +2,10 @@ import { PageHero } from "@/components/PageHero";
 import { Section } from "@/components/Section";
 import { Configurator } from "@/components/Configurator";
 
+// See app/about/page.tsx for why this is explicit here rather than relied
+// on cascading from app/template.tsx.
+export const dynamic = "force-dynamic";
+
 export default function CustomizationPage() {
   return (
     <>

@@ -9,16 +9,11 @@ import { getTextOverrides, getImageOverrides } from "@/lib/content";
 // every page visited afterward via client-side nav. Templates re-mount
 // (and thus re-fetch) on every navigation, so this can't go stale.
 export const dynamic = "force-dynamic";
-// getTextOverrides/getImageOverrides call the @vercel/blob SDK, which
-// makes its own internal fetch() calls — and Next.js patches the global
-// fetch to go through its persistent Data Cache by default, even for
-// fetches buried inside third-party libraries, independent of per-request
-// rendering mode. `dynamic = "force-dynamic"` alone does not override an
-// explicit or inherited cache on those inner fetches. This was the real
-// reason removed images kept coming back on refresh: the removal was
-// correctly saved, but this route kept serving a cached pre-removal
-// list() result. `force-no-store` overrides caching for every fetch in
-// this segment, including ones made deep inside a dependency.
+// getTextOverrides/getImageOverrides now read from MongoDB (a real TCP
+// connection, not fetch()), so Next.js's fetch-based Data Cache doesn't
+// apply here the way it did with the old Vercel Blob SDK — but keeping
+// `force-no-store` costs nothing and guards against the same class of
+// caching surprise if a future data source goes through fetch() again.
 export const fetchCache = "force-no-store";
 
 export default async function Template({ children }: { children: React.ReactNode }) {

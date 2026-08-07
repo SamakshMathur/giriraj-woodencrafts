@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { Section } from "@/components/Section";
 import { EditableImage } from "@/components/EditableImage";
 import { EditableText } from "@/components/EditableText";
-import { PRODUCTS, getProductBySlug } from "@/lib/products";
+import { getProductBySlug } from "@/lib/products";
 import { GALLERY_IMAGES } from "@/lib/craft";
 
 // No generateStaticParams here on purpose. This page has 44 EditableImage

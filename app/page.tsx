@@ -9,6 +9,10 @@ import { Reveal } from "@/components/Reveal";
 import { PRODUCTS } from "@/lib/products";
 import { CRAFT_STAGES, GALLERY_IMAGES } from "@/lib/craft";
 
+// See app/about/page.tsx for why this is explicit here rather than relied
+// on cascading from app/template.tsx.
+export const dynamic = "force-dynamic";
+
 const CATEGORIES = [
   { slug: "traditional", name: "Traditional Collection", image: "/images/mandirs/traditional-collection.webp" },
   { slug: "royal", name: "Royal Collection", image: "/images/mandirs/vaikuntha-front.webp" },
