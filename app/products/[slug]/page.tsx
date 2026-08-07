@@ -6,9 +6,19 @@ import { EditableText } from "@/components/EditableText";
 import { PRODUCTS, getProductBySlug } from "@/lib/products";
 import { GALLERY_IMAGES } from "@/lib/craft";
 
-export function generateStaticParams() {
-  return PRODUCTS.map((p) => ({ slug: p.slug }));
-}
+// No generateStaticParams here on purpose. This page has 44 EditableImage
+// slots across the 4 products (hero + 10 gallery labels each) — the exact
+// pages a screenshot showed still serving stale images from. With
+// generateStaticParams, Next.js prerenders these routes once at *build*
+// time and freezes that HTML on the CDN; app/template.tsx's
+// `dynamic = "force-dynamic"` does not reliably override that for a page
+// that opts into static params itself (confirmed directly: the build
+// output kept marking this route "● (SSG)" despite the parent template's
+// setting). Admin edits made after a deploy would never appear here until
+// the next full redeploy. `force-dynamic` below forces this route to
+// render fresh on every request, same as every other content page.
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
 const IMAGE_LABELS = [
   "Front",
