@@ -15,7 +15,7 @@ export const dynamic = "force-dynamic";
 
 const CATEGORIES = [
   { slug: "traditional", name: "Traditional Collection", image: "/images/mandirs/traditional-collection-deity-altar.webp" },
-  { slug: "royal", name: "Royal Collection", image: "/images/mandirs/traditional-collection-deity-altar.webp" },
+  { slug: "royal", name: "Royal Collection", image: "/images/mandirs/royal-collection-arch-mandir.webp" },
   { slug: "modern", name: "Modern Collection", image: "/images/mandirs/modern-elephant-carved-mandir.webp" },
   { slug: "compact", name: "Compact Apartments", image: "/images/mandirs/compact-apartments-mandir.webp" },
   { slug: "wall-mounted", name: "Wall Mounted", image: "/images/mandirs/wall-mounted-frame.webp" },
