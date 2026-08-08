@@ -14,7 +14,7 @@ import { CRAFT_STAGES, GALLERY_IMAGES } from "@/lib/craft";
 export const dynamic = "force-dynamic";
 
 const CATEGORIES = [
-  { slug: "traditional", name: "Traditional Collection", image: "/images/mandirs/traditional-collection.webp" },
+  { slug: "traditional", name: "Traditional Collection", image: "/images/mandirs/traditional-collection-deity-altar.webp" },
   { slug: "royal", name: "Royal Collection", image: "/images/mandirs/vaikuntha-front.webp" },
   { slug: "modern", name: "Modern Collection", image: "/images/mandirs/ananta-front.webp" },
   { slug: "compact", name: "Compact Apartments", image: "/images/mandirs/compact-apartments-mandir.webp" },
