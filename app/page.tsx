@@ -172,14 +172,14 @@ export default function Home() {
           {CATEGORIES.map((category, i) => (
             <Reveal
               key={category.name}
-              className="group relative aspect-square overflow-hidden rounded-2xl bg-card shadow-warm-sm"
+              className="group relative aspect-[4/5] overflow-hidden rounded-2xl bg-card shadow-warm-sm"
               delay={i * 0.08}
             >
               <EditableImage
                 id={`home-category-${category.slug}`}
                 src={category.image}
                 alt={category.name}
-                className="object-cover transition-transform duration-500 ease-reverent group-hover:scale-105"
+                className="object-cover object-top transition-transform duration-500 ease-reverent group-hover:scale-105"
               />
               {/* Polish-sweep: a soft light band passing over the photo on
                   hover, clipped by the card's own overflow-hidden — it can
