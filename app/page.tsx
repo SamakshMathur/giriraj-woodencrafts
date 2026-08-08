@@ -17,9 +17,9 @@ const CATEGORIES = [
   { slug: "traditional", name: "Traditional Collection", image: "/images/mandirs/traditional-collection.webp" },
   { slug: "royal", name: "Royal Collection", image: "/images/mandirs/vaikuntha-front.webp" },
   { slug: "modern", name: "Modern Collection", image: "/images/mandirs/ananta-front.webp" },
-  { slug: "compact", name: "Compact Apartments", image: "/images/mandirs/shreeji-front.webp" },
-  { slug: "wall-mounted", name: "Wall Mounted", image: "/images/mandirs/suvarna-front.webp" },
-  { slug: "maharaja", name: "Luxury Maharaja Series", image: "/images/mandirs/close-up-carving.webp" },
+  { slug: "compact", name: "Compact Apartments", image: "/images/mandirs/compact-apartments-mandir.webp" },
+  { slug: "wall-mounted", name: "Wall Mounted", image: "/images/mandirs/wall-mounted-frame.webp" },
+  { slug: "maharaja", name: "Luxury Maharaja Series", image: "/images/mandirs/maharaja-gold-frame.webp" },
 ];
 
 export default function Home() {
