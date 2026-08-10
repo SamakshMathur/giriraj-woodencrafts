@@ -13,6 +13,16 @@ import { CRAFT_STAGES, GALLERY_IMAGES } from "@/lib/craft";
 // on cascading from app/template.tsx.
 export const dynamic = "force-dynamic";
 
+// Scoped to the Luxury Showcase section only — deliberately not written
+// into PRODUCTS[].image in lib/products.ts, since that default is shared
+// with each product's own detail-page hero photo, and this replacement
+// was scoped to just this homepage section.
+const SHOWCASE_IMAGE_OVERRIDES: Record<string, string> = {
+  shreeji: "/images/mandirs/showcase-shreeji-arch.webp",
+  vaikuntha: "/images/mandirs/showcase-vaikuntha-deity-altar.webp",
+  ananta: "/images/mandirs/showcase-ananta-peacock-table.webp",
+};
+
 const CATEGORIES = [
   { slug: "traditional", name: "Traditional Collection", image: "/images/mandirs/traditional-collection-deity-altar.webp" },
   { slug: "royal", name: "Royal Collection", image: "/images/mandirs/royal-collection-arch-mandir.webp" },
@@ -146,7 +156,7 @@ export default function Home() {
             >
               <EditableImage
                 id={`home-showcase-${product.slug}`}
-                src={product.image}
+                src={SHOWCASE_IMAGE_OVERRIDES[product.slug] ?? product.image}
                 alt={product.name}
                 className="object-cover transition-transform duration-700 ease-reverent group-hover:scale-105"
               />
