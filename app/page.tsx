@@ -21,6 +21,7 @@ const SHOWCASE_IMAGE_OVERRIDES: Record<string, string> = {
   shreeji: "/images/mandirs/showcase-shreeji-arch.webp",
   vaikuntha: "/images/mandirs/showcase-vaikuntha-deity-altar.webp",
   ananta: "/images/mandirs/showcase-ananta-peacock-table.webp",
+  suvarna: "/images/mandirs/showcase-suvarna-gold-dome-frame.webp",
 };
 
 const CATEGORIES = [
