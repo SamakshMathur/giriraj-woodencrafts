@@ -35,12 +35,19 @@ export default function AboutPage() {
 
       <Section className="bg-bg pt-0">
         <div className="grid items-center gap-14 md:grid-cols-2">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-warm-sm">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-[#150d07] shadow-warm-sm">
+            {/* object-contain, not object-cover: this is a square logo
+                with text and icons all the way to its edges, and the
+                container is a wide 4:3 box — cover would crop the crest
+                or the tagline. Contain fits the whole mark, letterboxed
+                on a background matched to the logo's own dark backdrop
+                so the bars are invisible rather than looking like empty
+                space. */}
             <EditableImage
               id="about-story-photo"
-              src="/images/mandirs/workshop-wood-selection.webp"
-              alt="Inside the Giriraj workshop"
-              className="object-cover"
+              src="/images/logo/giriraj-woodencrafts-full-logo.webp"
+              alt="Giriraj Woodencrafts — crafted with devotion, made to last generations"
+              className="object-contain"
             />
           </div>
           <div>
