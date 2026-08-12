@@ -14,13 +14,16 @@ import { EditableText } from "@/components/EditableText";
 // freezes it, so admin edits never appear until the next deploy.
 export const dynamic = "force-dynamic";
 
+// Matches the homepage's "Our Collections" 6 photos exactly (this array
+// is local to this page only, not shared elsewhere, so no scoped-override
+// pattern is needed here).
 const FACTORY_IMAGES = [
-  "/images/mandirs/workshop-wood-selection.webp",
-  "/images/mandirs/workshop-seasoning.webp",
-  "/images/mandirs/close-up-carving.webp",
-  "/images/mandirs/vaikuntha-front.webp",
-  "/images/mandirs/hero-dark-mahogany.webp",
-  "/images/mandirs/shreeji-front.webp",
+  "/images/mandirs/traditional-collection-deity-altar.webp",
+  "/images/mandirs/royal-collection-arch-mandir.webp",
+  "/images/mandirs/compact-apartments-mandir.webp",
+  "/images/mandirs/modern-carved-pedestal-table.webp",
+  "/images/mandirs/wall-mounted-peacock-legs.webp",
+  "/images/mandirs/maharaja-gold-frame.webp",
 ];
 
 export default function AboutPage() {
