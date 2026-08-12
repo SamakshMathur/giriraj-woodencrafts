@@ -4,7 +4,7 @@ export const CRAFT_STAGES: { slug: string; name: string; image: string }[] = [
   { slug: "seasoning", name: "Seasoning", image: "/images/mandirs/workshop-seasoning.webp" },
   { slug: "hand-carving", name: "Hand Carving", image: "/images/mandirs/close-up-carving.webp" },
   { slug: "polishing", name: "Polishing", image: "/images/mandirs/vaikuntha-front.webp" },
-  { slug: "quality-inspection", name: "Quality Inspection", image: "/images/mandirs/ananta-front.webp" },
+  { slug: "quality-inspection", name: "Quality Inspection", image: "/images/mandirs/craft-quality-inspection-workshop.webp" },
   { slug: "packaging", name: "Packaging", image: "/images/mandirs/suvarna-front.webp" },
   { slug: "delivery", name: "Delivery", image: "/images/mandirs/shreeji-front.webp" },
 ];
