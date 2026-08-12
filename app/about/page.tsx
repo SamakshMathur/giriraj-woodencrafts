@@ -69,9 +69,9 @@ export default function AboutPage() {
         <SectionHeading id="about-values" eyebrow="Values" title="What We Stand For" />
         <div className="mt-16 grid gap-10 sm:grid-cols-3">
           {[
-            { name: "Authenticity", image: "/images/mandirs/value-authenticity-lotus-panel.webp" },
+            { name: "Authenticity", image: "/images/mandirs/value-reverence-deity-panel.webp" },
             { name: "Patience", image: "/images/mandirs/value-patience-floral-panel.webp" },
-            { name: "Reverence", image: "/images/mandirs/value-reverence-deity-panel.webp" },
+            { name: "Reverence", image: "/images/mandirs/value-authenticity-lotus-panel.webp" },
           ].map(({ name: value, image }) => (
             <div key={value} className="text-center">
               <div className="relative mx-auto aspect-square w-full max-w-xs overflow-hidden rounded-2xl shadow-warm-sm">
