@@ -113,7 +113,7 @@ export default function Home() {
       <Section className="bg-bg">
         <SectionHeading
           id="home-why"
-          eyebrow="Why Giriraj"
+          eyebrow="Why Giriraj Woodencrafts"
           title="Built on What Cannot Be Rushed"
         />
         <div className="mt-16 grid gap-12 md:grid-cols-3">
@@ -209,15 +209,6 @@ export default function Home() {
                   hover, clipped by the card's own overflow-hidden — it can
                   never bleed past this card's edges. */}
               <div className="pointer-events-none absolute inset-0 -translate-x-full skew-x-12 bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 ease-reverent group-hover:translate-x-full" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 p-6">
-                <EditableText
-                  id={`home-category-${category.slug}-name`}
-                  defaultValue={category.name}
-                  as="p"
-                  className="font-heading text-lg text-white"
-                />
-              </div>
             </Reveal>
           ))}
         </div>
@@ -229,10 +220,9 @@ export default function Home() {
           id="home-customize"
           eyebrow="Configure"
           title="Design a Mandir That Is Only Yours"
-          subtitle="Choose your polishing, storage and lighting — like configuring a work of art."
         />
         <div className="mt-14 flex flex-wrap items-center justify-center gap-3 text-xs uppercase tracking-widest2 text-white/70">
-          {["Size", "Polishing", "Storage", "Lighting"].map(
+          {["Size", "Polishing", "Storage"].map(
             (step, i, arr) => (
               <span key={step} className="flex items-center gap-3">
                 <span className="rounded-full border border-white/30 px-4 py-2">
