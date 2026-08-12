@@ -24,6 +24,19 @@ const SHOWCASE_IMAGE_OVERRIDES: Record<string, string> = {
   suvarna: "/images/mandirs/showcase-suvarna-gold-dome-frame.webp",
 };
 
+// Scoped to the homepage's Gallery preview only, same reasoning as
+// SHOWCASE_IMAGE_OVERRIDES above — GALLERY_IMAGES (lib/craft.ts) is
+// shared with the full /gallery page via the same gallery-{i} ids, and
+// this replacement was scoped to just the homepage section.
+const GALLERY_PREVIEW_IMAGE_OVERRIDES: Record<number, string> = {
+  0: "/images/mandirs/compact-apartments-mandir.webp",
+  1: "/images/mandirs/maharaja-gold-frame.webp",
+  2: "/images/mandirs/wall-mounted-frame.webp",
+  3: "/images/mandirs/traditional-collection-deity-altar.webp",
+  4: "/images/mandirs/gallery-dark-dome-frame.webp",
+  5: "/images/mandirs/gallery-elephant-mandir-v2.webp",
+};
+
 const CATEGORIES = [
   { slug: "traditional", name: "Traditional Collection", image: "/images/mandirs/traditional-collection-deity-altar.webp" },
   { slug: "royal", name: "Royal Collection", image: "/images/mandirs/royal-collection-arch-mandir.webp" },
@@ -281,7 +294,7 @@ export default function Home() {
             >
               <EditableImage
                 id={`gallery-${i}`}
-                src={item.src}
+                src={GALLERY_PREVIEW_IMAGE_OVERRIDES[i] ?? item.src}
                 alt={item.label}
                 className="object-cover"
               />
