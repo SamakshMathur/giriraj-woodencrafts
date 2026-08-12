@@ -17,6 +17,23 @@ const CATEGORIES = [
   "Workshop",
 ];
 
+// Scoped to this page only, same reasoning as the homepage's override
+// maps — GALLERY_IMAGES (lib/craft.ts) is also read by each product's
+// detail-page gallery as a fallback default, so replacing entries there
+// directly would silently change those pages too. This only replaces
+// what's rendered here.
+const GALLERY_PAGE_IMAGE_OVERRIDES: Record<number, { src: string; label: string }> = {
+  0: { src: "/images/mandirs/gallery-small-standing-mandir.webp", label: "Customer Homes" },
+  1: { src: "/images/mandirs/gallery-peacock-medallion-arch.webp", label: "Royal Collection" },
+  2: { src: "/images/mandirs/gallery-carved-drawer-detail.webp", label: "Close-up Details" },
+  3: { src: "/images/mandirs/gallery-pillar-corner-detail.webp", label: "Close-up Details" },
+  4: { src: "/images/mandirs/gallery-peacock-corner-detail.webp", label: "Close-up Details" },
+  5: { src: "/images/mandirs/gallery-carved-mandala-disc.webp", label: "Behind the Scenes" },
+  6: { src: "/images/mandirs/gallery-gold-arch-corner.webp", label: "Royal Collection" },
+  7: { src: "/images/mandirs/gallery-peacock-wheel-crown.webp", label: "Close-up Details" },
+  8: { src: "/images/mandirs/gallery-swan-carving-detail.webp", label: "Close-up Details" },
+};
+
 export default function GalleryPage() {
   return (
     <>
@@ -44,21 +61,24 @@ export default function GalleryPage() {
         </div>
 
         <div className="columns-2 gap-4 md:columns-3">
-          {GALLERY_IMAGES.map((item, i) => (
-            <Reveal
-              key={item.src}
-              className="relative mb-4 overflow-hidden break-inside-avoid rounded-2xl bg-card shadow-warm-sm"
-              style={{ aspectRatio: ["4/5", "1/1", "3/4"][i % 3] }}
-              delay={(i % 6) * 0.06}
-            >
-              <EditableImage
-                id={`gallery-${i}`}
-                src={item.src}
-                alt={item.label}
-                className="object-cover"
-              />
-            </Reveal>
-          ))}
+          {GALLERY_IMAGES.map((item, i) => {
+            const override = GALLERY_PAGE_IMAGE_OVERRIDES[i];
+            return (
+              <Reveal
+                key={item.src}
+                className="relative mb-4 overflow-hidden break-inside-avoid rounded-2xl bg-card shadow-warm-sm"
+                style={{ aspectRatio: ["4/5", "1/1", "3/4"][i % 3] }}
+                delay={(i % 6) * 0.06}
+              >
+                <EditableImage
+                  id={`gallery-${i}`}
+                  src={override?.src ?? item.src}
+                  alt={override?.label ?? item.label}
+                  className="object-cover"
+                />
+              </Reveal>
+            );
+          })}
         </div>
       </Section>
     </>
