@@ -106,13 +106,13 @@ export default function AboutPage() {
           {FACTORY_IMAGES.map((src, i) => (
             <div
               key={src}
-              className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-warm-sm"
+              className="relative aspect-[4/5] overflow-hidden rounded-2xl shadow-warm-sm"
             >
               <EditableImage
                 id={`about-factory-${i}`}
                 src={src}
                 alt="Giriraj workshop"
-                className="object-cover"
+                className="object-cover object-top"
               />
             </div>
           ))}
