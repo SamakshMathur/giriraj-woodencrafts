@@ -16,6 +16,17 @@ const FILTERS = [
   { label: "Finishing", options: ["Antique", "Dark Wooden", "Light Wooden"] },
 ];
 
+// Scoped to this page only (see app/about/page.tsx comment pattern for
+// why — PRODUCTS[].image is shared with the product's own detail-page
+// hero photo). Each product is matched to the homepage "Our Collections"
+// photo for the collection it belongs to.
+const PRODUCTS_CARD_IMAGE_OVERRIDES: Record<string, string> = {
+  shreeji: "/images/mandirs/traditional-collection-deity-altar.webp", // Traditional Collection
+  vaikuntha: "/images/mandirs/royal-collection-arch-mandir.webp", // Royal Collection
+  ananta: "/images/mandirs/compact-apartments-mandir.webp", // Modern Collection
+  suvarna: "/images/mandirs/maharaja-gold-frame.webp", // Luxury Maharaja Series
+};
+
 export default function ProductsPage() {
   return (
     <>
@@ -53,7 +64,7 @@ export default function ProductsPage() {
                 <div className="relative aspect-[3/4] overflow-hidden">
                   <EditableImage
                     id={`products-card-${product.slug}`}
-                    src={product.image}
+                    src={PRODUCTS_CARD_IMAGE_OVERRIDES[product.slug] ?? product.image}
                     alt={product.name}
                     className="object-cover transition-transform duration-500 ease-reverent group-hover:scale-[1.03]"
                   />
