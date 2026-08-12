@@ -65,13 +65,25 @@ export default function AboutPage() {
       <Section className="bg-bg-secondary">
         <SectionHeading id="about-values" eyebrow="Values" title="What We Stand For" />
         <div className="mt-16 grid gap-10 sm:grid-cols-3">
-          {["Authenticity", "Patience", "Reverence"].map((value) => (
+          {[
+            { name: "Authenticity", image: "/images/mandirs/value-authenticity-lotus-panel.webp" },
+            { name: "Patience", image: "/images/mandirs/value-patience-floral-panel.webp" },
+            { name: "Reverence", image: "/images/mandirs/value-reverence-deity-panel.webp" },
+          ].map(({ name: value, image }) => (
             <div key={value} className="text-center">
+              <div className="relative mx-auto aspect-square w-full max-w-xs overflow-hidden rounded-2xl shadow-warm-sm">
+                <EditableImage
+                  id={`about-value-${value.toLowerCase()}-image`}
+                  src={image}
+                  alt={`${value} — hand-carved detail`}
+                  className="object-cover"
+                />
+              </div>
               <EditableText
                 id={`about-value-${value.toLowerCase()}-title`}
                 defaultValue={value}
                 as="h3"
-                className="font-heading text-2xl text-text"
+                className="mt-6 font-heading text-2xl text-text"
               />
               <EditableText
                 id={`about-value-${value.toLowerCase()}-detail`}
