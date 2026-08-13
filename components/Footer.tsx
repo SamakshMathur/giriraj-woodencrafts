@@ -44,9 +44,26 @@ export function Footer() {
             <p className="text-sm font-medium text-text">Reach Us</p>
             <ul className="mt-4 space-y-3 text-sm text-text-secondary">
               <li>WhatsApp: +91 82905 83377</li>
-              <li>Phone: +91 82905 83377</li>
-              <li>hello@giriraj.com</li>
-              <li>Instagram: @giriraj.woodencrafts</li>
+              <li>Phone: +91 88528 20399</li>
+              <li>
+                <a
+                  href="mailto:girirajwoodencrafts@gmail.com"
+                  className="transition-colors hover:text-accent"
+                >
+                  girirajwoodencrafts@gmail.com
+                </a>
+              </li>
+              <li>
+                Instagram:{" "}
+                <a
+                  href="https://www.instagram.com/girirajwoodencrafts?igsh=aGN6Z3lzc2Zwb3A1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-accent"
+                >
+                  girirajwoodencrafts
+                </a>
+              </li>
             </ul>
           </div>
 

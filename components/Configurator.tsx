@@ -6,9 +6,8 @@ import { convertToWebp } from "@/lib/convertToWebp";
 
 const STEPS: { key: string; label: string; options: string[] }[] = [
   { key: "size", label: "Choose Size", options: ["Compact", "Standard", "Grand"] },
-  { key: "polishing", label: "Choose Polishing", options: ["Matte", "Glossy", "Satin", "Gold Leaf"] },
-  { key: "storage", label: "Choose Storage", options: ["None", "Single Drawer", "Double Drawer"] },
-  { key: "lighting", label: "Choose Lighting", options: ["None", "Warm LED", "Diya-style LED"] },
+  { key: "polishing", label: "Choose Polishing", options: ["PU", "Melamine", "Deco", "Golden Leaf"] },
+  { key: "storage", label: "Choose Storage", options: ["None", "Drawers", "Plates", "Single Box"] },
 ];
 
 export function Configurator() {

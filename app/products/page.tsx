@@ -11,8 +11,7 @@ export const dynamic = "force-dynamic";
 import { PRODUCTS } from "@/lib/products";
 
 const FILTERS = [
-  { label: "Wood", options: ["Teak", "Sheesham", "Oak"] },
-  { label: "Style", options: ["Wall Mounted", "Floor Mounted"] },
+  { label: "Style", options: ["Wall Mounted", "Floor Mounted", "Tulsi", "Arti Table"] },
   { label: "Finishing", options: ["Antique", "Dark Wooden", "Light Wooden"] },
 ];
 
