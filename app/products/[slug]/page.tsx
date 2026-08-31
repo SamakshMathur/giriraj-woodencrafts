@@ -20,18 +20,9 @@ import { GALLERY_IMAGES } from "@/lib/craft";
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
 
-const IMAGE_LABELS = [
-  "Front",
-  "45°",
-  "Side",
-  "Close-up Carving",
-  "Drawer",
-  "Marble",
-  "Lighting",
-  "Inside Shelf",
-  "Dimensions",
-  "Lifestyle",
-];
+// Second row (Marble, Lighting, Inside Shelf, Dimensions, Lifestyle) removed
+// per request — just the first row of five now.
+const IMAGE_LABELS = ["Front", "45°", "Side", "Close-up Carving", "Drawer"];
 
 export default async function ProductDetailPage({
   params,
