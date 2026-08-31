@@ -24,6 +24,22 @@ export const fetchCache = "force-no-store";
 // per request — just the first row of five now.
 const IMAGE_LABELS = ["Front", "45°", "Side", "Close-up Carving", "Drawer"];
 
+// Real photos for specific products' gallery slots, keyed by slug then the
+// IMAGE_LABELS index (0=Front, 1=45°, 2=Side, 3=Close-up Carving,
+// 4=Drawer). Falls back to the generic GALLERY_IMAGES default for any
+// product/index not listed here — deliberately per-product, not written
+// into the shared GALLERY_IMAGES array, since these are actual photos of
+// one specific product, not generic filler.
+const PRODUCT_GALLERY_IMAGE_OVERRIDES: Record<string, Record<number, string>> = {
+  vaikuntha: {
+    0: "/images/mandirs/vaikuntha-gallery-front.webp",
+    1: "/images/mandirs/vaikuntha-gallery-45.webp",
+    2: "/images/mandirs/vaikuntha-gallery-side.webp",
+    3: "/images/mandirs/vaikuntha-gallery-carving.webp",
+    4: "/images/mandirs/vaikuntha-gallery-drawer.webp",
+  },
+};
+
 export default async function ProductDetailPage({
   params,
 }: {
@@ -90,7 +106,10 @@ export default async function ProductDetailPage({
             >
               <EditableImage
                 id={`product-gallery-${product.slug}-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
-                src={GALLERY_IMAGES[i % GALLERY_IMAGES.length].src}
+                src={
+                  PRODUCT_GALLERY_IMAGE_OVERRIDES[product.slug]?.[i] ??
+                  GALLERY_IMAGES[i % GALLERY_IMAGES.length].src
+                }
                 alt={`${product.name} — ${label}`}
                 className="object-cover"
               />
