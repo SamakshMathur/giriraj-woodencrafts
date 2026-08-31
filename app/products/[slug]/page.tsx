@@ -72,13 +72,16 @@ export default async function ProductDetailPage({
         </div>
       </section>
 
-      {/* Hero image */}
-      <div className="relative mx-auto mt-8 aspect-[16/9] max-w-content overflow-hidden px-6 md:mx-10 md:rounded-2xl">
+      {/* Hero image — aspect-[4/3], not [16/9]: these showcase photos are
+          portrait (ratio 0.63-1.00), and 16:9 was cropping so aggressively
+          it looked like a random zoomed-in detail shot rather than the
+          product. object-top keeps the ornate crown fully in frame. */}
+      <div className="relative mx-auto mt-8 aspect-[4/3] max-w-content overflow-hidden px-6 md:mx-10 md:rounded-2xl">
         <EditableImage
           id={`product-hero-${product.slug}`}
           src={product.image}
           alt={product.name}
-          className="object-cover"
+          className="object-cover object-top"
         />
       </div>
 

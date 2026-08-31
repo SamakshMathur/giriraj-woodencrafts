@@ -26,7 +26,7 @@ export const PRODUCTS: Product[] = [
     marble: true,
     style: "Floor Mounted",
     finishing: "Dark Wooden",
-    image: "/images/mandirs/shreeji-front.webp",
+    image: "/images/mandirs/showcase-shreeji-arch.webp",
   },
   {
     slug: "vaikuntha",
@@ -40,7 +40,7 @@ export const PRODUCTS: Product[] = [
     marble: true,
     style: "Floor Mounted",
     finishing: "Antique",
-    image: "/images/mandirs/vaikuntha-front.webp",
+    image: "/images/mandirs/showcase-vaikuntha-deity-altar.webp",
   },
   {
     slug: "ananta",
@@ -54,7 +54,7 @@ export const PRODUCTS: Product[] = [
     marble: false,
     style: "Wall Mounted",
     finishing: "Light Wooden",
-    image: "/images/mandirs/ananta-front.webp",
+    image: "/images/mandirs/showcase-ananta-peacock-table.webp",
   },
   {
     slug: "suvarna",
@@ -68,7 +68,7 @@ export const PRODUCTS: Product[] = [
     marble: true,
     style: "Floor Mounted",
     finishing: "Antique",
-    image: "/images/mandirs/suvarna-front.webp",
+    image: "/images/mandirs/showcase-suvarna-gold-dome-frame.webp",
   },
 ];
 
