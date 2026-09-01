@@ -31,6 +31,13 @@ const IMAGE_LABELS = ["Front", "45°", "Side", "Close-up Carving", "Drawer"];
 // into the shared GALLERY_IMAGES array, since these are actual photos of
 // one specific product, not generic filler.
 const PRODUCT_GALLERY_IMAGE_OVERRIDES: Record<string, Record<number, string>> = {
+  shreeji: {
+    0: "/images/mandirs/shreeji-gallery-front.webp",
+    1: "/images/mandirs/shreeji-gallery-45.webp",
+    2: "/images/mandirs/shreeji-gallery-side.webp",
+    3: "/images/mandirs/shreeji-gallery-carving.webp",
+    4: "/images/mandirs/shreeji-gallery-drawer.webp",
+  },
   vaikuntha: {
     0: "/images/mandirs/vaikuntha-gallery-front.webp",
     1: "/images/mandirs/vaikuntha-gallery-45.webp",
