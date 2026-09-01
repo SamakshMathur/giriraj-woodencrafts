@@ -69,39 +69,68 @@ export default async function ProductDetailPage({
 
   return (
     <>
+      {/* Hero — image and details side by side, not stacked full-width.
+          The photos here are portrait (ratio ~0.63-1.00); at full page
+          width that made the hero absurdly tall (a real UX problem,
+          flagged directly). Same aspect-[3/4] + object-cover as the
+          homepage card — still the identical crop — just constrained to
+          a proper column width instead of spanning the whole page, which
+          is what actually fixes the height, not another ratio change. */}
       <section className="pt-32 pb-4 md:pt-40">
         <div className="mx-auto max-w-content px-6 md:px-10">
-          <EditableText
-            id={`product-${product.slug}-collection`}
-            defaultValue={product.collection}
-            as="p"
-            className="text-xs uppercase tracking-widest2 text-accent"
-          />
-          <EditableText
-            id={`product-${product.slug}-name`}
-            defaultValue={product.name}
-            as="h1"
-            className="mt-3 font-heading text-4xl text-text md:text-6xl"
-          />
+          <div className="grid gap-10 md:grid-cols-2 md:items-center lg:gap-16">
+            <div className="relative aspect-[3/4] overflow-hidden rounded-2xl shadow-warm-sm">
+              <EditableImage
+                id={`product-hero-${product.slug}`}
+                src={product.image}
+                alt={product.name}
+                className="object-cover"
+              />
+            </div>
+
+            <div>
+              <EditableText
+                id={`product-${product.slug}-collection`}
+                defaultValue={product.collection}
+                as="p"
+                className="text-xs uppercase tracking-widest2 text-accent"
+              />
+              <EditableText
+                id={`product-${product.slug}-name`}
+                defaultValue={product.name}
+                as="h1"
+                className="mt-3 font-heading text-4xl text-text md:text-5xl"
+              />
+
+              <dl className="mt-8 divide-y divide-border border-t border-border">
+                {specs.map(([label, value]) => (
+                  <div key={label} className="flex justify-between py-3 text-sm">
+                    <dt className="text-text-secondary">{label}</dt>
+                    <dd className="font-medium text-text">{value}</dd>
+                  </div>
+                ))}
+              </dl>
+
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link
+                  href="/contact"
+                  className="rounded-full bg-brand px-6 py-3 text-sm text-white transition-all hover:bg-brand-secondary hover:shadow-[0_0_24px_rgba(198,156,69,0.4)]"
+                >
+                  Request Quote
+                </Link>
+                <a
+                  href="https://wa.me/918290583377"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full border border-accent px-6 py-3 text-sm text-text transition-all hover:bg-accent hover:text-brand-secondary hover:shadow-[0_0_24px_rgba(198,156,69,0.4)]"
+                >
+                  WhatsApp
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
-
-      {/* Hero image — aspect-[3/4], matching the homepage Luxury Showcase
-          card's own aspect-[3/4] + plain object-cover exactly (see
-          app/page.tsx). Same source photo + same aspect ratio + same
-          object-position = the identical crop/framing in both places,
-          just at a different size — not just the same file, the same
-          picture. (aspect-[16/9], then aspect-[4/3], both cropped this
-          portrait photo down to an unrecognizable sliver — this is the
-          fix that actually matches what the ratio math requires.) */}
-      <div className="relative mx-auto mt-8 aspect-[3/4] max-w-content overflow-hidden px-6 md:mx-10 md:rounded-2xl">
-        <EditableImage
-          id={`product-hero-${product.slug}`}
-          src={product.image}
-          alt={product.name}
-          className="object-cover"
-        />
-      </div>
 
       {/* Image gallery */}
       <Section className="bg-bg">
@@ -128,55 +157,39 @@ export default async function ProductDetailPage({
         </div>
       </Section>
 
-      {/* Specifications */}
-      <Section className="bg-bg-secondary">
-        <div className="grid gap-12 md:grid-cols-2">
-          <div>
-            <EditableText
-              id="product-specifications-heading"
-              defaultValue="Specifications"
-              as="h2"
-              className="font-heading text-3xl text-text"
-            />
-            <dl className="mt-8 divide-y divide-border">
-              {specs.map(([label, value]) => (
-                <div key={label} className="flex justify-between py-3 text-sm">
-                  <dt className="text-text-secondary">{label}</dt>
-                  <dd className="font-medium text-text">{value}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-          <div className="flex flex-col justify-center gap-4 rounded-2xl bg-card p-10 shadow-warm-sm">
-            <EditableText
-              id="product-cta-title"
-              defaultValue="A High-Ticket Piece, Considered Fully"
-              as="h3"
-              className="font-heading text-2xl text-text"
-            />
-            <EditableText
-              id="product-cta-copy"
-              defaultValue="Every mandir is made to order. Speak with our experts or book a showroom visit before you decide."
-              as="p"
-              multiline
-              className="text-sm leading-relaxed text-text-secondary"
-            />
-            <div className="mt-4 flex flex-wrap gap-3">
-              <Link
-                href="/contact"
-                className="rounded-full bg-brand px-6 py-3 text-sm text-white transition-all hover:bg-brand-secondary hover:shadow-[0_0_24px_rgba(198,156,69,0.4)]"
-              >
-                Request Quote
-              </Link>
-              <a
-                href="https://wa.me/918290583377"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-full border border-accent px-6 py-3 text-sm text-text transition-all hover:bg-accent hover:text-brand-secondary hover:shadow-[0_0_24px_rgba(198,156,69,0.4)]"
-              >
-                WhatsApp
-              </a>
-            </div>
+      {/* CTA — specs now live in the hero above, so this is just the
+          considered-purchase nudge, as a single centered banner instead
+          of a half-empty two-column row. */}
+      <Section className="bg-brand-secondary text-white">
+        <div className="mx-auto max-w-2xl text-center">
+          <EditableText
+            id="product-cta-title"
+            defaultValue="A High-Ticket Piece, Considered Fully"
+            as="h3"
+            className="font-heading text-3xl text-white"
+          />
+          <EditableText
+            id="product-cta-copy"
+            defaultValue="Every mandir is made to order. Speak with our experts or book a showroom visit before you decide."
+            as="p"
+            multiline
+            className="mt-4 text-sm leading-relaxed text-white/70"
+          />
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Link
+              href="/contact"
+              className="rounded-full bg-accent px-8 py-3.5 text-sm text-brand-secondary transition-all duration-300 ease-reverent hover:scale-[1.02] hover:shadow-[0_0_28px_rgba(198,156,69,0.5)]"
+            >
+              Request Quote
+            </Link>
+            <a
+              href="https://wa.me/918290583377"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full border border-white/30 px-8 py-3.5 text-sm text-white transition-all duration-300 ease-reverent hover:border-white hover:bg-white/10"
+            >
+              WhatsApp
+            </a>
           </div>
         </div>
       </Section>
