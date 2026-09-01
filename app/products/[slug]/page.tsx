@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Section } from "@/components/Section";
-import { EditableImage } from "@/components/EditableImage";
 import { EditableText } from "@/components/EditableText";
+import { ProductImageCarousel, type CarouselSlide } from "@/components/ProductImageCarousel";
 import { getProductBySlug } from "@/lib/products";
 import { GALLERY_IMAGES } from "@/lib/craft";
 
@@ -67,6 +67,20 @@ export default async function ProductDetailPage({
     ["Availability", "Made to order · 8–10 weeks"],
   ];
 
+  // Hero + the same five shots that used to live in a separate thumbnail
+  // grid further down the page — now reachable via the carousel's </>
+  // arrows instead, so the same photos aren't shown twice and the page
+  // doesn't carry the extra height of a whole second image section.
+  const slides: CarouselSlide[] = [
+    { id: `product-hero-${product.slug}`, src: product.image, alt: product.name },
+    ...IMAGE_LABELS.map((label, i) => ({
+      id: `product-gallery-${product.slug}-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+      src: PRODUCT_GALLERY_IMAGE_OVERRIDES[product.slug]?.[i] ?? GALLERY_IMAGES[i % GALLERY_IMAGES.length].src,
+      alt: `${product.name} — ${label}`,
+      label,
+    })),
+  ];
+
   return (
     <>
       {/* Hero — image and details side by side, not stacked full-width.
@@ -75,18 +89,14 @@ export default async function ProductDetailPage({
           flagged directly). Same aspect-[3/4] + object-cover as the
           homepage card — still the identical crop — just constrained to
           a proper column width instead of spanning the whole page, which
-          is what actually fixes the height, not another ratio change. */}
+          is what actually fixes the height, not another ratio change.
+          The image side is now a carousel (</> arrows) cycling through
+          all 6 shots instead of one static photo — see the thumbnail
+          grid this replaced, removed below. */}
       <section className="pt-32 pb-4 md:pt-40">
         <div className="mx-auto max-w-content px-6 md:px-10">
           <div className="grid gap-10 md:grid-cols-2 md:items-center lg:gap-16">
-            <div className="relative aspect-[3/4] overflow-hidden rounded-2xl shadow-warm-sm">
-              <EditableImage
-                id={`product-hero-${product.slug}`}
-                src={product.image}
-                alt={product.name}
-                className="object-cover"
-              />
-            </div>
+            <ProductImageCarousel slides={slides} />
 
             <div>
               <EditableText
@@ -131,31 +141,6 @@ export default async function ProductDetailPage({
           </div>
         </div>
       </section>
-
-      {/* Image gallery */}
-      <Section className="bg-bg">
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
-          {IMAGE_LABELS.map((label, i) => (
-            <div
-              key={label}
-              className="relative aspect-square overflow-hidden rounded-xl bg-card shadow-warm-sm"
-            >
-              <EditableImage
-                id={`product-gallery-${product.slug}-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
-                src={
-                  PRODUCT_GALLERY_IMAGE_OVERRIDES[product.slug]?.[i] ??
-                  GALLERY_IMAGES[i % GALLERY_IMAGES.length].src
-                }
-                alt={`${product.name} — ${label}`}
-                className="object-cover"
-              />
-              <span className="absolute bottom-2 left-2 rounded-full bg-black/50 px-2 py-0.5 text-[10px] uppercase tracking-widest2 text-white">
-                {label}
-              </span>
-            </div>
-          ))}
-        </div>
-      </Section>
 
       {/* CTA — specs now live in the hero above, so this is just the
           considered-purchase nudge, as a single centered banner instead
