@@ -45,6 +45,15 @@ const PRODUCT_GALLERY_IMAGE_OVERRIDES: Record<string, Record<number, string>> = 
     3: "/images/mandirs/vaikuntha-gallery-carving.webp",
     4: "/images/mandirs/vaikuntha-gallery-drawer.webp",
   },
+  // Side (index 2) and Drawer (index 4) not provided yet for Ananta —
+  // those two slides fall through to the generic GALLERY_IMAGES default
+  // until real photos are added, same as before this product had any
+  // overrides at all.
+  ananta: {
+    0: "/images/mandirs/ananta-gallery-front.webp",
+    1: "/images/mandirs/ananta-gallery-45.webp",
+    3: "/images/mandirs/ananta-gallery-carving.webp",
+  },
 };
 
 export default async function ProductDetailPage({
