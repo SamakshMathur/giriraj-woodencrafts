@@ -80,14 +80,25 @@ export default async function ProductDetailPage({
   // grid further down the page — now reachable via the carousel's </>
   // arrows instead, so the same photos aren't shown twice and the page
   // doesn't carry the extra height of a whole second image section.
+  //
+  // Once a product has ANY real per-angle photos, slides without one are
+  // dropped entirely rather than filled in with GALLERY_IMAGES' generic
+  // filler — that filler is an unrelated other product's photo, which
+  // read as flat-out wrong sitting in this product's own gallery (e.g.
+  // Ananta's "Side" slide showing Vaikuntha's front). Products with no
+  // real photos at all yet keep the generic filler across every slide,
+  // same as before any of this existed.
+  const productOverrides = PRODUCT_GALLERY_IMAGE_OVERRIDES[product.slug];
+  const gallerySlides: CarouselSlide[] = IMAGE_LABELS.map((label, i) => ({
+    id: `product-gallery-${product.slug}-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+    src: productOverrides?.[i] ?? (productOverrides ? undefined : GALLERY_IMAGES[i % GALLERY_IMAGES.length].src),
+    alt: `${product.name} — ${label}`,
+    label,
+  })).filter((slide) => slide.src);
+
   const slides: CarouselSlide[] = [
     { id: `product-hero-${product.slug}`, src: product.image, alt: product.name },
-    ...IMAGE_LABELS.map((label, i) => ({
-      id: `product-gallery-${product.slug}-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
-      src: PRODUCT_GALLERY_IMAGE_OVERRIDES[product.slug]?.[i] ?? GALLERY_IMAGES[i % GALLERY_IMAGES.length].src,
-      alt: `${product.name} — ${label}`,
-      label,
-    })),
+    ...gallerySlides,
   ];
 
   return (
