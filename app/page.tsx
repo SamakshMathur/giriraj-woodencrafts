@@ -311,36 +311,58 @@ export default function Home() {
 
       {/* Testimonials */}
       <Section className="bg-bg-secondary">
-        <SectionHeading id="home-testimonials" eyebrow="Stories" title="Customer Stories" />
+        <SectionHeading id="home-testimonials" eyebrow="Testimonials" title="Customer Stories" />
         <div className="mt-16 grid gap-8 md:grid-cols-3">
-          {[1, 2, 3].map((i) => (
-            <Reveal key={i} className="rounded-2xl bg-card p-8 shadow-warm-sm" delay={(i - 1) * 0.1}>
-              <EditableText
-                id={`home-testimonial-${i}-quote`}
-                defaultValue="The mandir feels like it has always belonged in our home. The craftsmanship is beyond anything we imagined."
-                as="p"
-                multiline
-                className="text-sm leading-relaxed text-text-secondary"
-              />
-              <div className="mt-6 flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full bg-brand-secondary/20" />
-                <div>
-                  <EditableText
-                    id={`home-testimonial-${i}-name`}
-                    defaultValue="Customer Name"
-                    as="p"
-                    className="text-sm font-medium text-text"
-                  />
-                  <EditableText
-                    id={`home-testimonial-${i}-location`}
-                    defaultValue="City · Royal Collection"
-                    as="p"
-                    className="text-xs text-muted"
-                  />
+          {[
+            {
+              quote:
+                "The mandir feels like it has always belonged in our home. The craftsmanship is beyond anything we imagined.",
+              name: "Samaksh Mathur",
+              location: "City · Royal Collection",
+            },
+            {
+              quote:
+                "Every detail was handled with such care, from the first sketch to the final polish. It truly feels like a piece of our heritage.",
+              name: "Aryan Goyal",
+              location: "City · Traditional Collection",
+            },
+            {
+              quote:
+                "We wanted something authentic, not mass-produced. Giriraj Woodencrafts delivered exactly that, and more.",
+              name: "Saksham Singhal",
+              location: "City · Modern Collection",
+            },
+          ].map((testimonial, idx) => {
+            const i = idx + 1;
+            return (
+              <Reveal key={i} className="rounded-2xl bg-card p-8 shadow-warm-sm" delay={(i - 1) * 0.1}>
+                <EditableText
+                  id={`home-testimonial-${i}-quote`}
+                  defaultValue={testimonial.quote}
+                  as="p"
+                  multiline
+                  className="text-sm leading-relaxed text-text-secondary"
+                />
+                <div className="mt-6 flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-full bg-brand-secondary/20" />
+                  <div>
+                    <EditableText
+                      id={`home-testimonial-${i}-name`}
+                      defaultValue={testimonial.name}
+                      as="p"
+                      className="text-sm font-medium text-text"
+                    />
+                    <EditableText
+                      id={`home-testimonial-${i}-location`}
+                      defaultValue={testimonial.location}
+                      as="p"
+                      className="text-xs text-muted"
+                    />
+                  </div>
                 </div>
-              </div>
-            </Reveal>
-          ))}
+              </Reveal>
+            );
+          })}
         </div>
       </Section>
 
