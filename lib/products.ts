@@ -54,7 +54,7 @@ export const PRODUCTS: Product[] = [
     marble: false,
     style: "Wall Mounted",
     finishing: "Light Wooden",
-    image: "/images/mandirs/showcase-ananta-peacock-table.webp",
+    image: "/images/mandirs/compact-apartments-mandir.webp",
   },
   {
     slug: "suvarna",
