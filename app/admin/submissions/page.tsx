@@ -160,10 +160,18 @@ export default function SubmissionsPage() {
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <p className="font-heading text-xl text-text">{s.name}</p>
-                    <p className="mt-1 text-sm text-text-secondary">
-                      {s.phone}
-                      {s.email && <> &middot; {s.email}</>}
-                    </p>
+                    {(s.phone || s.email) && (
+                      <p className="mt-1 text-sm text-text-secondary">
+                        {s.phone}
+                        {s.phone && s.email && <> &middot; </>}
+                        {s.email}
+                      </p>
+                    )}
+                    {s.via === "whatsapp" && (
+                      <p className="mt-1 text-xs text-accent">
+                        Sent via WhatsApp: the chat is in the business WhatsApp
+                      </p>
+                    )}
                     <p className="mt-1 text-xs text-muted">{formatDate(s.createdAt)}</p>
                   </div>
                   <span
@@ -197,6 +205,7 @@ export default function SubmissionsPage() {
                 )}
 
                 <div className="mt-5 flex flex-wrap gap-3">
+                  {s.phone && (
                   <a
                     href={`https://wa.me/91${s.phone.replace(/\D/g, "").slice(-10)}`}
                     target="_blank"
@@ -205,6 +214,7 @@ export default function SubmissionsPage() {
                   >
                     WhatsApp
                   </a>
+                  )}
                   <button
                     onClick={() => toggleStatus(s)}
                     disabled={busyId === s.id}

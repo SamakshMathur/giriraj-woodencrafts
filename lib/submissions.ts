@@ -11,6 +11,8 @@ export type Submission = {
   selections: Record<string, string>;
   note?: string;
   imageUrl?: string;
+  /** How the visitor reached out. Missing on older records, which all came through the form. */
+  via?: "form" | "whatsapp";
   status: SubmissionStatus;
 };
 

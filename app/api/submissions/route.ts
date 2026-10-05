@@ -26,8 +26,11 @@ export async function POST(req: NextRequest) {
   const note = clip(form.get("note"), MAX_TEXT_LENGTH);
   const selectionsRaw = clip(form.get("selections"), MAX_TEXT_LENGTH);
   const file = form.get("file");
+  const via = form.get("via") === "whatsapp" ? "whatsapp" : "form";
 
-  if (!name || !phone) {
+  // The WhatsApp route doesn't need name/phone: the visitor's number shows
+  // up in the WhatsApp chat itself. The form route still requires both.
+  if (via === "form" && (!name || !phone)) {
     return NextResponse.json({ ok: false, error: "Name and phone are required" }, { status: 400 });
   }
 
@@ -61,14 +64,19 @@ export async function POST(req: NextRequest) {
     imageUrl = toImageUrl(fileId);
   }
 
+  if (via === "whatsapp" && !imageUrl && !note && Object.keys(selections).length === 0) {
+    return NextResponse.json({ ok: false, error: "Nothing to send" }, { status: 400 });
+  }
+
   const submission = await addSubmission({
-    name,
+    name: name || "WhatsApp visitor",
     phone,
     email: email || undefined,
     selections,
     note: note || undefined,
     imageUrl,
+    via,
   });
 
-  return NextResponse.json({ ok: true, id: submission.id });
+  return NextResponse.json({ ok: true, id: submission.id, imageUrl });
 }
