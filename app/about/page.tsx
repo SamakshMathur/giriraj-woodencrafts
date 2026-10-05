@@ -38,7 +38,7 @@ export default function AboutPage() {
 
       <Section className="bg-bg pt-0">
         <div className="grid items-center gap-14 md:grid-cols-2">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-[#150d07] shadow-warm-sm">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-md bg-[#150d07] shadow-warm-sm">
             {/* object-contain, not object-cover: this is a square logo
                 with text and icons all the way to its edges, and the
                 container is a wide 4:3 box — cover would crop the crest
@@ -74,7 +74,7 @@ export default function AboutPage() {
             { name: "Reverence", image: "/images/mandirs/value-authenticity-lotus-panel.webp" },
           ].map(({ name: value, image }) => (
             <div key={value} className="text-center">
-              <div className="relative mx-auto aspect-square w-full max-w-xs overflow-hidden rounded-2xl shadow-warm-sm">
+              <div className="relative mx-auto aspect-square w-full max-w-xs overflow-hidden rounded-md shadow-warm-sm">
                 <EditableImage
                   id={`about-value-${value.toLowerCase()}-image`}
                   src={image}
@@ -106,7 +106,7 @@ export default function AboutPage() {
           {FACTORY_IMAGES.map((src, i) => (
             <div
               key={src}
-              className="relative aspect-[4/5] overflow-hidden rounded-2xl shadow-warm-sm"
+              className="relative aspect-[4/5] overflow-hidden rounded-md shadow-warm-sm"
             >
               <EditableImage
                 id={`about-factory-${i}`}

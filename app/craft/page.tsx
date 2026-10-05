@@ -27,7 +27,7 @@ export default function CraftPage() {
                 i % 2 === 1 ? "md:[&>*:first-child]:order-2" : ""
               }`}
             >
-              <div className="relative aspect-video overflow-hidden rounded-2xl shadow-warm-sm">
+              <div className="relative aspect-video overflow-hidden rounded-md shadow-warm-sm">
                 <EditableImage
                   id={`craft-stage-${stage.slug}`}
                   src={stage.image}

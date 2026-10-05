@@ -160,7 +160,7 @@ export default function Home() {
             <Link
               key={product.slug}
               href={`/products/${product.slug}`}
-              className="group relative aspect-[3/4] w-[280px] shrink-0 overflow-hidden rounded-2xl bg-card shadow-warm-sm md:w-[360px]"
+              className="group relative aspect-[3/4] w-[280px] shrink-0 overflow-hidden rounded-md bg-card shadow-warm-sm md:w-[360px]"
             >
               <EditableImage
                 id={`home-showcase-${product.slug}`}
@@ -190,7 +190,7 @@ export default function Home() {
           {CATEGORIES.map((category, i) => (
             <Reveal
               key={category.name}
-              className="group relative aspect-[4/5] overflow-hidden rounded-2xl bg-card shadow-warm-sm"
+              className="group relative aspect-[4/5] overflow-hidden rounded-md bg-card shadow-warm-sm"
               delay={i * 0.08}
             >
               <EditableImage
@@ -272,7 +272,7 @@ export default function Home() {
           {GALLERY_IMAGES.slice(0, 6).map((item, i) => (
             <Reveal
               key={item.src}
-              className="relative mb-4 overflow-hidden break-inside-avoid rounded-2xl bg-card shadow-warm-sm"
+              className="relative mb-4 overflow-hidden break-inside-avoid rounded-md bg-card shadow-warm-sm"
               style={{ aspectRatio: i % 2 === 0 ? "4/5" : "1/1" }}
               delay={i * 0.06}
             >
@@ -297,7 +297,7 @@ export default function Home() {
 
       {/* Video */}
       <Section className="bg-bg">
-        <div className="relative mx-auto aspect-video max-w-4xl overflow-hidden rounded-2xl bg-brand-secondary shadow-warm">
+        <div className="relative mx-auto aspect-video max-w-4xl overflow-hidden rounded-md bg-brand-secondary shadow-warm">
           <div className="flex h-full items-center justify-center text-white/70">
             <EditableText
               id="home-video-caption"
@@ -335,7 +335,7 @@ export default function Home() {
           ].map((testimonial, idx) => {
             const i = idx + 1;
             return (
-              <Reveal key={i} className="rounded-2xl bg-card p-8 shadow-warm-sm" delay={(i - 1) * 0.1}>
+              <Reveal key={i} className="rounded-md bg-card p-8 shadow-warm-sm" delay={(i - 1) * 0.1}>
                 <EditableText
                   id={`home-testimonial-${i}-quote`}
                   defaultValue={testimonial.quote}

@@ -22,20 +22,20 @@ export default function ContactPage() {
               <input
                 type="text"
                 placeholder="Full Name"
-                className="rounded-xl border border-border bg-card px-4 py-3 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-accent"
+                className="rounded-md border border-border bg-card px-4 py-3 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-accent"
               />
               <input
                 type="tel"
                 placeholder="Phone Number"
-                className="rounded-xl border border-border bg-card px-4 py-3 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-accent"
+                className="rounded-md border border-border bg-card px-4 py-3 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-accent"
               />
             </div>
             <input
               type="email"
               placeholder="Email"
-              className="w-full rounded-xl border border-border bg-card px-4 py-3 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-accent"
+              className="w-full rounded-md border border-border bg-card px-4 py-3 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-accent"
             />
-            <select className="w-full rounded-xl border border-border bg-card px-4 py-3 text-sm text-text focus:outline-none focus:ring-1 focus:ring-accent">
+            <select className="w-full rounded-md border border-border bg-card px-4 py-3 text-sm text-text focus:outline-none focus:ring-1 focus:ring-accent">
               <option>I&apos;m interested in&hellip;</option>
               <option>Requesting a Quote</option>
               <option>Video Consultation</option>
@@ -45,7 +45,7 @@ export default function ContactPage() {
             <textarea
               placeholder="Tell us about your space and vision"
               rows={5}
-              className="w-full rounded-xl border border-border bg-card px-4 py-3 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-accent"
+              className="w-full rounded-md border border-border bg-card px-4 py-3 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-accent"
             />
             <button
               type="submit"
@@ -56,7 +56,7 @@ export default function ContactPage() {
           </form>
 
           <div className="space-y-8">
-            <div className="flex aspect-video items-center justify-center rounded-2xl bg-brand-secondary/10 font-display text-xs uppercase tracking-widest2 text-muted shadow-warm-sm">
+            <div className="flex aspect-video items-center justify-center rounded-md bg-brand-secondary/10 font-display text-xs uppercase tracking-widest2 text-muted shadow-warm-sm">
               Map
             </div>
             <div className="space-y-3 text-sm text-text-secondary">

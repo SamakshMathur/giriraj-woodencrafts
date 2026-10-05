@@ -33,7 +33,7 @@ export function PasswordGate({
     <div className="flex min-h-screen items-center justify-center bg-bg px-6 py-32">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm rounded-2xl border border-border bg-card p-8 text-center shadow-warm"
+        className="w-full max-w-sm rounded-md border border-border bg-card p-8 text-center shadow-warm"
       >
         <p className="font-heading text-2xl text-text">{title}</p>
         <p className="mt-2 text-sm text-text-secondary">{description}</p>
@@ -47,7 +47,7 @@ export function PasswordGate({
           }}
           placeholder="Password"
           autoFocus
-          className={`mt-6 w-full rounded-xl border bg-bg px-4 py-3 text-center text-sm text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-accent ${
+          className={`mt-6 w-full rounded-md border bg-bg px-4 py-3 text-center text-sm text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-accent ${
             error ? "border-red-400" : "border-border"
           }`}
         />

@@ -66,7 +66,7 @@ export default function GalleryPage() {
             return (
               <Reveal
                 key={item.src}
-                className="relative mb-4 overflow-hidden break-inside-avoid rounded-2xl bg-card shadow-warm-sm"
+                className="relative mb-4 overflow-hidden break-inside-avoid rounded-md bg-card shadow-warm-sm"
                 style={{ aspectRatio: ["4/5", "1/1", "3/4"][i % 3] }}
                 delay={(i % 6) * 0.06}
               >

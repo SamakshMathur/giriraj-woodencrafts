@@ -90,7 +90,7 @@ export default function AdminPage() {
 
         <Link
           href="/admin/submissions"
-          className="mt-10 flex items-center justify-between rounded-2xl border border-accent bg-accent/10 p-6 shadow-warm-sm transition-transform duration-300 ease-reverent hover:-translate-y-0.5"
+          className="mt-10 flex items-center justify-between rounded-md border border-accent bg-accent/10 p-6 shadow-warm-sm transition-transform duration-300 ease-reverent hover:-translate-y-0.5"
         >
           <div>
             <p className="font-heading text-xl text-text">Custom Design Requests</p>
@@ -114,7 +114,7 @@ export default function AdminPage() {
             <Link
               key={page.href}
               href={page.href}
-              className="group rounded-2xl border border-border bg-card p-6 shadow-warm-sm transition-transform duration-300 ease-reverent hover:-translate-y-0.5"
+              className="group rounded-md border border-border bg-card p-6 shadow-warm-sm transition-transform duration-300 ease-reverent hover:-translate-y-0.5"
             >
               <p className="font-heading text-xl text-text">{page.label}</p>
               <p className="mt-2 text-sm text-text-secondary">{page.note}</p>
@@ -125,7 +125,7 @@ export default function AdminPage() {
           ))}
         </div>
 
-        <div className="mt-16 rounded-2xl border border-border bg-card p-6">
+        <div className="mt-16 rounded-md border border-border bg-card p-6">
           <p className="text-sm font-medium text-text">Reset</p>
           <p className="mt-2 max-w-xl text-sm text-text-secondary">
             Removes every image and text edit you&rsquo;ve made, reverting the

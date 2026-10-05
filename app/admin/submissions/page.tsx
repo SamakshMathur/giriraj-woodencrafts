@@ -137,9 +137,9 @@ export default function SubmissionsPage() {
           {submissions?.map((s) => (
             <div
               key={s.id}
-              className="grid gap-6 rounded-2xl border border-border bg-card p-6 shadow-warm-sm sm:grid-cols-[160px_1fr]"
+              className="grid gap-6 rounded-md border border-border bg-card p-6 shadow-warm-sm sm:grid-cols-[160px_1fr]"
             >
-              <div className="relative aspect-square overflow-hidden rounded-xl bg-brand-secondary/10">
+              <div className="relative aspect-square overflow-hidden rounded-md bg-brand-secondary/10">
                 {s.imageUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
