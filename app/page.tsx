@@ -426,12 +426,14 @@ export default function Home() {
           subtitle="Speak with our design experts or book a showroom visit."
         />
         <div className="mt-10 flex flex-wrap justify-center gap-4">
-          <Link
-            href="/contact"
+          <a
+            href={`https://wa.me/918290583377?text=${encodeURIComponent("Hi Giriraj, I'd like to talk to an expert about a mandir.")}`}
+            target="_blank"
+            rel="noopener noreferrer"
             className="rounded-full bg-brand px-8 py-3.5 text-sm text-white transition-all duration-300 hover:bg-brand-secondary hover:shadow-[0_0_28px_rgba(198,156,69,0.4)]"
           >
             Talk to Our Expert
-          </Link>
+          </a>
           <Link
             href="/customization"
             className="rounded-full border border-accent px-8 py-3.5 text-sm text-text transition-all duration-300 hover:bg-accent hover:text-brand-secondary hover:shadow-[0_0_28px_rgba(198,156,69,0.4)]"
