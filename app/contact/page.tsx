@@ -30,11 +30,6 @@ export default function ContactPage() {
                 className="rounded-md border border-border bg-card px-4 py-3 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-accent"
               />
             </div>
-            <input
-              type="email"
-              placeholder="Email"
-              className="w-full rounded-md border border-border bg-card px-4 py-3 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-accent"
-            />
             <select className="w-full rounded-md border border-border bg-card px-4 py-3 text-sm text-text focus:outline-none focus:ring-1 focus:ring-accent">
               <option>I&apos;m interested in&hellip;</option>
               <option>Requesting a Quote</option>
