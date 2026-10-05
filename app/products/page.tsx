@@ -36,7 +36,7 @@ export default function ProductsPage() {
         subtitle="Browse our handcrafted collections, or configure one entirely your own."
       />
 
-      <Section className="bg-bg pt-0">
+      <Section className="bg-bg pt-8 md:pt-10">
         <div className="flex flex-wrap gap-3 border-b border-border pb-10">
           {FILTERS.map((filter) => (
             <div key={filter.label} className="flex items-center gap-2">
