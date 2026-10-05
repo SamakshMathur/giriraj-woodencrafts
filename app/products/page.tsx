@@ -43,7 +43,7 @@ export default function ProductsPage() {
               <span className="text-xs uppercase tracking-widest2 text-muted">
                 {filter.label}
               </span>
-              <select className="rounded-full border border-border bg-card px-4 py-2 text-sm text-text focus:outline-none focus:ring-1 focus:ring-accent">
+              <select className="border border-border bg-card px-4 py-2 text-sm text-text focus:outline-none focus:ring-1 focus:ring-accent">
                 <option>All</option>
                 {filter.options.map((o) => (
                   <option key={o}>{o}</option>
@@ -53,23 +53,24 @@ export default function ProductsPage() {
           ))}
         </div>
 
-        <div className="mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {PRODUCTS.map((product, i) => (
             <Reveal key={product.slug} delay={i * 0.08}>
               <Link
                 href={`/products/${product.slug}`}
-                className="group block overflow-hidden rounded-2xl bg-card shadow-warm-sm transition-transform duration-500 ease-reverent hover:-translate-y-1"
+                className="group flex h-full flex-col border border-border bg-card transition-all duration-500 ease-reverent hover:-translate-y-1 hover:border-accent hover:shadow-warm"
               >
-                <div className="relative aspect-[3/4] overflow-hidden">
+                <div className="relative aspect-[4/5] overflow-hidden border-b border-border bg-brand-secondary">
                   <EditableImage
                     id={`products-card-${product.slug}`}
                     src={PRODUCTS_CARD_IMAGE_OVERRIDES[product.slug] ?? product.image}
                     alt={product.name}
-                    className="object-cover transition-transform duration-500 ease-reverent group-hover:scale-[1.03]"
+                    backdrop
+                    className="object-contain p-4 transition-transform duration-500 ease-reverent group-hover:scale-[1.03]"
                   />
                   <div className="pointer-events-none absolute inset-0 -translate-x-full skew-x-12 bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 ease-reverent group-hover:translate-x-full" />
                 </div>
-                <div className="p-6">
+                <div className="flex flex-1 flex-col p-6">
                 <EditableText
                   id={`product-${product.slug}-collection`}
                   defaultValue={product.collection}
@@ -88,6 +89,10 @@ export default function ProductsPage() {
                     as="p"
                     className="mt-1 text-sm text-text-secondary"
                   />
+                  <span className="mt-5 flex items-center justify-between border-t border-border pt-4 text-xs uppercase tracking-widest2 text-text">
+                    View details
+                    <span aria-hidden className="text-accent transition-transform duration-300 group-hover:translate-x-1">→</span>
+                  </span>
                 </div>
               </Link>
             </Reveal>

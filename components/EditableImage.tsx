@@ -27,12 +27,19 @@ export function EditableImage({
   src,
   alt,
   className = "",
+  backdrop = false,
 }: {
   id: string;
   /** Omit when there's no default photo yet (e.g. a slot waiting on real content). */
   src?: string;
   alt: string;
   className?: string;
+  /**
+   * Fill the frame with a soft, blurred copy of the same photo behind it.
+   * Pair with `object-contain` so the whole photo shows uncropped, whatever
+   * its shape, without leaving bare bars around it.
+   */
+  backdrop?: boolean;
 }) {
   const { isAdmin } = useAdminMode();
   const { images } = useOverrides();
@@ -95,6 +102,15 @@ export function EditableImage({
 
   return (
     <>
+      {effectiveSrc && backdrop && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={effectiveSrc}
+          alt=""
+          aria-hidden
+          className="absolute inset-0 h-full w-full scale-110 object-cover opacity-70 blur-2xl"
+        />
+      )}
       {effectiveSrc ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Section } from "@/components/Section";
 import { EditableText } from "@/components/EditableText";
 import { ProductImageCarousel, type CarouselSlide } from "@/components/ProductImageCarousel";
 import { getProductBySlug } from "@/lib/products";
@@ -103,87 +102,100 @@ export default async function ProductDetailPage({
 
   return (
     <>
-      {/* Hero — image and details side by side, not stacked full-width.
-          The photos here are portrait (ratio ~0.63-1.00); at full page
-          width that made the hero absurdly tall (a real UX problem,
-          flagged directly). Same aspect-[3/4] + object-cover as the
-          homepage card — still the identical crop — just constrained to
-          a proper column width instead of spanning the whole page, which
-          is what actually fixes the height, not another ratio change.
-          The image side is now a carousel (</> arrows) cycling through
-          all 6 shots instead of one static photo — see the thumbnail
-          grid this replaced, removed below. */}
-      <section className="pt-32 pb-4 md:pt-40">
+      {/* Product detail: framed gallery on the left, a boxed info panel on
+          the right that stays in view while the gallery scrolls on desktop.
+          Square edges and bordered cells throughout for a cleaner,
+          catalogue-style look. */}
+      <section className="pb-16 pt-28 md:pb-24 md:pt-32">
         <div className="mx-auto max-w-content px-6 md:px-10">
-          <div className="grid gap-10 md:grid-cols-2 md:items-center lg:gap-16">
-            <ProductImageCarousel slides={slides} />
+          <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-2 text-xs uppercase tracking-widest2 text-muted">
+            <Link href="/" className="transition-colors hover:text-accent">Home</Link>
+            <span aria-hidden>/</span>
+            <Link href="/products" className="transition-colors hover:text-accent">Products</Link>
+            <span aria-hidden>/</span>
+            <span className="text-text">{product.name}</span>
+          </nav>
 
-            <div>
-              <EditableText
-                id={`product-${product.slug}-collection`}
-                defaultValue={product.collection}
-                as="p"
-                className="text-xs uppercase tracking-widest2 text-accent"
-              />
-              <EditableText
-                id={`product-${product.slug}-name`}
-                defaultValue={product.name}
-                as="h1"
-                className="mt-3 font-heading text-4xl text-text md:text-5xl"
-              />
+          <div className="grid gap-8 lg:grid-cols-12 lg:items-start lg:gap-10">
+            <div className="lg:col-span-7">
+              <ProductImageCarousel slides={slides} />
+            </div>
 
-              <dl className="mt-8 divide-y divide-border border-t border-border">
-                {specs.map(([label, value]) => (
-                  <div key={label} className="flex justify-between py-3 text-sm">
-                    <dt className="text-text-secondary">{label}</dt>
-                    <dd className="font-medium text-text">{value}</dd>
-                  </div>
-                ))}
-              </dl>
+            <div className="border border-border bg-card lg:sticky lg:top-28 lg:col-span-5">
+              <div className="border-b border-border p-6 md:p-8">
+                <EditableText
+                  id={`product-${product.slug}-collection`}
+                  defaultValue={product.collection}
+                  as="p"
+                  className="text-xs uppercase tracking-widest2 text-accent"
+                />
+                <EditableText
+                  id={`product-${product.slug}-name`}
+                  defaultValue={product.name}
+                  as="h1"
+                  className="mt-3 font-heading text-4xl leading-tight text-text md:text-5xl"
+                />
+                <p className="mt-3 text-sm text-text-secondary">
+                  Handcrafted in {product.wood} · {product.dimensions}
+                </p>
+              </div>
 
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Link
-                  href="/contact"
-                  className="rounded-full bg-brand px-6 py-3 text-sm text-white transition-all hover:bg-brand-secondary hover:shadow-[0_0_24px_rgba(198,156,69,0.4)]"
-                >
-                  Request Quote
-                </Link>
-                <a
-                  href="https://wa.me/918290583377"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-full border border-accent px-6 py-3 text-sm text-text transition-all hover:bg-accent hover:text-brand-secondary hover:shadow-[0_0_24px_rgba(198,156,69,0.4)]"
-                >
-                  WhatsApp
-                </a>
+              <div className="p-6 md:p-8">
+                <h2 className="text-xs uppercase tracking-widest2 text-muted">Specifications</h2>
+                <dl className="mt-4 grid grid-cols-2 border-l border-t border-border">
+                  {specs.map(([label, value]) => (
+                    <div key={label} className="border-b border-r border-border p-4">
+                      <dt className="text-[10px] uppercase tracking-widest2 text-muted">{label}</dt>
+                      <dd className="mt-1.5 text-sm font-medium text-text">{value}</dd>
+                    </div>
+                  ))}
+                </dl>
+
+                <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                  <Link
+                    href="/contact"
+                    className="flex items-center justify-center bg-brand px-6 py-3.5 text-sm font-medium text-white transition-colors hover:bg-brand-secondary"
+                  >
+                    Request Quote
+                  </Link>
+                  <a
+                    href="https://wa.me/918290583377"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center border border-text/20 px-6 py-3.5 text-sm font-medium text-text transition-colors hover:border-accent hover:bg-accent hover:text-brand-secondary"
+                  >
+                    WhatsApp
+                  </a>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA — specs now live in the hero above, so this is just the
-          considered-purchase nudge, as a single centered banner instead
-          of a half-empty two-column row. */}
-      <Section className="bg-brand-secondary text-white">
-        <div className="mx-auto max-w-2xl text-center">
-          <EditableText
-            id="product-cta-title"
-            defaultValue="A High-Ticket Piece, Considered Fully"
-            as="h3"
-            className="font-heading text-3xl text-white"
-          />
-          <EditableText
-            id="product-cta-copy"
-            defaultValue="Every mandir is made to order. Speak with our experts or book a showroom visit before you decide."
-            as="p"
-            multiline
-            className="mt-4 text-sm leading-relaxed text-white/70"
-          />
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
+      {/* CTA, as a boxed panel inside the page width rather than a
+          full-bleed band. */}
+      <section className="px-6 pb-24 md:px-10 md:pb-32">
+        <div className="mx-auto grid max-w-content items-center gap-8 bg-brand-secondary p-8 md:grid-cols-[1fr_auto] md:p-12">
+          <div className="max-w-2xl">
+            <EditableText
+              id="product-cta-title"
+              defaultValue="A High-Ticket Piece, Considered Fully"
+              as="h3"
+              className="font-heading text-3xl text-white"
+            />
+            <EditableText
+              id="product-cta-copy"
+              defaultValue="Every mandir is made to order. Speak with our experts or book a showroom visit before you decide."
+              as="p"
+              multiline
+              className="mt-3 text-sm leading-relaxed text-white/70"
+            />
+          </div>
+          <div className="grid gap-3 sm:flex">
             <Link
               href="/contact"
-              className="rounded-full bg-accent px-8 py-3.5 text-sm text-brand-secondary transition-all duration-300 ease-reverent hover:scale-[1.02] hover:shadow-[0_0_28px_rgba(198,156,69,0.5)]"
+              className="text-center bg-accent px-8 py-3.5 text-sm font-medium text-brand-secondary transition-opacity hover:opacity-90"
             >
               Request Quote
             </Link>
@@ -191,13 +203,13 @@ export default async function ProductDetailPage({
               href="https://wa.me/918290583377"
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full border border-white/30 px-8 py-3.5 text-sm text-white transition-all duration-300 ease-reverent hover:border-white hover:bg-white/10"
+              className="text-center border border-white/30 px-8 py-3.5 text-sm font-medium text-white transition-colors hover:border-white hover:bg-white/10"
             >
               WhatsApp
             </a>
           </div>
         </div>
-      </Section>
+      </section>
     </>
   );
 }
