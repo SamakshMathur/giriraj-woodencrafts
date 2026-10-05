@@ -24,7 +24,14 @@ function getClientPromise(): Promise<MongoClient> {
     // network problem). This is a documented, common fix for this exact
     // symptom with MongoDB Atlas + Node.js.
     const client = new MongoClient(uri, { family: 4 });
-    globalForMongo._mongoClientPromise = client.connect();
+    // If connecting fails (e.g. the Atlas cluster is paused), forget the
+    // failed attempt so the next request tries again. Without this, a warm
+    // serverless instance kept returning the same rejected promise and
+    // stayed broken even after the cluster came back.
+    globalForMongo._mongoClientPromise = client.connect().catch((err) => {
+      globalForMongo._mongoClientPromise = undefined;
+      throw err;
+    });
   }
   return globalForMongo._mongoClientPromise;
 }
