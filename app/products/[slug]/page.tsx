@@ -4,6 +4,7 @@ import { EditableText } from "@/components/EditableText";
 import { ProductImageCarousel, type CarouselSlide } from "@/components/ProductImageCarousel";
 import { getProductBySlug } from "@/lib/products";
 import { GALLERY_IMAGES } from "@/lib/craft";
+import { whatsAppLink } from "@/lib/whatsapp";
 
 // No generateStaticParams here on purpose. This page has 44 EditableImage
 // slots across the 4 products (hero + 10 gallery labels each) — the exact
@@ -159,7 +160,7 @@ export default async function ProductDetailPage({
                     Request Quote
                   </Link>
                   <a
-                    href="https://wa.me/918290583377"
+                    href={whatsAppLink(`Hi Giriraj, I'm interested in the ${product.name} mandir (${product.dimensions}). Could you share the price and details?`)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center border border-text/20 px-6 py-3.5 text-sm font-medium text-text transition-colors hover:border-accent hover:bg-accent hover:text-brand-secondary"
@@ -200,7 +201,7 @@ export default async function ProductDetailPage({
               Request Quote
             </Link>
             <a
-              href="https://wa.me/918290583377"
+              href={whatsAppLink(`Hi Giriraj, I'm interested in the ${product.name} mandir (${product.dimensions}). Could you share the price and details?`)}
               target="_blank"
               rel="noopener noreferrer"
               className="text-center border border-white/30 px-8 py-3.5 text-sm font-medium text-white transition-colors hover:border-white hover:bg-white/10"

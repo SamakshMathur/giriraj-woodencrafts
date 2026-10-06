@@ -8,6 +8,7 @@ import { EditableText } from "@/components/EditableText";
 import { Reveal } from "@/components/Reveal";
 import { PRODUCTS } from "@/lib/products";
 import { CRAFT_STAGES, GALLERY_IMAGES } from "@/lib/craft";
+import { whatsAppLink } from "@/lib/whatsapp";
 
 // See app/about/page.tsx for why this is explicit here rather than relied
 // on cascading from app/template.tsx.
@@ -79,13 +80,13 @@ export default function Home() {
             <div className="mt-10 flex flex-wrap gap-4">
               <Link
                 href="/products"
-                className="rounded-full bg-accent px-7 py-3.5 text-sm text-brand-secondary transition-all duration-300 ease-reverent hover:scale-[1.02] hover:shadow-[0_0_28px_rgba(198,156,69,0.5)]"
+                className="rounded-md bg-accent px-7 py-3.5 text-sm text-brand-secondary transition-all duration-300 ease-reverent hover:scale-[1.02] hover:shadow-[0_0_28px_rgba(198,156,69,0.5)]"
               >
                 Explore Collection
               </Link>
               <Link
                 href="/customization"
-                className="rounded-full border border-white/40 px-7 py-3.5 text-sm text-white transition-all duration-300 hover:bg-white/10 hover:shadow-[0_0_24px_rgba(198,156,69,0.35)]"
+                className="rounded-md border border-white/40 px-7 py-3.5 text-sm text-white transition-all duration-300 hover:bg-white/10 hover:shadow-[0_0_24px_rgba(198,156,69,0.35)]"
               >
                 Customize Yours
               </Link>
@@ -199,6 +200,20 @@ export default function Home() {
                 alt={category.name}
                 className="object-cover object-top transition-transform duration-500 ease-reverent group-hover:scale-105"
               />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-4 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 pt-16 text-white">
+                <EditableText
+                  id={`home-category-${category.slug}-name`}
+                  defaultValue={category.name}
+                  as="h3"
+                  className="pointer-events-auto font-heading text-2xl leading-tight"
+                />
+                <span aria-hidden className="shrink-0 text-accent transition-transform duration-300 group-hover:translate-x-1">→</span>
+              </div>
+              <Link
+                href="/products"
+                aria-label={`View ${category.name}`}
+                className="absolute inset-0 z-[5]"
+              />
               {/* Polish-sweep: a soft light band passing over the photo on
                   hover, clipped by the card's own overflow-hidden — it can
                   never bleed past this card's edges. */}
@@ -214,15 +229,16 @@ export default function Home() {
           id="home-customize"
           eyebrow="Configure"
           title="Design a Mandir That Is Only Yours"
+          tone="light"
         />
         <div className="mt-14 flex flex-wrap items-center justify-center gap-3 text-xs uppercase tracking-widest2 text-white/70">
           {["Size", "Polishing", "Storage"].map(
             (step, i, arr) => (
               <span key={step} className="flex items-center gap-3">
-                <span className="rounded-full border border-white/30 px-4 py-2">
+                <span className="rounded-md border border-white/30 px-4 py-2">
                   {step}
                 </span>
-                {i < arr.length - 1 && <span className="text-accent">&darr;</span>}
+                {i < arr.length - 1 && <span className="text-accent">&rarr;</span>}
               </span>
             )
           )}
@@ -230,7 +246,7 @@ export default function Home() {
         <div className="mt-12 text-center">
           <Link
             href="/customization"
-            className="inline-block rounded-full bg-accent px-8 py-3.5 text-sm text-brand-secondary transition-all duration-300 ease-reverent hover:scale-[1.02] hover:shadow-[0_0_28px_rgba(198,156,69,0.5)]"
+            className="inline-block rounded-md bg-accent px-8 py-3.5 text-sm text-brand-secondary transition-all duration-300 ease-reverent hover:scale-[1.02] hover:shadow-[0_0_28px_rgba(198,156,69,0.5)]"
           >
             Start Customizing
           </Link>
@@ -295,20 +311,6 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* Video */}
-      <Section className="bg-bg">
-        <div className="relative mx-auto aspect-video max-w-4xl overflow-hidden rounded-md bg-brand-secondary shadow-warm">
-          <div className="flex h-full items-center justify-center text-white/70">
-            <EditableText
-              id="home-video-caption"
-              defaultValue="Cinematic Film · 60s"
-              as="span"
-              className="font-display text-xs uppercase tracking-widest2"
-            />
-          </div>
-        </div>
-      </Section>
-
       {/* Testimonials */}
       <Section className="bg-bg-secondary">
         <SectionHeading id="home-testimonials" eyebrow="Testimonials" title="Customer Stories" />
@@ -318,33 +320,43 @@ export default function Home() {
               quote:
                 "The mandir feels like it has always belonged in our home. The craftsmanship is beyond anything we imagined.",
               name: "Samaksh Mathur",
-              location: "City · Royal Collection",
+              location: "Royal Collection",
             },
             {
               quote:
                 "Every detail was handled with such care, from the first sketch to the final polish. It truly feels like a piece of our heritage.",
               name: "Aryan Goyal",
-              location: "City · Traditional Collection",
+              location: "Traditional Collection",
             },
             {
               quote:
                 "We wanted something authentic, not mass-produced. Giriraj Woodencrafts delivered exactly that, and more.",
               name: "Saksham Singhal",
-              location: "City · Modern Collection",
+              location: "Modern Collection",
             },
           ].map((testimonial, idx) => {
             const i = idx + 1;
             return (
-              <Reveal key={i} className="rounded-md bg-card p-8 shadow-warm-sm" delay={(i - 1) * 0.1}>
+              <Reveal key={i} className="flex flex-col rounded-md border border-border bg-card p-8" delay={(i - 1) * 0.1}>
+                <span aria-hidden className="mb-3 font-heading text-5xl leading-none text-accent">&ldquo;</span>
                 <EditableText
                   id={`home-testimonial-${i}-quote`}
                   defaultValue={testimonial.quote}
                   as="p"
                   multiline
-                  className="text-sm leading-relaxed text-text-secondary"
+                  className="mb-6 text-sm leading-relaxed text-text-secondary"
                 />
-                <div className="mt-6 flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-brand-secondary/20" />
+                <div className="mt-auto flex items-center gap-3 border-t border-border pt-6">
+                  <div
+                    aria-hidden
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/15 font-heading text-base text-accent"
+                  >
+                    {testimonial.name
+                      .split(" ")
+                      .map((part) => part[0])
+                      .slice(0, 2)
+                      .join("")}
+                  </div>
                   <div>
                     <EditableText
                       id={`home-testimonial-${i}-name`}
@@ -369,15 +381,19 @@ export default function Home() {
       {/* Promise */}
       <Section className="bg-bg">
         <SectionHeading id="home-promise" eyebrow="Our Promise" title="What You Can Count On" />
-        <div className="mt-16 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            "Lifetime craftsmanship support",
-            "Premium wood",
-            "Safe packaging",
-            "Nationwide delivery",
-          ].map((item, i) => (
-            <Reveal key={item} className="text-center" delay={i * 0.08}>
-              <div className="mx-auto mb-4 h-12 w-12 rounded-full border border-accent/40" />
+            { label: "Lifetime craftsmanship support", icon: "M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6l7-3z M9 12l2 2 4-4" },
+            { label: "Premium wood", icon: "M12 21V9 M12 9c0-3 2-6 6-6 0 4-3 6-6 6z M12 13c0-3-2-5-6-5 0 4 3 5 6 5z" },
+            { label: "Safe packaging", icon: "M3 7l9-4 9 4-9 4-9-4z M3 7v10l9 4 9-4V7 M12 11v10" },
+            { label: "Nationwide delivery", icon: "M3 6h11v9H3z M14 9h4l3 3v3h-7 M7 18a1.5 1.5 0 1 0 0 .01 M17 18a1.5 1.5 0 1 0 0 .01" },
+          ].map(({ label: item, icon }, i) => (
+            <Reveal key={item} className="rounded-md border border-border bg-card px-6 py-8 text-center" delay={i * 0.08}>
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-accent/40 text-accent">
+                <svg viewBox="0 0 24 24" aria-hidden className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d={icon} />
+                </svg>
+              </div>
               <EditableText
                 id={`home-promise-${i}`}
                 defaultValue={item}
@@ -394,10 +410,19 @@ export default function Home() {
         <SectionHeading id="home-faq" eyebrow="Questions" title="Frequently Asked" />
         <div className="mx-auto mt-14 max-w-2xl divide-y divide-border">
           {[
-            "How long does a custom mandir take to craft?",
-            "What wood options are available?",
-            "Do you deliver and install nationwide?",
-          ].map((q, i) => (
+            {
+              q: "How long does a custom mandir take to craft?",
+              a: "Every mandir is made to order. Most designs take 8–10 weeks from the confirmed design to dispatch, depending on size and how much carving is involved.",
+            },
+            {
+              q: "What wood options are available?",
+              a: "We mainly work in Burma Teak, Sheesham and Oak, with finishes from natural satin and matte walnut to antique gold trim and hand-gilded gold leaf. Tell us your preference and we'll guide you.",
+            },
+            {
+              q: "Do you deliver and install nationwide?",
+              a: "Yes, we deliver across India with protective packaging. Message us on WhatsApp with your city and we'll confirm the delivery timeline and installation for your location.",
+            },
+          ].map(({ q, a }, i) => (
             <details key={q} className="group py-5">
               <summary className="flex cursor-pointer list-none items-center justify-between text-sm text-text">
                 {q}
@@ -407,7 +432,7 @@ export default function Home() {
               </summary>
               <EditableText
                 id={`home-faq-${i}-answer`}
-                defaultValue="Answer coming soon."
+                defaultValue={a}
                 as="p"
                 multiline
                 className="mt-3 text-sm leading-relaxed text-text-secondary"
@@ -427,16 +452,16 @@ export default function Home() {
         />
         <div className="mt-10 flex flex-wrap justify-center gap-4">
           <a
-            href={`https://wa.me/918290583377?text=${encodeURIComponent("Hi Giriraj, I'd like to talk to an expert about a mandir.")}`}
+            href={whatsAppLink("Hi Giriraj, I'd like to talk to an expert about a mandir.")}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full bg-brand px-8 py-3.5 text-sm text-white transition-all duration-300 hover:bg-brand-secondary hover:shadow-[0_0_28px_rgba(198,156,69,0.4)]"
+            className="rounded-md bg-brand px-8 py-3.5 text-sm text-white transition-all duration-300 hover:bg-brand-secondary hover:shadow-[0_0_28px_rgba(198,156,69,0.4)]"
           >
             Talk to Our Expert
           </a>
           <Link
             href="/customization"
-            className="rounded-full border border-accent px-8 py-3.5 text-sm text-text transition-all duration-300 hover:bg-accent hover:text-brand-secondary hover:shadow-[0_0_28px_rgba(198,156,69,0.4)]"
+            className="rounded-md border border-accent px-8 py-3.5 text-sm text-text transition-all duration-300 hover:bg-accent hover:text-brand-secondary hover:shadow-[0_0_28px_rgba(198,156,69,0.4)]"
           >
             Request Quote
           </Link>

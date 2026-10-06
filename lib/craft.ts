@@ -1,12 +1,12 @@
 
-export const CRAFT_STAGES: { slug: string; name: string; image: string }[] = [
-  { slug: "wood-selection", name: "Wood Selection", image: "/images/mandirs/workshop-wood-selection.webp" },
-  { slug: "seasoning", name: "Seasoning", image: "/images/mandirs/workshop-seasoning.webp" },
-  { slug: "hand-carving", name: "Hand Carving", image: "/images/mandirs/close-up-carving.webp" },
-  { slug: "polishing", name: "Polishing", image: "/images/mandirs/vaikuntha-front.webp" },
-  { slug: "quality-inspection", name: "Quality Inspection", image: "/images/mandirs/craft-quality-inspection-workshop.webp" },
-  { slug: "packaging", name: "Packaging", image: "/images/mandirs/suvarna-front.webp" },
-  { slug: "delivery", name: "Delivery", image: "/images/mandirs/shreeji-front.webp" },
+export const CRAFT_STAGES: { slug: string; name: string; image: string; detail: string }[] = [
+  { slug: "wood-selection", name: "Wood Selection", image: "/images/mandirs/workshop-wood-selection.webp", detail: "Each log is chosen by hand for straight grain, density and colour. Only selected teak and premium hardwood make it to the workshop." },
+  { slug: "seasoning", name: "Seasoning", image: "/images/mandirs/workshop-seasoning.webp", detail: "The wood is dried slowly so it settles before carving. This keeps the finished mandir from warping or cracking in your home's climate." },
+  { slug: "hand-carving", name: "Hand Carving", image: "/images/mandirs/close-up-carving.webp", detail: "Artisans carve every motif by hand with chisels and mallets, following traditional temple proportions. No machine-stamped patterns." },
+  { slug: "polishing", name: "Polishing", image: "/images/mandirs/vaikuntha-front.webp", detail: "Surfaces are sanded and polished in layers by hand until the grain glows, then finished in the polish you chose." },
+  { slug: "quality-inspection", name: "Quality Inspection", image: "/images/mandirs/craft-quality-inspection-workshop.webp", detail: "Every joint, drawer and carved edge is checked before the piece is approved. Anything that isn't right goes back to the bench." },
+  { slug: "packaging", name: "Packaging", image: "/images/mandirs/suvarna-front.webp", detail: "Each mandir is wrapped and crated with protective padding, with delicate carvings braced separately for the journey." },
+  { slug: "delivery", name: "Delivery", image: "/images/mandirs/shreeji-front.webp", detail: "We deliver across India and coordinate the timing with you, so your mandir arrives safely and ready to be placed." },
 ];
 
 export const GALLERY_IMAGES: { src: string; label: string }[] = [

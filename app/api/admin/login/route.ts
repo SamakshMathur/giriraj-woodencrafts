@@ -6,6 +6,8 @@ export async function POST(req: NextRequest) {
   const password = body?.password;
 
   if (!checkPassword(password)) {
+    // Slows down automated password guessing.
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     return NextResponse.json({ ok: false }, { status: 401 });
   }
 

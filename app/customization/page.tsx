@@ -15,7 +15,7 @@ export default function CustomizationPage() {
         title="Design a Mandir That Is Only Yours"
         subtitle="Choose every detail — polishing, storage and lighting — and watch it come together."
       />
-      <Section className="bg-bg pt-0">
+      <Section className="bg-bg pt-8 md:pt-10">
         <Configurator />
       </Section>
     </>

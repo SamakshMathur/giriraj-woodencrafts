@@ -41,8 +41,15 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" data-theme="royal-walnut">
+    <html lang="en" data-theme="royal-walnut" suppressHydrationWarning>
       <head>
+        {/* Applies the visitor's saved colour theme before the page paints,
+            so it doesn't flash the default theme first on every load. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem("girraj-theme");if(t==="royal-walnut"||t==="divine-marble"||t==="midnight-sanctum")document.documentElement.setAttribute("data-theme",t)}catch(e){}`,
+          }}
+        />
         {/* Google tag (gtag.js) */}
         <script
           async

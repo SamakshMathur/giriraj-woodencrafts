@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { whatsAppLink } from "@/lib/whatsapp";
 
 const QUICK_LINKS = [
   { href: "/products", label: "Products" },
@@ -43,8 +44,23 @@ export function Footer() {
           <div>
             <p className="text-sm font-medium text-text">Reach Us</p>
             <ul className="mt-4 space-y-3 text-sm text-text-secondary">
-              <li>WhatsApp: +91 82905 83377</li>
-              <li>Phone: +91 88528 20399</li>
+              <li>
+                WhatsApp:{" "}
+                <a
+                  href={whatsAppLink()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-accent"
+                >
+                  +91 82905 83377
+                </a>
+              </li>
+              <li>
+                Phone:{" "}
+                <a href="tel:+918852820399" className="transition-colors hover:text-accent">
+                  +91 88528 20399
+                </a>
+              </li>
               <li>
                 <a
                   href="mailto:girirajwoodencrafts@gmail.com"
@@ -68,23 +84,19 @@ export function Footer() {
           </div>
 
           <div>
-            <p className="text-sm font-medium text-text">Newsletter</p>
+            <p className="text-sm font-medium text-text">Talk to Us</p>
             <p className="mt-4 text-sm text-text-secondary">
-              Stories of craftsmanship, once a month.
+              Questions about a design, size or delivery? Message us and an expert will reply.
             </p>
-            <form className="mt-4 flex gap-2">
-              <input
-                type="email"
-                placeholder="Your email"
-                className="w-full rounded-full border border-border bg-card px-4 py-2 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-accent"
-              />
-              <button
-                type="submit"
-                className="shrink-0 rounded-full bg-brand px-4 py-2 text-sm text-white transition-colors hover:bg-brand-secondary"
-              >
-                Join
-              </button>
-            </form>
+            <a
+              href={whatsAppLink("Hi Giriraj, I'd like to know more about your mandirs.")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-flex items-center gap-2 rounded-md bg-brand px-5 py-2.5 text-sm text-white transition-colors hover:bg-brand-secondary"
+            >
+              Chat on WhatsApp
+              <span aria-hidden>→</span>
+            </a>
           </div>
         </div>
 

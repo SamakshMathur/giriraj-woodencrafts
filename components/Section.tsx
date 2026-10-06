@@ -23,12 +23,15 @@ export function SectionHeading({
   title,
   subtitle,
   align = "center",
+  tone = "default",
 }: {
   id: string;
   eyebrow?: string;
   title: string;
   subtitle?: string;
   align?: "center" | "left";
+  /** "light" for headings placed on a dark background band. */
+  tone?: "default" | "light";
 }) {
   return (
     <Reveal className={align === "center" ? "mx-auto max-w-2xl text-center" : "max-w-2xl"}>
@@ -44,7 +47,9 @@ export function SectionHeading({
         id={`${id}-title`}
         defaultValue={title}
         as="h2"
-        className="font-heading text-4xl font-medium leading-tight text-text md:text-5xl"
+        className={`font-heading text-4xl font-medium leading-tight md:text-5xl ${
+          tone === "light" ? "text-white" : "text-text"
+        }`}
       />
       {subtitle && (
         <EditableText
@@ -52,7 +57,9 @@ export function SectionHeading({
           defaultValue={subtitle}
           as="p"
           multiline
-          className="mt-5 text-base leading-relaxed text-text-secondary md:text-lg"
+          className={`mt-5 text-base leading-relaxed md:text-lg ${
+            tone === "light" ? "text-white/70" : "text-text-secondary"
+          }`}
         />
       )}
     </Reveal>

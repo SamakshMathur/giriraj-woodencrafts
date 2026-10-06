@@ -1,9 +1,23 @@
 import { PageHero } from "@/components/PageHero";
 import { Section } from "@/components/Section";
+import { ContactForm } from "@/components/ContactForm";
+import { whatsAppLink } from "@/lib/whatsapp";
 
 // See app/about/page.tsx for why this is explicit here rather than relied
 // on cascading from app/template.tsx.
 export const dynamic = "force-dynamic";
+
+const CONTACT_ROWS: { label: string; value: string; href: string; external?: boolean }[] = [
+  { label: "WhatsApp", value: "+91 82905 83377", href: whatsAppLink(), external: true },
+  { label: "Phone", value: "+91 88528 20399", href: "tel:+918852820399" },
+  { label: "Email", value: "girirajwoodencrafts@gmail.com", href: "mailto:girirajwoodencrafts@gmail.com" },
+  {
+    label: "Instagram",
+    value: "@girirajwoodencrafts",
+    href: "https://www.instagram.com/girirajwoodencrafts?igsh=aGN6Z3lzc2Zwb3A1",
+    external: true,
+  },
+];
 
 export default function ContactPage() {
   return (
@@ -15,71 +29,48 @@ export default function ContactPage() {
         subtitle="Speak with our design experts or book a showroom visit."
       />
 
-      <Section className="bg-bg pt-0">
-        <div className="grid gap-14 md:grid-cols-2">
-          <form className="space-y-5">
-            <div className="grid gap-5 sm:grid-cols-2">
-              <input
-                type="text"
-                placeholder="Full Name"
-                className="rounded-md border border-border bg-card px-4 py-3 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-accent"
-              />
-              <input
-                type="tel"
-                placeholder="Phone Number"
-                className="rounded-md border border-border bg-card px-4 py-3 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-accent"
-              />
-            </div>
-            <select className="w-full rounded-md border border-border bg-card px-4 py-3 text-sm text-text focus:outline-none focus:ring-1 focus:ring-accent">
-              <option>I&apos;m interested in&hellip;</option>
-              <option>Requesting a Quote</option>
-              <option>Video Consultation</option>
-              <option>Booking a Showroom Visit</option>
-              <option>Bulk / Temple Setup Order</option>
-            </select>
-            <textarea
-              placeholder="Tell us about your space and vision"
-              rows={5}
-              className="w-full rounded-md border border-border bg-card px-4 py-3 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-accent"
-            />
-            <button
-              type="submit"
-              className="w-full rounded-full bg-brand py-3.5 text-sm text-white transition-all hover:bg-brand-secondary hover:shadow-[0_0_24px_rgba(198,156,69,0.4)] sm:w-auto sm:px-10"
-            >
-              Send Enquiry
-            </button>
-          </form>
+      <Section className="bg-bg pt-8 md:pt-10">
+        <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:gap-14">
+          <div>
+            <h2 className="font-heading text-3xl text-text">Send us an enquiry</h2>
+            <p className="mb-6 mt-2 text-sm text-text-secondary">
+              Tell us what you have in mind and we&rsquo;ll get back to you on WhatsApp.
+            </p>
+            <ContactForm />
+          </div>
 
-          <div className="space-y-8">
-            <div className="flex aspect-video items-center justify-center rounded-md bg-brand-secondary/10 font-display text-xs uppercase tracking-widest2 text-muted shadow-warm-sm">
-              Map
+          <aside className="h-fit border border-border bg-card">
+            <div className="border-b border-border p-6 md:p-8">
+              <p className="text-xs uppercase tracking-widest2 text-accent">Reach us directly</p>
+              <p className="mt-2 font-heading text-2xl text-text">We&rsquo;re a message away</p>
             </div>
-            <div className="space-y-3 text-sm text-text-secondary">
-              <p>
-                <span className="text-text">Workshop &amp; Showroom</span>
-                <br />
-                Address line, City, State, PIN
-              </p>
-              <p>
-                <span className="text-text">Phone</span>
-                <br />
-                +91 82905 83377
-              </p>
-              <p>
-                <span className="text-text">Email</span>
-                <br />
-                hello@giriraj.com
-              </p>
+            <dl className="divide-y divide-border">
+              {CONTACT_ROWS.map((row) => (
+                <div key={row.label} className="px-6 py-4 md:px-8">
+                  <dt className="text-[10px] uppercase tracking-widest2 text-muted">{row.label}</dt>
+                  <dd className="mt-1 text-sm">
+                    <a
+                      href={row.href}
+                      {...(row.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                      className="break-all text-text transition-colors hover:text-accent"
+                    >
+                      {row.value}
+                    </a>
+                  </dd>
+                </div>
+              ))}
+            </dl>
+            <div className="border-t border-border p-6 md:p-8">
               <a
-                href="https://wa.me/918290583377"
+                href={whatsAppLink("Hi Giriraj, I'd like to know more about your mandirs.")}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block rounded-full border border-accent px-6 py-2.5 text-sm text-text transition-all hover:bg-accent hover:text-brand-secondary hover:shadow-[0_0_24px_rgba(198,156,69,0.4)]"
+                className="flex w-full items-center justify-center rounded-md bg-[#25D366] px-6 py-3 text-sm font-medium text-[#0b3d20] transition-opacity hover:opacity-90"
               >
                 Chat on WhatsApp
               </a>
             </div>
-          </div>
+          </aside>
         </div>
       </Section>
     </>

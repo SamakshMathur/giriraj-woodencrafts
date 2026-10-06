@@ -58,7 +58,7 @@ export function PasswordGate({
         <button
           type="submit"
           disabled={submitting}
-          className="mt-6 w-full rounded-full bg-brand py-3 text-sm text-white transition-colors hover:bg-brand-secondary disabled:opacity-50"
+          className="mt-6 w-full rounded-md bg-brand py-3 text-sm text-white transition-colors hover:bg-brand-secondary disabled:opacity-50"
         >
           {submitting ? "Checking…" : "Unlock"}
         </button>

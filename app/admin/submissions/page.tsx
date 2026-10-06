@@ -12,6 +12,7 @@ const STEP_LABELS: Record<string, string> = {
   polishing: "Polishing",
   storage: "Storage",
   lighting: "Lighting",
+  interest: "Interested in",
 };
 
 function formatDate(iso: string) {
@@ -120,7 +121,7 @@ export default function SubmissionsPage() {
           </div>
           <button
             onClick={load}
-            className="rounded-full border border-border px-5 py-2.5 text-sm text-text-secondary transition-colors hover:border-accent hover:text-text"
+            className="rounded-md border border-border px-5 py-2.5 text-sm text-text-secondary transition-colors hover:border-accent hover:text-text"
           >
             Refresh
           </button>
@@ -175,7 +176,7 @@ export default function SubmissionsPage() {
                     <p className="mt-1 text-xs text-muted">{formatDate(s.createdAt)}</p>
                   </div>
                   <span
-                    className={`shrink-0 rounded-full px-3 py-1 text-xs uppercase tracking-widest2 ${
+                    className={`shrink-0 rounded-md px-3 py-1 text-xs uppercase tracking-widest2 ${
                       s.status === "new"
                         ? "bg-accent text-brand-secondary"
                         : "bg-accent-2/20 text-accent-2"
@@ -190,7 +191,7 @@ export default function SubmissionsPage() {
                     {Object.entries(s.selections).map(([key, value]) => (
                       <span
                         key={key}
-                        className="rounded-full border border-border px-3 py-1 text-xs text-text-secondary"
+                        className="rounded-md border border-border px-3 py-1 text-xs text-text-secondary"
                       >
                         {STEP_LABELS[key] ?? key}: <span className="text-text">{value}</span>
                       </span>
@@ -210,7 +211,7 @@ export default function SubmissionsPage() {
                     href={`https://wa.me/91${s.phone.replace(/\D/g, "").slice(-10)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="rounded-full bg-brand px-5 py-2 text-xs text-white transition-colors hover:bg-brand-secondary"
+                    className="rounded-md bg-brand px-5 py-2 text-xs text-white transition-colors hover:bg-brand-secondary"
                   >
                     WhatsApp
                   </a>
@@ -218,14 +219,14 @@ export default function SubmissionsPage() {
                   <button
                     onClick={() => toggleStatus(s)}
                     disabled={busyId === s.id}
-                    className="rounded-full border border-accent px-5 py-2 text-xs text-text transition-colors hover:bg-accent hover:text-brand-secondary disabled:opacity-50"
+                    className="rounded-md border border-accent px-5 py-2 text-xs text-text transition-colors hover:bg-accent hover:text-brand-secondary disabled:opacity-50"
                   >
                     Mark as {s.status === "new" ? "Contacted" : "New"}
                   </button>
                   <button
                     onClick={() => remove(s)}
                     disabled={busyId === s.id}
-                    className="rounded-full border border-border px-5 py-2 text-xs text-text-secondary transition-colors hover:border-red-400 hover:text-red-500 disabled:opacity-50"
+                    className="rounded-md border border-border px-5 py-2 text-xs text-text-secondary transition-colors hover:border-red-400 hover:text-red-500 disabled:opacity-50"
                   >
                     Delete
                   </button>

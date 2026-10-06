@@ -82,7 +82,7 @@ export default function AdminPage() {
           </div>
           <button
             onClick={logout}
-            className="rounded-full border border-border px-5 py-2.5 text-sm text-text-secondary transition-colors hover:border-accent hover:text-text"
+            className="rounded-md border border-border px-5 py-2.5 text-sm text-text-secondary transition-colors hover:border-accent hover:text-text"
           >
             Turn off edit mode
           </button>
@@ -101,7 +101,7 @@ export default function AdminPage() {
           </div>
           <div className="flex shrink-0 items-center gap-3">
             {newRequestCount !== null && newRequestCount > 0 && (
-              <span className="rounded-full bg-accent px-3 py-1 text-xs font-medium text-brand-secondary">
+              <span className="rounded-md bg-accent px-3 py-1 text-xs font-medium text-brand-secondary">
                 {newRequestCount} new
               </span>
             )}
@@ -134,7 +134,7 @@ export default function AdminPage() {
           <button
             onClick={handleResetAll}
             disabled={resetting}
-            className="mt-4 rounded-full border border-accent px-6 py-2.5 text-sm text-text transition-colors hover:bg-accent hover:text-brand-secondary disabled:opacity-50"
+            className="mt-4 rounded-md border border-accent px-6 py-2.5 text-sm text-text transition-colors hover:bg-accent hover:text-brand-secondary disabled:opacity-50"
           >
             {resetDone ? "Done — reloading…" : resetting ? "Resetting…" : "Reset everything to default"}
           </button>

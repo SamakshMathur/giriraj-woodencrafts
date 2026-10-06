@@ -36,7 +36,7 @@ export default function AboutPage() {
         subtitle="A family of woodworkers, three generations deep."
       />
 
-      <Section className="bg-bg pt-0">
+      <Section className="bg-bg pt-8 md:pt-10">
         <div className="grid items-center gap-14 md:grid-cols-2">
           <div className="relative aspect-[4/3] overflow-hidden rounded-md bg-[#150d07] shadow-warm-sm">
             {/* object-contain, not object-cover: this is a square logo
@@ -69,10 +69,22 @@ export default function AboutPage() {
         <SectionHeading id="about-values" eyebrow="Values" title="What We Stand For" />
         <div className="mt-16 grid gap-10 sm:grid-cols-3">
           {[
-            { name: "Authenticity", image: "/images/mandirs/value-reverence-deity-panel.webp" },
-            { name: "Patience", image: "/images/mandirs/value-patience-floral-panel.webp" },
-            { name: "Reverence", image: "/images/mandirs/value-authenticity-lotus-panel.webp" },
-          ].map(({ name: value, image }) => (
+            {
+              name: "Authenticity",
+              image: "/images/mandirs/value-reverence-deity-panel.webp",
+              detail: "Real hardwood and genuine hand-carving, so every motif carries the mark of the artisan who made it.",
+            },
+            {
+              name: "Patience",
+              image: "/images/mandirs/value-patience-floral-panel.webp",
+              detail: "Wood is seasoned before it is carved and every surface is finished by hand. We take the time a sacred piece deserves.",
+            },
+            {
+              name: "Reverence",
+              image: "/images/mandirs/value-authenticity-lotus-panel.webp",
+              detail: "A mandir is a home for the divine. Its proportions, motifs and finishes follow traditional temple aesthetics.",
+            },
+          ].map(({ name: value, image, detail }) => (
             <div key={value} className="text-center">
               <div className="relative mx-auto aspect-square w-full max-w-xs overflow-hidden rounded-md shadow-warm-sm">
                 <EditableImage
@@ -90,7 +102,7 @@ export default function AboutPage() {
               />
               <EditableText
                 id={`about-value-${value.toLowerCase()}-detail`}
-                defaultValue="Detail on this value coming soon."
+                defaultValue={detail}
                 as="p"
                 multiline
                 className="mt-3 text-sm leading-relaxed text-text-secondary"

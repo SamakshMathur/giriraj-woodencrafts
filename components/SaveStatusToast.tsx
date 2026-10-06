@@ -41,7 +41,7 @@ export function SaveStatusProvider({ children }: { children: React.ReactNode }) 
       {status && (
         <div
           role="status"
-          className={`fixed bottom-6 left-1/2 z-[100] -translate-x-1/2 rounded-full px-5 py-2.5 text-sm font-medium text-white shadow-warm transition-all duration-300 ${
+          className={`fixed bottom-6 left-1/2 z-[100] -translate-x-1/2 rounded-md px-5 py-2.5 text-sm font-medium text-white shadow-warm transition-all duration-300 ${
             status.kind === "error"
               ? "bg-red-500"
               : status.kind === "saved"

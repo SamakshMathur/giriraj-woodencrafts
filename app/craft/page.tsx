@@ -18,7 +18,7 @@ export default function CraftPage() {
         subtitle="Every mandir passes through the hands of artisans carrying generations of technique."
       />
 
-      <Section className="bg-bg pt-0">
+      <Section className="bg-bg pt-8 md:pt-10">
         <div className="space-y-24">
           {CRAFT_STAGES.map((stage, i) => (
             <div
@@ -47,7 +47,7 @@ export default function CraftPage() {
                 />
                 <EditableText
                   id={`craft-stage-${stage.slug}-detail`}
-                  defaultValue="Detail on this stage of the journey coming soon."
+                  defaultValue={stage.detail}
                   as="p"
                   multiline
                   className="mt-4 max-w-md text-sm leading-relaxed text-text-secondary"

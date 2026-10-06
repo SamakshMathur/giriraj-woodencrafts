@@ -3,8 +3,7 @@
 import { useState } from "react";
 import { useSaveStatus } from "@/components/SaveStatusToast";
 import { convertToWebp } from "@/lib/convertToWebp";
-
-const WHATSAPP_NUMBER = "918290583377";
+import { WHATSAPP_NUMBER } from "@/lib/whatsapp";
 
 const STEPS: { key: string; label: string; options: string[] }[] = [
   { key: "size", label: "Choose Size", options: ["Compact", "Standard", "Grand"] },
@@ -260,7 +259,7 @@ export function Configurator() {
             <button
               key={s.key}
               onClick={() => setActiveStep(i)}
-              className={`rounded-full border px-4 py-1.5 text-xs transition-colors duration-300 ${
+              className={`rounded-md border px-4 py-1.5 text-xs transition-colors duration-300 ${
                 i === activeStep
                   ? "border-accent bg-accent text-brand-secondary"
                   : selections[s.key]
@@ -294,7 +293,7 @@ export function Configurator() {
           <button
             onClick={handleSubmit}
             disabled={submitting}
-            className="mt-10 w-full rounded-full bg-brand py-4 text-sm text-white transition-all hover:bg-brand-secondary hover:shadow-[0_0_24px_rgba(198,156,69,0.4)] disabled:opacity-50 sm:w-auto sm:px-10"
+            className="mt-10 w-full rounded-md bg-brand py-4 text-sm text-white transition-all hover:bg-brand-secondary hover:shadow-[0_0_24px_rgba(198,156,69,0.4)] disabled:opacity-50 sm:w-auto sm:px-10"
           >
             {submitting ? "Sending…" : "Get Quote"}
           </button>

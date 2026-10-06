@@ -137,7 +137,7 @@ export function EditableImage({
             effectiveSrc ? "opacity-0 hover:opacity-100" : "opacity-100"
           } ${dragOver ? "bg-black/75 opacity-100" : "bg-black/60"}`}
         >
-          <span className="rounded-full border border-white/40 bg-black/40 px-3 py-1.5">
+          <span className="rounded-md border border-white/40 bg-black/40 px-3 py-1.5">
             {uploading
               ? "Uploading…"
               : dragOver

@@ -1,4 +1,6 @@
+import { ObjectId } from "mongodb";
 import { getDb } from "./db";
+import { deleteImage } from "./images";
 
 export type SubmissionStatus = "new" | "contacted";
 
@@ -57,5 +59,9 @@ export async function updateSubmissionStatus(id: string, status: SubmissionStatu
 
 export async function deleteSubmission(id: string): Promise<void> {
   const db = await getDb();
-  await db.collection<SubmissionDoc>(COLLECTION).deleteOne({ _id: id });
+  const removed = await db.collection<SubmissionDoc>(COLLECTION).findOneAndDelete({ _id: id });
+  // Also remove the uploaded reference photo, so deleted requests don't
+  // leave orphaned files filling up the database's storage.
+  const fileId = removed?.imageUrl?.match(/\/api\/images\/([0-9a-f]{24})$/)?.[1];
+  if (fileId) await deleteImage(new ObjectId(fileId));
 }

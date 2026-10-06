@@ -1,8 +1,9 @@
-const WHATSAPP_NUMBER = "918290583377";
+import { whatsAppLink } from "@/lib/whatsapp";
+
 const DEFAULT_MESSAGE = "Hi Giriraj, I'd like to know more about your mandirs.";
 
 export function WhatsAppButton() {
-  const href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(DEFAULT_MESSAGE)}`;
+  const href = whatsAppLink(DEFAULT_MESSAGE);
 
   return (
     <a

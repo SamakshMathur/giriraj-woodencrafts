@@ -23,7 +23,11 @@ function getClientPromise(): Promise<MongoClient> {
     // error showed up from Vercel's own servers too, ruling out a local
     // network problem). This is a documented, common fix for this exact
     // symptom with MongoDB Atlas + Node.js.
-    const client = new MongoClient(uri, { family: 4 });
+    // serverSelectionTimeoutMS: fail after 5s instead of the driver's
+    // default 30s. Every page reads admin overrides through here, so with
+    // the default a database outage made every page hang for 30 seconds
+    // before falling back to default content.
+    const client = new MongoClient(uri, { family: 4, serverSelectionTimeoutMS: 5000 });
     // If connecting fails (e.g. the Atlas cluster is paused), forget the
     // failed attempt so the next request tries again. Without this, a warm
     // serverless instance kept returning the same rejected promise and
