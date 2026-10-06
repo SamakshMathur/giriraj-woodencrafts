@@ -22,7 +22,11 @@
   ],
   "observability": {
     "enabled": true
-  }
+  },
+  // Keep variables set in the Cloudflare dashboard when deploying from Git.
+  // Without this, each deploy deletes dashboard "Variables" (not Secrets)
+  // that aren't listed in this file, e.g. MONGODB_URI if added as a Variable.
+  "keep_vars": true
   // Secrets are NOT stored here. Set them in the Cloudflare dashboard
   // (Worker > Settings > Variables and Secrets): MONGODB_URI, ADMIN_PASSWORD.
 }
