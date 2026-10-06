@@ -1,37 +1,57 @@
 import { MongoClient, type Db } from "mongodb";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 
-// Serverless functions can be reused ("warm") across requests, and each
-// fresh MongoClient opens its own connection pool — without caching, a
-// warm function would open a new pool on every invocation and eventually
-// exhaust the database's connection limit. Caching the client (and the
-// connect() promise, not just the client, so concurrent requests during
-// a cold start all await the same connection attempt instead of racing
-// to open several) is the standard pattern for Mongo + serverless.
-const globalForMongo = global as unknown as { _mongoClientPromise?: Promise<MongoClient> };
+// family: 4 forces IPv4 resolution. Without it, Node tries IPv6 first
+// against Atlas's *.mongodb.net hosts, which surfaced as a confusing
+// TLS-layer failure ("tlsv1 alert internal error" / SSL alert 80).
+// serverSelectionTimeoutMS: fail after 5s instead of the driver's default
+// 30s. Every page reads admin overrides through here, so with the default
+// a database outage made every page hang for 30 seconds before falling
+// back to default content.
+const CLIENT_OPTIONS = { family: 4 as const, serverSelectionTimeoutMS: 5000 };
 
-function getClientPromise(): Promise<MongoClient> {
+function getUri(): string {
   const uri = process.env.MONGODB_URI;
   if (!uri) {
     throw new Error("MONGODB_URI is not set");
   }
+  return uri;
+}
+
+/** True when running inside Cloudflare Workers (the OpenNext build). */
+const isCloudflareWorkers =
+  typeof navigator !== "undefined" && navigator.userAgent === "Cloudflare-Workers";
+
+// --- Cloudflare Workers -----------------------------------------------
+// Workers forbid reusing a socket opened by one request in a later
+// request: the later request waits forever and the runtime cancels it.
+// So on Workers, each request gets its own client, shared only between
+// the lookups of that one request (keyed by the request's context object).
+const clientsByRequest = new WeakMap<object, Promise<MongoClient>>();
+
+function getRequestClient(): Promise<MongoClient> {
+  const { ctx } = getCloudflareContext();
+  let promise = clientsByRequest.get(ctx);
+  if (!promise) {
+    promise = new MongoClient(getUri(), CLIENT_OPTIONS).connect();
+    clientsByRequest.set(ctx, promise);
+  }
+  return promise;
+}
+
+// --- Node (Vercel, `next start`, `next dev`) -------------------------
+// Serverless functions are reused ("warm") across requests, and each
+// MongoClient opens its own connection pool, so the client is cached for
+// the life of the process. The connect() promise itself is cached so
+// concurrent requests during a cold start share one connection attempt.
+const globalForMongo = global as unknown as { _mongoClientPromise?: Promise<MongoClient> };
+
+function getSharedClient(): Promise<MongoClient> {
   if (!globalForMongo._mongoClientPromise) {
-    // family: 4 forces IPv4 resolution. Without it, Node tries IPv6 first
-    // against Atlas's *.mongodb.net hosts, which surfaced as a confusing
-    // TLS-layer failure ("tlsv1 alert internal error" / SSL alert 80)
-    // rather than a connectivity error — reproduced identically from two
-    // different networks (this only started making sense once the same
-    // error showed up from Vercel's own servers too, ruling out a local
-    // network problem). This is a documented, common fix for this exact
-    // symptom with MongoDB Atlas + Node.js.
-    // serverSelectionTimeoutMS: fail after 5s instead of the driver's
-    // default 30s. Every page reads admin overrides through here, so with
-    // the default a database outage made every page hang for 30 seconds
-    // before falling back to default content.
-    const client = new MongoClient(uri, { family: 4, serverSelectionTimeoutMS: 5000 });
+    const client = new MongoClient(getUri(), CLIENT_OPTIONS);
     // If connecting fails (e.g. the Atlas cluster is paused), forget the
-    // failed attempt so the next request tries again. Without this, a warm
-    // serverless instance kept returning the same rejected promise and
-    // stayed broken even after the cluster came back.
+    // failed attempt so the next request tries again instead of reusing
+    // the rejected promise forever.
     globalForMongo._mongoClientPromise = client.connect().catch((err) => {
       globalForMongo._mongoClientPromise = undefined;
       throw err;
@@ -41,6 +61,6 @@ function getClientPromise(): Promise<MongoClient> {
 }
 
 export async function getDb(): Promise<Db> {
-  const client = await getClientPromise();
+  const client = await (isCloudflareWorkers ? getRequestClient() : getSharedClient());
   return client.db();
 }

@@ -1,0 +1,28 @@
+// Cloudflare Workers config for the site, built with the OpenNext adapter
+// (@opennextjs/cloudflare). The Worker is generated into .open-next/ by
+// `npm run cf:build`; static files are served from .open-next/assets.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "giriraj-woodencrafts",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-10-01",
+  // nodejs_compat is required: Next.js and the MongoDB driver use Node APIs
+  // (net/tls sockets, crypto, streams).
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      // Lets the Worker call itself, used by OpenNext for caching.
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "giriraj-woodencrafts"
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+  // Secrets are NOT stored here. Set them in the Cloudflare dashboard
+  // (Worker > Settings > Variables and Secrets): MONGODB_URI, ADMIN_PASSWORD.
+}
