@@ -1,16 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isAdminRequest } from "@/lib/adminAuth";
+import { withErrorHandling } from "@/lib/api";
 import { getSubmissions, updateSubmissionStatus, deleteSubmission } from "@/lib/submissions";
 
-export async function GET() {
+export const GET = withErrorHandling(async () => {
   if (!(await isAdminRequest())) {
     return NextResponse.json({ ok: false }, { status: 401 });
   }
   const submissions = await getSubmissions();
   return NextResponse.json({ submissions });
-}
+});
 
-export async function PATCH(req: NextRequest) {
+export const PATCH = withErrorHandling(async (req: NextRequest) => {
   if (!(await isAdminRequest())) {
     return NextResponse.json({ ok: false }, { status: 401 });
   }
@@ -21,9 +22,9 @@ export async function PATCH(req: NextRequest) {
   }
   await updateSubmissionStatus(id, status);
   return NextResponse.json({ ok: true });
-}
+});
 
-export async function DELETE(req: NextRequest) {
+export const DELETE = withErrorHandling(async (req: NextRequest) => {
   if (!(await isAdminRequest())) {
     return NextResponse.json({ ok: false }, { status: 401 });
   }
@@ -34,4 +35,4 @@ export async function DELETE(req: NextRequest) {
   }
   await deleteSubmission(id);
   return NextResponse.json({ ok: true });
-}
+});

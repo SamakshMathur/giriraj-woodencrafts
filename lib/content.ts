@@ -17,33 +17,55 @@ type ImageDoc = { _id: string; fileId: ObjectId | null; updatedAt: Date };
 // no application-level locking needed.
 
 // Reads degrade to "no overrides" on a DB outage instead of crashing the
-// page — a transient connectivity hiccup (including at `next build` time,
-// when Next.js prerenders a static /_not-found fallback that still goes
-// through this same template) should show default content, not a 500.
+// page: a connectivity hiccup should show default content, not a 500.
 // Writes (below) deliberately do NOT catch errors: a failed save must
 // surface as a failure to the admin, not silently pretend to succeed.
-export async function getTextOverrides(): Promise<TextOverrides> {
+async function readOverrides(): Promise<{ text: TextOverrides; images: ImageOverrides }> {
+  const db = await getDb();
+  const [textDocs, imageDocs] = await Promise.all([
+    db.collection<TextDoc>(TEXT_COLLECTION).find().toArray(),
+    db.collection<ImageDoc>(IMAGE_COLLECTION).find().toArray(),
+  ]);
+  const text: TextOverrides = {};
+  for (const doc of textDocs) text[doc._id] = doc.value;
+  const images: ImageOverrides = {};
+  for (const doc of imageDocs) images[doc._id] = doc.fileId ? imageUrl(doc.fileId) : null;
+  return { text, images };
+}
+
+// Every page reads the overrides, and on Cloudflare a database round trip
+// costs one to two seconds, so the result is kept in memory for a short
+// time. Visitors see an admin edit within OVERRIDES_TTL_MS; the admin's own
+// pages always read fresh (see app/template.tsx). Only plain data is
+// cached, never a database connection.
+const OVERRIDES_TTL_MS = 60_000;
+const FAILURE_TTL_MS = 15_000;
+let overridesCache: { value: { text: TextOverrides; images: ImageOverrides }; expiresAt: number } | null =
+  null;
+
+export async function getOverrides({ fresh = false } = {}): Promise<{
+  text: TextOverrides;
+  images: ImageOverrides;
+}> {
+  const now = Date.now();
+  if (!fresh && overridesCache && overridesCache.expiresAt > now) return overridesCache.value;
   try {
-    const db = await getDb();
-    const docs = await db.collection<TextDoc>(TEXT_COLLECTION).find().toArray();
-    const result: TextOverrides = {};
-    for (const doc of docs) result[doc._id] = doc.value;
-    return result;
-  } catch {
-    return {};
+    const value = await readOverrides();
+    overridesCache = { value, expiresAt: now + OVERRIDES_TTL_MS };
+    return value;
+  } catch (err) {
+    console.error("Could not load overrides, showing defaults:", err);
+    // Remember the failure briefly so an outage doesn't make every page
+    // wait for the database timeout.
+    const value = overridesCache?.value ?? { text: {}, images: {} };
+    overridesCache = { value, expiresAt: now + FAILURE_TTL_MS };
+    return value;
   }
 }
 
-export async function getImageOverrides(): Promise<ImageOverrides> {
-  try {
-    const db = await getDb();
-    const docs = await db.collection<ImageDoc>(IMAGE_COLLECTION).find().toArray();
-    const result: ImageOverrides = {};
-    for (const doc of docs) result[doc._id] = doc.fileId ? imageUrl(doc.fileId) : null;
-    return result;
-  } catch {
-    return {};
-  }
+/** Called after any admin write so this instance serves the change at once. */
+function invalidateOverrides(): void {
+  overridesCache = null;
 }
 
 export async function setTextOverride(id: string, value: string): Promise<void> {
@@ -51,16 +73,19 @@ export async function setTextOverride(id: string, value: string): Promise<void> 
   await db
     .collection<TextDoc>(TEXT_COLLECTION)
     .updateOne({ _id: id }, { $set: { value, updatedAt: new Date() } }, { upsert: true });
+  invalidateOverrides();
 }
 
 export async function clearTextOverride(id: string): Promise<void> {
   const db = await getDb();
   await db.collection<TextDoc>(TEXT_COLLECTION).deleteOne({ _id: id });
+  invalidateOverrides();
 }
 
 export async function clearAllTextOverrides(): Promise<void> {
   const db = await getDb();
   await db.collection<TextDoc>(TEXT_COLLECTION).deleteMany({});
+  invalidateOverrides();
 }
 
 /**
@@ -88,6 +113,7 @@ export async function setImageOverride(
     await deleteImage(previous.fileId);
   }
 
+  invalidateOverrides();
   return imageUrl(fileId);
 }
 
@@ -104,6 +130,7 @@ export async function setImageOverrideEmpty(id: string): Promise<void> {
   if (previous?.fileId) {
     await deleteImage(previous.fileId);
   }
+  invalidateOverrides();
 }
 
 export async function clearAllImageOverrides(): Promise<void> {
@@ -114,4 +141,5 @@ export async function clearAllImageOverrides(): Promise<void> {
     .toArray();
   await Promise.all(docs.map((d) => (d.fileId ? deleteImage(d.fileId) : Promise.resolve())));
   await db.collection<ImageDoc>(IMAGE_COLLECTION).deleteMany({});
+  invalidateOverrides();
 }

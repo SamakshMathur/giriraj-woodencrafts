@@ -13,20 +13,20 @@ export function PasswordGate({
   title = "Restricted Area",
   description = "Enter the password to continue.",
 }: {
-  onUnlock: (password: string) => Promise<boolean>;
+  onUnlock: (password: string) => Promise<string | null>;
   title?: string;
   description?: string;
 }) {
   const [value, setValue] = useState("");
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    const ok = await onUnlock(value).catch(() => false);
+    const problem = await onUnlock(value).catch(() => "Could not reach the server. Try again.");
     setSubmitting(false);
-    setError(!ok);
+    setError(problem);
   };
 
   return (
@@ -43,7 +43,7 @@ export function PasswordGate({
           value={value}
           onChange={(e) => {
             setValue(e.target.value);
-            setError(false);
+            setError(null);
           }}
           placeholder="Password"
           autoFocus
@@ -52,7 +52,7 @@ export function PasswordGate({
           }`}
         />
         {error && (
-          <p className="mt-2 text-xs text-red-400">Incorrect password. Try again.</p>
+          <p className="mt-2 text-xs text-red-400">{error}</p>
         )}
 
         <button

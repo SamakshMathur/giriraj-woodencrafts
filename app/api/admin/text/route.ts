@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isAdminRequest } from "@/lib/adminAuth";
+import { withErrorHandling } from "@/lib/api";
 import { setTextOverride, clearTextOverride } from "@/lib/content";
 
-export async function POST(req: NextRequest) {
+export const POST = withErrorHandling(async (req: NextRequest) => {
   if (!(await isAdminRequest())) {
     return NextResponse.json({ ok: false }, { status: 401 });
   }
@@ -15,9 +16,9 @@ export async function POST(req: NextRequest) {
 
   await setTextOverride(id, value);
   return NextResponse.json({ ok: true });
-}
+});
 
-export async function DELETE(req: NextRequest) {
+export const DELETE = withErrorHandling(async (req: NextRequest) => {
   if (!(await isAdminRequest())) {
     return NextResponse.json({ ok: false }, { status: 401 });
   }
@@ -30,4 +31,4 @@ export async function DELETE(req: NextRequest) {
 
   await clearTextOverride(id);
   return NextResponse.json({ ok: true });
-}
+});

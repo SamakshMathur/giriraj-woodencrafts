@@ -6,8 +6,8 @@ type AdminModeContextValue = {
   isAdmin: boolean;
   /** True until the initial session check finishes. */
   loading: boolean;
-  /** Verifies the password against the server and sets the admin cookie on success. */
-  unlock: (password: string) => Promise<boolean>;
+  /** Verifies the password with the server. Resolves to null on success, or an error message. */
+  unlock: (password: string) => Promise<string | null>;
   logout: () => void;
 };
 
@@ -33,9 +33,13 @@ export function AdminModeProvider({ children }: { children: React.ReactNode }) {
     });
     if (res.ok) {
       setIsAdmin(true);
-      return true;
+      return null;
     }
-    return false;
+    if (res.status === 429) {
+      const data = await res.json().catch(() => null);
+      return data?.error ?? "Too many login attempts. Please wait 15 minutes and try again.";
+    }
+    return "Incorrect password. Try again.";
   };
 
   const logout = () => {

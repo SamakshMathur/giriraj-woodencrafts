@@ -12,6 +12,34 @@ async function getImagesBucket(): Promise<GridFSBucket> {
   return new GridFSBucket(db, { bucketName: BUCKET_NAME });
 }
 
+/**
+ * Photo formats accepted for upload. Deliberately excludes SVG: an SVG can
+ * contain scripts, which would run on this site's own domain if someone
+ * opened the uploaded file directly.
+ */
+export const ALLOWED_IMAGE_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+  "image/avif",
+  "image/heic",
+  "image/heif",
+]);
+
+export const MAX_IMAGE_BYTES = 8 * 1024 * 1024; // 8MB
+
+/** Returns an error message if the file isn't an acceptable photo, else null. */
+export function validateImageFile(file: File): string | null {
+  if (!ALLOWED_IMAGE_TYPES.has(file.type)) {
+    return "Please upload a photo (JPG, PNG, WebP, GIF, AVIF or HEIC).";
+  }
+  if (file.size > MAX_IMAGE_BYTES) {
+    return "This photo is too large. Please use one under 8MB.";
+  }
+  return null;
+}
+
 export function imageUrl(fileId: ObjectId): string {
   return `/api/images/${fileId.toHexString()}`;
 }
