@@ -49,6 +49,32 @@ const PRODUCT_GALLERY_IMAGE_OVERRIDES: Record<string, Record<number, string>> = 
   // those two slides fall through to the generic GALLERY_IMAGES default
   // until real photos are added, same as before this product had any
   // overrides at all.
+  kamdhenu: {
+    0: "/images/mandirs/kamdhenu-gallery-front.webp",
+    1: "/images/mandirs/kamdhenu-gallery-45.webp",
+    2: "/images/mandirs/kamdhenu-gallery-side.webp",
+    3: "/images/mandirs/kamdhenu-gallery-carving.webp",
+    4: "/images/mandirs/kamdhenu-gallery-drawer.webp",
+  },
+  swarna: {
+    0: "/images/mandirs/swarna-gallery-front.webp",
+    1: "/images/mandirs/swarna-gallery-45.webp",
+    2: "/images/mandirs/swarna-gallery-side.webp",
+    3: "/images/mandirs/swarna-gallery-carving.webp",
+    4: "/images/mandirs/swarna-gallery-drawer.webp",
+  },
+  // No separate front or drawer shot of this piece; those slides are skipped.
+  "shyam-mayur": {
+    1: "/images/mandirs/shyam-mayur-gallery-45.webp",
+    2: "/images/mandirs/shyam-mayur-gallery-side.webp",
+    3: "/images/mandirs/shyam-mayur-gallery-carving.webp",
+  },
+  "madhu-mayur": {
+    1: "/images/mandirs/madhu-mayur-gallery-45.webp",
+    2: "/images/mandirs/madhu-mayur-gallery-side.webp",
+    3: "/images/mandirs/madhu-mayur-gallery-carving.webp",
+    4: "/images/mandirs/madhu-mayur-gallery-drawer.webp",
+  },
   ananta: {
     0: "/images/mandirs/ananta-gallery-front.webp",
     1: "/images/mandirs/ananta-gallery-45.webp",
@@ -70,7 +96,10 @@ export default async function ProductDetailPage({
     ["Wood", product.wood],
     ["Finish", product.finish],
     ["Storage", product.storage ? "Included" : "Not included"],
-    ["Lighting", product.lighting ? "Integrated LED" : "Not included"],
+    [
+      "Lighting",
+      product.lighting === undefined ? "Available on request" : product.lighting ? "Integrated LED" : "Not included",
+    ],
     ["Marble", product.marble ? "Included" : "Not included"],
     ["Finishing", product.finishing],
     ["Availability", "Made to order · 8–10 weeks"],

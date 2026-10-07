@@ -11,16 +11,15 @@ import { EditableText } from "@/components/EditableText";
 // never appear until the next deploy.
 export const dynamic = "force-dynamic";
 
-// Matches the homepage's "Our Collections" 6 photos exactly (this array
-// is local to this page only, not shared elsewhere, so no scoped-override
-// pattern is needed here).
+// Workshop and carving photos, so this section shows the craft rather
+// repeating the finished mandirs shown elsewhere on the site.
 const FACTORY_IMAGES = [
-  "/images/mandirs/traditional-collection-deity-altar.webp",
-  "/images/mandirs/royal-collection-arch-mandir.webp",
-  "/images/mandirs/compact-apartments-mandir.webp",
-  "/images/mandirs/modern-carved-pedestal-table.webp",
-  "/images/mandirs/wall-mounted-peacock-legs.webp",
-  "/images/mandirs/maharaja-gold-frame.webp",
+  "/images/mandirs/workshop-wood-selection.webp",
+  "/images/mandirs/workshop-seasoning.webp",
+  "/images/mandirs/close-up-carving.webp",
+  "/images/mandirs/carving-detail-pillar.webp",
+  "/images/mandirs/craft-quality-inspection-workshop.webp",
+  "/images/mandirs/showroom-mandala-back-panel.webp",
 ];
 
 export default function AboutPage() {
@@ -120,7 +119,7 @@ export default function AboutPage() {
               <EditableImage
                 id={`about-factory-${i}`}
                 src={src}
-                alt="Giriraj workshop"
+                alt="Inside the Giriraj workshop"
                 className="object-cover object-top"
               />
             </div>

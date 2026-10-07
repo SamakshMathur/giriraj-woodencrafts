@@ -23,22 +23,23 @@ export const dynamic = "force-dynamic";
 // SHOWCASE_IMAGE_OVERRIDES above — GALLERY_IMAGES (lib/craft.ts) is
 // shared with the full /gallery page via the same gallery-{i} ids, and
 // this replacement was scoped to just the homepage section.
+// Six different pieces, so the preview doesn't repeat one design.
 const GALLERY_PREVIEW_IMAGE_OVERRIDES: Record<number, string> = {
-  0: "/images/mandirs/compact-apartments-mandir.webp",
-  1: "/images/mandirs/maharaja-gold-frame.webp",
-  2: "/images/mandirs/wall-mounted-frame.webp",
-  3: "/images/mandirs/traditional-collection-deity-altar.webp",
-  4: "/images/mandirs/gallery-dark-dome-frame.webp",
-  5: "/images/mandirs/gallery-elephant-mandir-v2.webp",
+  0: "/images/mandirs/kamdhenu-hero.webp",
+  1: "/images/mandirs/swarna-hero.webp",
+  2: "/images/mandirs/showroom-carved-mandala.webp",
+  3: "/images/mandirs/madhu-mayur-hero.webp",
+  4: "/images/mandirs/shyam-mayur-hero.webp",
+  5: "/images/mandirs/showroom-gold-crown.webp",
 };
 
 const CATEGORIES = [
   { slug: "traditional", name: "Traditional Collection", image: "/images/mandirs/traditional-collection-deity-altar.webp" },
-  { slug: "royal", name: "Royal Collection", image: "/images/mandirs/royal-collection-arch-mandir.webp" },
+  { slug: "royal", name: "Royal Collection", image: "/images/mandirs/kamdhenu-hero.webp" },
   { slug: "modern", name: "Modern Collection", image: "/images/mandirs/compact-apartments-mandir.webp" },
   { slug: "compact", name: "Compact Apartments", image: "/images/mandirs/modern-carved-pedestal-table.webp" },
   { slug: "wall-mounted", name: "Wall Mounted", image: "/images/mandirs/wall-mounted-peacock-legs.webp" },
-  { slug: "maharaja", name: "Luxury Maharaja Series", image: "/images/mandirs/maharaja-gold-frame.webp" },
+  { slug: "maharaja", name: "Luxury Maharaja Series", image: "/images/mandirs/swarna-hero.webp" },
 ];
 
 export default function Home() {

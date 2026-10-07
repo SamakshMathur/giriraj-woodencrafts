@@ -6,7 +6,8 @@ export type Product = {
   finish: string;
   dimensions: string;
   storage: boolean;
-  lighting: boolean;
+  /** Omit when not yet confirmed; shown as "Available on request". */
+  lighting?: boolean;
   marble: boolean;
   style: "Wall Mounted" | "Floor Mounted";
   finishing: "Antique" | "Dark Wooden" | "Light Wooden";
@@ -71,6 +72,65 @@ export const PRODUCTS: Product[] = [
     image: "/images/mandirs/showcase-suvarna-gold-dome-frame.webp",
   },
 ];
+
+// Showroom pieces photographed in October 2026 (shared Drive folder).
+// Names, wood and sizes below are placeholders until the owner confirms
+// them; only what is visible in the photos is stated as fact (drawers,
+// marble top, finish colour). Sizes read "Made to your space".
+PRODUCTS.push(
+  {
+    slug: "kamdhenu",
+    name: "Kamdhenu Mahal",
+    collection: "Showroom Collection",
+    wood: "Solid hardwood",
+    finish: "Dark walnut polish",
+    dimensions: "Made to your space",
+    storage: true,
+    marble: true,
+    style: "Floor Mounted",
+    finishing: "Dark Wooden",
+    image: "/images/mandirs/kamdhenu-hero.webp",
+  },
+  {
+    slug: "swarna",
+    name: "Swarna Mandap",
+    collection: "Showroom Collection",
+    wood: "Solid hardwood",
+    finish: "Gold leaf carving on walnut",
+    dimensions: "Made to your space",
+    storage: true,
+    marble: true,
+    style: "Floor Mounted",
+    finishing: "Antique",
+    image: "/images/mandirs/swarna-hero.webp",
+  },
+  {
+    slug: "shyam-mayur",
+    name: "Shyam Mayur",
+    collection: "Showroom Collection",
+    wood: "Solid hardwood",
+    finish: "Deep walnut polish",
+    dimensions: "Made to your space",
+    storage: true,
+    marble: true,
+    style: "Floor Mounted",
+    finishing: "Dark Wooden",
+    image: "/images/mandirs/shyam-mayur-hero.webp",
+  },
+  {
+    slug: "madhu-mayur",
+    name: "Madhu Mayur",
+    collection: "Showroom Collection",
+    wood: "Solid hardwood",
+    finish: "Honey teak polish",
+    dimensions: "Made to your space",
+    storage: true,
+    marble: true,
+    style: "Floor Mounted",
+    finishing: "Light Wooden",
+    image: "/images/mandirs/madhu-mayur-hero.webp",
+  }
+);
 
 export function getProductBySlug(slug: string) {
   return PRODUCTS.find((p) => p.slug === slug);
