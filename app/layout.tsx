@@ -8,6 +8,12 @@ import { Footer } from "@/components/Footer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import "./globals.css";
 
+// Every page reads the admin cookie (see app/template.tsx), so the whole
+// app renders per request. Set here at the root so pages that can't
+// declare it themselves (client pages, the 404 page) never get treated as
+// static, which crashes on Cloudflare with DYNAMIC_SERVER_USAGE.
+export const dynamic = "force-dynamic";
+
 const GA_MEASUREMENT_ID = "G-2KWXVRNELM";
 
 const cormorant = Cormorant_Garamond({
