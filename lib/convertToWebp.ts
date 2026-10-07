@@ -5,8 +5,8 @@
  * Falls back to the original file if conversion isn't possible.
  */
 // Longest side, in pixels. Phone photos are often 4000px+ and several MB,
-// and Vercel rejects request bodies over about 4.5MB, so big photos are
-// scaled down before upload. 2400px is still sharp on large screens.
+// and the upload API caps images at 8MB, so big photos are scaled down
+// before upload. 2400px is still sharp on large screens.
 const MAX_DIMENSION = 2400;
 
 export async function convertToWebp(file: File, quality = 0.82): Promise<File> {

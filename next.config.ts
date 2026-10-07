@@ -11,5 +11,5 @@ const nextConfig: NextConfig = {
 
 export default nextConfig;
 
-// Lets `next dev` use Cloudflare bindings locally. No effect on Vercel builds.
+// Lets `next dev` use Cloudflare bindings and secrets (from .dev.vars) locally.
 initOpenNextCloudflareForDev();

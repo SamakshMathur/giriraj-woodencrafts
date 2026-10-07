@@ -39,8 +39,8 @@ function getRequestClient(): Promise<MongoClient> {
   return promise;
 }
 
-// --- Node (Vercel, `next start`, `next dev`) -------------------------
-// Serverless functions are reused ("warm") across requests, and each
+// --- Node (`next dev`, `next start`) --------------------------------
+// A long-running Node process serves many requests, and each
 // MongoClient opens its own connection pool, so the client is cached for
 // the life of the process. The connect() promise itself is cached so
 // concurrent requests during a cold start share one connection attempt.

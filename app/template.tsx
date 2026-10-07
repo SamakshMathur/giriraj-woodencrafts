@@ -9,11 +9,10 @@ import { getTextOverrides, getImageOverrides } from "@/lib/content";
 // every page visited afterward via client-side nav. Templates re-mount
 // (and thus re-fetch) on every navigation, so this can't go stale.
 export const dynamic = "force-dynamic";
-// getTextOverrides/getImageOverrides now read from MongoDB (a real TCP
-// connection, not fetch()), so Next.js's fetch-based Data Cache doesn't
-// apply here the way it did with the old Vercel Blob SDK — but keeping
-// `force-no-store` costs nothing and guards against the same class of
-// caching surprise if a future data source goes through fetch() again.
+// getTextOverrides/getImageOverrides read from MongoDB (a TCP connection,
+// not fetch()), so Next.js's fetch-based Data Cache doesn't apply; keeping
+// `force-no-store` guards against caching surprises if a future data
+// source goes through fetch().
 export const fetchCache = "force-no-store";
 
 export default async function Template({ children }: { children: React.ReactNode }) {

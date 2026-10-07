@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 import { getFileInfo, openDownloadStream } from "@/lib/images";
 
-// Images are served here instead of from a dedicated CDN (that's the
-// trade-off of moving off Vercel Blob for now — see conversation). Each
+// Uploaded images live in MongoDB (GridFS) and are served here. Each
 // fileId is permanent/immutable once uploaded (edits create a *new*
 // fileId, never overwrite an existing one), so a long, immutable
 // Cache-Control is safe and lets browsers/edge caches avoid re-hitting

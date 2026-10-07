@@ -31,7 +31,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-.vercel
 .env*
 
 # Cloudflare / OpenNext build output and local secrets

@@ -12,17 +12,9 @@ export type ImageOverrides = Record<string, string | null>;
 type TextDoc = { _id: string; value: string; updatedAt: Date };
 type ImageDoc = { _id: string; fileId: ObjectId | null; updatedAt: Date };
 
-// Previously this was hand-rolled on top of Vercel Blob: first a single
-// shared JSON file with no concurrency control at all (the original
-// "removed images reappear" bug), then two attempts at optimistic
-// concurrency via etags that both broke under genuine concurrent writes,
-// then a from-scratch per-id-timestamped-file scheme that finally got
-// concurrency right but still depended on Vercel Blob's storage quotas
-// (which is what actually broke uploads — see conversation). MongoDB's
-// findOneAndUpdate is atomic per-document natively, so the entire
-// concurrency problem this file used to work around simply doesn't exist
-// here — two simultaneous writes to the same id are serialized by the
-// database itself, not by application code.
+// MongoDB's findOneAndUpdate is atomic per document, so two simultaneous
+// admin edits to the same id are serialized by the database itself, with
+// no application-level locking needed.
 
 // Reads degrade to "no overrides" on a DB outage instead of crashing the
 // page — a transient connectivity hiccup (including at `next build` time,
