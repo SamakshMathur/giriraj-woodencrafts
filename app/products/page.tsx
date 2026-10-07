@@ -27,6 +27,8 @@ export default function ProductsPage() {
         eyebrow="Collection"
         title="Every Mandir, a Work of Art"
         subtitle="Browse our handcrafted collections, or configure one entirely your own."
+        image="/images/mandirs/swarna-gallery-carving.webp"
+        imagePosition="center 40%"
       />
 
       <Section className="bg-bg pt-8 md:pt-10">

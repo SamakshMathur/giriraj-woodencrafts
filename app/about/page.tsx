@@ -30,6 +30,8 @@ export default function AboutPage() {
         eyebrow="About Giriraj"
         title="Where Devotion Meets Craftsmanship"
         subtitle="A family of woodworkers, three generations deep."
+        image="/images/mandirs/kamdhenu-gallery-side.webp"
+        imagePosition="center 30%"
       />
 
       <Section className="bg-bg pt-8 md:pt-10">

@@ -14,6 +14,8 @@ export default function CustomizationPage() {
         eyebrow="Configurator"
         title="Design a Mandir That Is Only Yours"
         subtitle="Choose every detail — polishing, storage and lighting — and watch it come together."
+        image="/images/mandirs/showroom-gold-drawers.webp"
+        imagePosition="center 50%"
       />
       <Section className="bg-bg pt-8 md:pt-10">
         <Configurator />

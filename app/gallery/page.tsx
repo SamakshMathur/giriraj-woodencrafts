@@ -33,6 +33,8 @@ export default function GalleryPage() {
         eyebrow="Gallery"
         title="Moments Carved in Wood"
         subtitle="Customer homes, close-up carvings, and the workshop behind them."
+        image="/images/mandirs/showroom-carved-mandala.webp"
+        imagePosition="center 50%"
       />
 
       <Section className="bg-bg pt-8 md:pt-10">

@@ -27,6 +27,8 @@ export default function ContactPage() {
         eyebrow="Contact"
         title="Begin Your Mandir's Story"
         subtitle="Speak with our design experts or book a showroom visit."
+        image="/images/mandirs/madhu-mayur-gallery-45.webp"
+        imagePosition="center 25%"
       />
 
       <Section className="bg-bg pt-8 md:pt-10">

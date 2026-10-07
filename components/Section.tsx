@@ -1,5 +1,6 @@
 import { EditableText } from "@/components/EditableText";
 import { Reveal } from "@/components/Reveal";
+import { Ornament } from "@/components/Ornament";
 
 export function Section({
   id,
@@ -51,6 +52,7 @@ export function SectionHeading({
           tone === "light" ? "text-white" : "text-text"
         }`}
       />
+      <Ornament className={`mt-5 ${align === "center" ? "mx-auto" : ""}`} />
       {subtitle && (
         <EditableText
           id={`${id}-subtitle`}

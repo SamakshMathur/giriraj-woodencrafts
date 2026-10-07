@@ -6,6 +6,8 @@ import { TempleSpire } from "@/components/TempleSpire";
 import { EditableImage } from "@/components/EditableImage";
 import { EditableText } from "@/components/EditableText";
 import { Reveal } from "@/components/Reveal";
+import { HorizontalScroller } from "@/components/HorizontalScroller";
+import { ImageBand } from "@/components/ImageBand";
 import { PRODUCTS } from "@/lib/products";
 import { CRAFT_STAGES, GALLERY_IMAGES } from "@/lib/craft";
 import { whatsAppLink } from "@/lib/whatsapp";
@@ -100,50 +102,69 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="absolute bottom-8 left-1/2 z-10 h-10 w-6 -translate-x-1/2 rounded-full border border-white/40">
+        <div className="absolute bottom-8 left-1/2 z-10 hidden h-10 w-6 -translate-x-1/2 rounded-full border border-white/40 md:block">
           <div className="mx-auto mt-2 h-2 w-1 animate-pulse rounded-full bg-white/70" />
         </div>
       </section>
 
-      {/* Why Giriraj — Trust */}
+      {/* Why Giriraj — Trust: three photo cards */}
       <Section className="bg-bg">
         <SectionHeading
           id="home-why"
           eyebrow="Why Giriraj Woodencrafts"
           title="Built on What Cannot Be Rushed"
         />
-        <div className="mt-16 grid gap-12 md:grid-cols-3">
+        <div className="mt-16 grid gap-6 md:grid-cols-3">
           {[
             {
               slug: "premium-wood",
               title: "Premium Wood",
               copy: "Only selected teak and premium hardwood, sourced with care.",
+              image: "/images/mandirs/workshop-wood-selection.webp",
             },
             {
               slug: "hand-carved",
               title: "Hand Carved",
               copy: "Every design carved by skilled artisans, never machine-stamped.",
+              image: "/images/mandirs/showroom-cow-calf-panel.webp",
             },
             {
               slug: "sacred-design",
               title: "Sacred Design",
               copy: "Built according to traditional aesthetics and proportion.",
+              image: "/images/mandirs/showroom-carved-mandala.webp",
             },
           ].map((item, i) => (
-            <Reveal key={item.title} className="text-center" delay={i * 0.1}>
-              <EditableText
-                id={`home-why-${item.slug}-title`}
-                defaultValue={item.title}
-                as="h3"
-                className="font-heading text-2xl text-text"
+            <Reveal
+              key={item.title}
+              className="group relative aspect-[4/5] overflow-hidden rounded-md bg-brand-secondary"
+              delay={i * 0.1}
+            >
+              <EditableImage
+                id={`home-why-${item.slug}-image`}
+                src={item.image}
+                alt={item.title}
+                className="object-cover transition-transform duration-700 ease-reverent group-hover:scale-105"
               />
-              <EditableText
-                id={`home-why-${item.slug}-copy`}
-                defaultValue={item.copy}
-                as="p"
-                multiline
-                className="mt-3 text-sm leading-relaxed text-text-secondary"
-              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 z-30 p-7 text-white">
+                <span className="font-display text-xs tracking-widest2 text-accent">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <EditableText
+                  id={`home-why-${item.slug}-title`}
+                  defaultValue={item.title}
+                  as="h3"
+                  className="mt-2 font-heading text-3xl"
+                />
+                <EditableText
+                  id={`home-why-${item.slug}-copy`}
+                  defaultValue={item.copy}
+                  as="p"
+                  multiline
+                  className="mt-2 text-sm leading-relaxed text-white/80"
+                />
+              </div>
             </Reveal>
           ))}
         </div>
@@ -157,12 +178,12 @@ export default function Home() {
           title="Luxury Showcase"
           align="left"
         />
-        <div className="mt-14 flex gap-6 overflow-x-auto pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        <HorizontalScroller label="Luxury showcase" className="mt-14">
           {PRODUCTS.map((product) => (
             <Link
               key={product.slug}
               href={`/products/${product.slug}`}
-              className="group relative aspect-[3/4] w-[280px] shrink-0 overflow-hidden rounded-md bg-card shadow-warm-sm md:w-[360px]"
+              className="group relative aspect-[3/4] w-[280px] shrink-0 snap-start overflow-hidden rounded-md bg-card shadow-warm-sm md:w-[360px]"
             >
               <EditableImage
                 id={`home-showcase-${product.slug}`}
@@ -182,7 +203,7 @@ export default function Home() {
               </div>
             </Link>
           ))}
-        </div>
+        </HorizontalScroller>
       </Section>
 
       {/* Categories */}
@@ -224,6 +245,15 @@ export default function Home() {
         </div>
       </Section>
 
+      {/* Photo band */}
+      <ImageBand
+        id="home-band"
+        image="/images/mandirs/kamdhenu-gallery-carving.webp"
+        quote="Every motif is carved by hand. No two mandirs are ever exactly alike."
+        caption="From the cow and calf on a drawer front to the lotus behind the deity, each panel takes our artisans days of patient chisel work."
+        cta={{ href: "/craft", label: "See how we work" }}
+      />
+
       {/* Customization teaser */}
       <Section className="bg-brand-secondary text-white">
         <SectionHeading
@@ -254,32 +284,49 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* Craftsmanship journey */}
+      {/* Craftsmanship journey: large photo cards, scrollable */}
       <Section className="bg-bg">
-        <SectionHeading id="home-craft" eyebrow="Process" title="Craftsmanship Journey" />
-        <div className="mt-16 flex justify-center gap-8 overflow-x-auto pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        <SectionHeading
+          id="home-craft"
+          eyebrow="Process"
+          title="Craftsmanship Journey"
+          subtitle="Seven stages, every one by hand, from choosing the log to placing the mandir in your home."
+        />
+        <HorizontalScroller label="Craftsmanship stages" className="mt-14">
           {CRAFT_STAGES.map((stage, i) => (
-            <div key={stage.name} className="flex shrink-0 flex-col items-center gap-4 text-center">
-              <div className="relative h-20 w-20 overflow-hidden rounded-full border border-border shadow-warm-sm">
+            <div
+              key={stage.name}
+              className="flex w-[260px] shrink-0 snap-start flex-col overflow-hidden rounded-md border border-border bg-card md:w-[300px]"
+            >
+              <div className="relative aspect-[4/3] overflow-hidden bg-brand-secondary">
                 <EditableImage
                   id={`craft-stage-${stage.slug}`}
                   src={stage.image}
                   alt={stage.name}
                   className="object-cover"
                 />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-sm font-heading text-white">
+                <span className="pointer-events-none absolute left-0 top-0 z-30 bg-black/60 px-3 py-1.5 font-display text-xs tracking-widest2 text-accent">
                   {String(i + 1).padStart(2, "0")}
-                </div>
+                </span>
               </div>
-              <EditableText
-                id={`craft-stage-${stage.slug}-name`}
-                defaultValue={stage.name}
-                as="p"
-                className="w-32 text-sm text-text-secondary"
-              />
+              <div className="flex flex-1 flex-col p-5">
+                <EditableText
+                  id={`craft-stage-${stage.slug}-name`}
+                  defaultValue={stage.name}
+                  as="h3"
+                  className="font-heading text-xl text-text"
+                />
+                <EditableText
+                  id={`craft-stage-${stage.slug}-detail`}
+                  defaultValue={stage.detail}
+                  as="p"
+                  multiline
+                  className="mt-2 line-clamp-3 text-sm leading-relaxed text-text-secondary"
+                />
+              </div>
             </div>
           ))}
-        </div>
+        </HorizontalScroller>
       </Section>
 
       {/* Gallery preview */}
@@ -313,8 +360,8 @@ export default function Home() {
       </Section>
 
       {/* Testimonials */}
-      <Section className="bg-bg-secondary">
-        <SectionHeading id="home-testimonials" eyebrow="Testimonials" title="Customer Stories" />
+      <Section className="bg-brand-secondary">
+        <SectionHeading id="home-testimonials" eyebrow="Testimonials" title="Customer Stories" tone="light" />
         <div className="mt-16 grid gap-8 md:grid-cols-3">
           {[
             {
@@ -338,16 +385,16 @@ export default function Home() {
           ].map((testimonial, idx) => {
             const i = idx + 1;
             return (
-              <Reveal key={i} className="flex flex-col rounded-md border border-border bg-card p-8" delay={(i - 1) * 0.1}>
+              <Reveal key={i} className="flex flex-col rounded-md border border-white/10 bg-white/[0.04] p-8" delay={(i - 1) * 0.1}>
                 <span aria-hidden className="mb-3 font-heading text-5xl leading-none text-accent">&ldquo;</span>
                 <EditableText
                   id={`home-testimonial-${i}-quote`}
                   defaultValue={testimonial.quote}
                   as="p"
                   multiline
-                  className="mb-6 text-sm leading-relaxed text-text-secondary"
+                  className="mb-6 text-base leading-relaxed text-white/80"
                 />
-                <div className="mt-auto flex items-center gap-3 border-t border-border pt-6">
+                <div className="mt-auto flex items-center gap-3 border-t border-white/10 pt-6">
                   <div
                     aria-hidden
                     className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/15 font-heading text-base text-accent"
@@ -363,13 +410,13 @@ export default function Home() {
                       id={`home-testimonial-${i}-name`}
                       defaultValue={testimonial.name}
                       as="p"
-                      className="text-sm font-medium text-text"
+                      className="text-sm font-medium text-white"
                     />
                     <EditableText
                       id={`home-testimonial-${i}-location`}
                       defaultValue={testimonial.location}
                       as="p"
-                      className="text-xs text-muted"
+                      className="text-xs text-white/50"
                     />
                   </div>
                 </div>
@@ -443,31 +490,43 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* Contact CTA */}
-      <Section className="bg-bg text-center">
-        <SectionHeading
-          id="home-contact"
-          eyebrow="Get in Touch"
-          title="Begin Your Mandir's Story"
-          subtitle="Speak with our design experts or book a showroom visit."
-        />
-        <div className="mt-10 flex flex-wrap justify-center gap-4">
+      {/* Contact CTA, over a photo */}
+      <section className="relative overflow-hidden bg-brand-secondary text-center">
+        <div className="absolute inset-0">
+          <EditableImage
+            id="home-contact-image"
+            src="/images/mandirs/madhu-mayur-gallery-carving.webp"
+            alt=""
+            className="object-cover"
+          />
+        </div>
+        <div className="pointer-events-none absolute inset-0 bg-black/70" />
+        <div className="relative z-30 mx-auto max-w-content px-6 py-28 md:px-10 md:py-36">
+          <SectionHeading
+            id="home-contact"
+            eyebrow="Get in Touch"
+            title="Begin Your Mandir's Story"
+            subtitle="Speak with our design experts or book a showroom visit."
+            tone="light"
+          />
+          <div className="mt-10 flex flex-wrap justify-center gap-4">
           <a
             href={whatsAppLink("Hi Giriraj, I'd like to talk to an expert about a mandir.")}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-md bg-brand px-8 py-3.5 text-sm text-white transition-all duration-300 hover:bg-brand-secondary hover:shadow-[0_0_28px_rgba(198,156,69,0.4)]"
+            className="rounded-md bg-accent px-8 py-3.5 text-sm text-brand-secondary transition-all duration-300 hover:shadow-[0_0_28px_rgba(198,156,69,0.5)]"
           >
             Talk to Our Expert
           </a>
           <Link
             href="/customization"
-            className="rounded-md border border-accent px-8 py-3.5 text-sm text-text transition-all duration-300 hover:bg-accent hover:text-brand-secondary hover:shadow-[0_0_28px_rgba(198,156,69,0.4)]"
+            className="rounded-md border border-white/50 px-8 py-3.5 text-sm text-white transition-all duration-300 hover:border-accent hover:bg-accent hover:text-brand-secondary"
           >
             Request Quote
           </Link>
         </div>
-      </Section>
+        </div>
+      </section>
     </>
   );
 }

@@ -16,6 +16,8 @@ export default function CraftPage() {
         eyebrow="Our Craft"
         title="A Legacy of Sacred Woodwork"
         subtitle="Every mandir passes through the hands of artisans carrying generations of technique."
+        image="/images/mandirs/showroom-peacock-pillar.webp"
+        imagePosition="center 45%"
       />
 
       <Section className="bg-bg pt-8 md:pt-10">
