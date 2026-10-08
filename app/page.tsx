@@ -199,7 +199,10 @@ export default function Home() {
                   as="p"
                   className="font-heading text-xl"
                 />
-                <p className="mt-1 text-xs text-white/70">{product.wood} &middot; Made to order</p>
+                <p className="mt-1 text-xs text-white/70">
+                  <EditableText id={`product-${product.slug}-wood`} defaultValue={product.wood} as="span" /> &middot; Made
+                  to order
+                </p>
               </div>
             </Link>
           ))}

@@ -5,6 +5,8 @@ import { ProductImageCarousel, type CarouselSlide } from "@/components/ProductIm
 import { getProductBySlug } from "@/lib/products";
 import { GALLERY_IMAGES } from "@/lib/craft";
 import { whatsAppLink } from "@/lib/whatsapp";
+import { getOverrides } from "@/lib/content";
+import { isAdminRequest } from "@/lib/adminAuth";
 
 // No generateStaticParams here on purpose. This page has 44 EditableImage
 // slots across the 4 products (hero + 10 gallery labels each) — the exact
@@ -91,19 +93,34 @@ export default async function ProductDetailPage({
   const product = getProductBySlug(slug);
   if (!product) notFound();
 
-  const specs: [string, string][] = [
-    ["Dimensions", product.dimensions],
-    ["Wood", product.wood],
-    ["Finish", product.finish],
-    ["Storage", product.storage ? "Included" : "Not included"],
-    [
-      "Lighting",
-      product.lighting === undefined ? "Available on request" : product.lighting ? "Integrated LED" : "Not included",
-    ],
-    ["Marble", product.marble ? "Included" : "Not included"],
-    ["Finishing", product.finishing],
-    ["Availability", "Made to order · 8–10 weeks"],
+  // Every spec is editable in admin mode. Each has a stable id
+  // (product-<slug>-<field>); "dimensions" and "wood" share their ids with
+  // the Products list card and the home showcase, so one edit updates the
+  // value everywhere it appears.
+  const specs: { label: string; field: string; value: string }[] = [
+    { label: "Dimensions", field: "dimensions", value: product.dimensions },
+    { label: "Wood", field: "wood", value: product.wood },
+    { label: "Finish", field: "finish", value: product.finish },
+    { label: "Storage", field: "storage", value: product.storage ? "Included" : "Not included" },
+    {
+      label: "Lighting",
+      field: "lighting",
+      value:
+        product.lighting === undefined ? "Available on request" : product.lighting ? "Integrated LED" : "Not included",
+    },
+    { label: "Marble", field: "marble", value: product.marble ? "Included" : "Not included" },
+    { label: "Finishing", field: "finishing", value: product.finishing },
+    { label: "Availability", field: "availability", value: "Made to order · 8–10 weeks" },
   ];
+
+  // The saved (edited) values, for text that isn't itself an editable
+  // field: the line under the name and the WhatsApp message.
+  const { text: savedText } = await getOverrides({ fresh: await isAdminRequest() });
+  const current = (field: string, fallback: string) => savedText[`product-${product.slug}-${field}`] ?? fallback;
+  const name = current("name", product.name);
+  const wood = current("wood", product.wood);
+  const dimensions = current("dimensions", product.dimensions);
+  const enquiry = `Hi Giriraj, I'm interested in the ${name} mandir (${dimensions}). Could you share the price and details?`;
 
   // Hero + the same five shots that used to live in a separate thumbnail
   // grid further down the page — now reachable via the carousel's </>
@@ -166,17 +183,24 @@ export default async function ProductDetailPage({
                   className="mt-3 font-heading text-4xl leading-tight text-text md:text-5xl"
                 />
                 <p className="mt-3 text-sm text-text-secondary">
-                  Handcrafted in {product.wood} · {product.dimensions}
+                  Handcrafted in {wood} · {dimensions}
                 </p>
               </div>
 
               <div className="p-6 md:p-8">
                 <h2 className="text-xs uppercase tracking-widest2 text-muted">Specifications</h2>
                 <dl className="mt-4 grid grid-cols-2 border-l border-t border-border">
-                  {specs.map(([label, value]) => (
-                    <div key={label} className="border-b border-r border-border p-4">
+                  {specs.map(({ label, field, value }) => (
+                    <div key={field} className="border-b border-r border-border p-4">
                       <dt className="text-[10px] uppercase tracking-widest2 text-muted">{label}</dt>
-                      <dd className="mt-1.5 text-sm font-medium text-text">{value}</dd>
+                      <dd className="mt-1.5">
+                        <EditableText
+                          id={`product-${product.slug}-${field}`}
+                          defaultValue={value}
+                          as="span"
+                          className="text-sm font-medium text-text"
+                        />
+                      </dd>
                     </div>
                   ))}
                 </dl>
@@ -189,7 +213,7 @@ export default async function ProductDetailPage({
                     Request Quote
                   </Link>
                   <a
-                    href={whatsAppLink(`Hi Giriraj, I'm interested in the ${product.name} mandir (${product.dimensions}). Could you share the price and details?`)}
+                    href={whatsAppLink(enquiry)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center border border-text/20 px-6 py-3.5 text-sm font-medium text-text transition-colors hover:border-accent hover:bg-accent hover:text-brand-secondary"
@@ -230,7 +254,7 @@ export default async function ProductDetailPage({
               Request Quote
             </Link>
             <a
-              href={whatsAppLink(`Hi Giriraj, I'm interested in the ${product.name} mandir (${product.dimensions}). Could you share the price and details?`)}
+              href={whatsAppLink(enquiry)}
               target="_blank"
               rel="noopener noreferrer"
               className="text-center border border-white/30 px-8 py-3.5 text-sm font-medium text-white transition-colors hover:border-white hover:bg-white/10"

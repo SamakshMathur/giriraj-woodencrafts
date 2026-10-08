@@ -8,7 +8,7 @@ import { PasswordGate } from "@/components/admin/PasswordGate";
 const EDITABLE_PAGES = [
   { href: "/", label: "Home", note: "Hero, showcase, categories, craftsmanship journey, gallery preview" },
   { href: "/products", label: "Products", note: "Product card photos" },
-  { href: "/products/shreeji", label: "Product Detail", note: "Hero image + gallery grid (any product)" },
+  { href: "/products/shreeji", label: "Product Detail", note: "Photos, name, collection, and every spec: dimensions, wood, finish, storage, lighting, marble, availability" },
   { href: "/customization", label: "Customization", note: "Header text" },
   { href: "/craft", label: "Our Craft", note: "Process stage photos" },
   { href: "/gallery", label: "Gallery", note: "Full masonry gallery" },
