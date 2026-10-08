@@ -33,25 +33,67 @@ async function readOverrides(): Promise<{ text: TextOverrides; images: ImageOver
   return { text, images };
 }
 
-// Every page reads the overrides, and on Cloudflare a database round trip
-// costs one to two seconds, so the result is kept in memory for a short
-// time. Visitors see an admin edit within OVERRIDES_TTL_MS; the admin's own
-// pages always read fresh (see app/template.tsx). Only plain data is
-// cached, never a database connection.
+// Every page reads the overrides. Loading them from MongoDB is costly on
+// Cloudflare: a fresh Worker instance must open a connection and log in,
+// and the login's password hashing alone can push a visit past the free
+// plan's 10 ms CPU limit (Error 1102). So they are cached in two layers:
+//   1. this instance's memory, for OVERRIDES_TTL_MS;
+//   2. Cloudflare's shared edge cache, so a brand-new instance can serve a
+//      page without touching the database at all.
+// Visitors see an admin edit within about a minute. Admins always read
+// fresh (see app/template.tsx), and each fresh read also refreshes the
+// shared copy. Only plain data is cached, never a database connection.
 const OVERRIDES_TTL_MS = 60_000;
 const FAILURE_TTL_MS = 15_000;
-let overridesCache: { value: { text: TextOverrides; images: ImageOverrides }; expiresAt: number } | null =
-  null;
+const SHARED_CACHE_KEY = "https://girirajwoodencrafts.com/__cache/overrides-v1";
 
-export async function getOverrides({ fresh = false } = {}): Promise<{
-  text: TextOverrides;
-  images: ImageOverrides;
-}> {
+type Overrides = { text: TextOverrides; images: ImageOverrides };
+let overridesCache: { value: Overrides; expiresAt: number } | null = null;
+
+function sharedCache(): Cache | null {
+  const store = (globalThis as { caches?: { default?: Cache } }).caches;
+  return store?.default ?? null;
+}
+
+async function readSharedCache(): Promise<Overrides | null> {
+  try {
+    const hit = await sharedCache()?.match(SHARED_CACHE_KEY);
+    return hit ? ((await hit.json()) as Overrides) : null;
+  } catch {
+    return null;
+  }
+}
+
+async function writeSharedCache(value: Overrides): Promise<void> {
+  try {
+    await sharedCache()?.put(
+      SHARED_CACHE_KEY,
+      new Response(JSON.stringify(value), {
+        headers: {
+          "Content-Type": "application/json",
+          "Cache-Control": `public, max-age=${OVERRIDES_TTL_MS / 1000}`,
+        },
+      })
+    );
+  } catch {
+    // The shared cache is an optimisation; failing to write it is harmless.
+  }
+}
+
+export async function getOverrides({ fresh = false } = {}): Promise<Overrides> {
   const now = Date.now();
-  if (!fresh && overridesCache && overridesCache.expiresAt > now) return overridesCache.value;
+  if (!fresh) {
+    if (overridesCache && overridesCache.expiresAt > now) return overridesCache.value;
+    const shared = await readSharedCache();
+    if (shared) {
+      overridesCache = { value: shared, expiresAt: now + OVERRIDES_TTL_MS };
+      return shared;
+    }
+  }
   try {
     const value = await readOverrides();
     overridesCache = { value, expiresAt: now + OVERRIDES_TTL_MS };
+    await writeSharedCache(value);
     return value;
   } catch (err) {
     console.error("Could not load overrides, showing defaults:", err);
@@ -63,9 +105,17 @@ export async function getOverrides({ fresh = false } = {}): Promise<{
   }
 }
 
-/** Called after any admin write so this instance serves the change at once. */
-function invalidateOverrides(): void {
+/**
+ * Called after any admin write: drops both cached copies so the next page
+ * load in this data centre reads the change from the database.
+ */
+async function invalidateOverrides(): Promise<void> {
   overridesCache = null;
+  try {
+    await sharedCache()?.delete(SHARED_CACHE_KEY);
+  } catch {
+    // Harmless: the shared copy expires within a minute anyway.
+  }
 }
 
 export async function setTextOverride(id: string, value: string): Promise<void> {
@@ -73,19 +123,19 @@ export async function setTextOverride(id: string, value: string): Promise<void> 
   await db
     .collection<TextDoc>(TEXT_COLLECTION)
     .updateOne({ _id: id }, { $set: { value, updatedAt: new Date() } }, { upsert: true });
-  invalidateOverrides();
+  await invalidateOverrides();
 }
 
 export async function clearTextOverride(id: string): Promise<void> {
   const db = await getDb();
   await db.collection<TextDoc>(TEXT_COLLECTION).deleteOne({ _id: id });
-  invalidateOverrides();
+  await invalidateOverrides();
 }
 
 export async function clearAllTextOverrides(): Promise<void> {
   const db = await getDb();
   await db.collection<TextDoc>(TEXT_COLLECTION).deleteMany({});
-  invalidateOverrides();
+  await invalidateOverrides();
 }
 
 /**
@@ -113,7 +163,7 @@ export async function setImageOverride(
     await deleteImage(previous.fileId);
   }
 
-  invalidateOverrides();
+  await invalidateOverrides();
   return imageUrl(fileId);
 }
 
@@ -130,7 +180,7 @@ export async function setImageOverrideEmpty(id: string): Promise<void> {
   if (previous?.fileId) {
     await deleteImage(previous.fileId);
   }
-  invalidateOverrides();
+  await invalidateOverrides();
 }
 
 export async function clearAllImageOverrides(): Promise<void> {
@@ -141,5 +191,5 @@ export async function clearAllImageOverrides(): Promise<void> {
     .toArray();
   await Promise.all(docs.map((d) => (d.fileId ? deleteImage(d.fileId) : Promise.resolve())));
   await db.collection<ImageDoc>(IMAGE_COLLECTION).deleteMany({});
-  invalidateOverrides();
+  await invalidateOverrides();
 }
