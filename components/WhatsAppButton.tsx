@@ -1,9 +1,11 @@
-import { whatsAppLink } from "@/lib/whatsapp";
+"use client";
 
-const DEFAULT_MESSAGE = "Hi Giriraj, I'd like to know more about your mandirs.";
+import { whatsAppLink } from "@/lib/whatsapp";
+import { useContact, useRegistryText } from "@/components/OverridesProvider";
 
 export function WhatsAppButton() {
-  const href = whatsAppLink(DEFAULT_MESSAGE);
+  const contact = useContact();
+  const href = whatsAppLink(useRegistryText("whatsapp-msg-general"), contact.whatsappNumber);
 
   return (
     <a

@@ -87,6 +87,28 @@ export function EditableImage({
     }
   };
 
+  // Brings back the site's built-in photo for this spot, undoing any
+  // replacement or removal.
+  const handleRestore = async (e: MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const before = state;
+    setState({ kind: "none" });
+    notify("saving", "Restoring…");
+    try {
+      const res = await fetch("/api/admin/image", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, restore: true }),
+      });
+      if (!res.ok) throw new Error("restore failed");
+      notify("saved", "Original photo restored");
+    } catch {
+      setState(before);
+      notify("error");
+    }
+  };
+
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     handleFile(e.target.files?.[0]);
     e.target.value = "";
@@ -162,6 +184,16 @@ export function EditableImage({
               className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/70 text-sm leading-none text-white transition-colors hover:bg-red-500/90"
             >
               &times;
+            </button>
+          )}
+          {state.kind !== "none" && src && !uploading && (
+            <button
+              type="button"
+              onClick={handleRestore}
+              title="Restore the original photo"
+              className="absolute left-2 top-2 rounded-full bg-black/70 px-3 py-1.5 text-[10px] font-medium normal-case tracking-normal text-white transition-colors hover:bg-accent hover:text-brand-secondary"
+            >
+              ↺ Restore original
             </button>
           )}
         </label>

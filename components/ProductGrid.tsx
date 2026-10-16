@@ -6,6 +6,8 @@ import { EditableImage } from "@/components/EditableImage";
 import { EditableText } from "@/components/EditableText";
 import { Reveal } from "@/components/Reveal";
 import type { Product } from "@/lib/products";
+import { useOverrides, useRegistryText } from "@/components/OverridesProvider";
+import { textSlug } from "@/lib/textRegistry";
 
 type FilterKey = "style" | "finishing";
 
@@ -27,6 +29,10 @@ export function ProductGrid({
   /** Per-slug card photo overrides for this page. */
   cardImages: Record<string, string>;
 }) {
+  const { text } = useOverrides();
+  const allLabel = useRegistryText("products-filter-all");
+  const countOne = useRegistryText("products-count-one");
+  const countMany = useRegistryText("products-count-many");
   const [selected, setSelected] = useState<Record<FilterKey, string>>({ style: "", finishing: "" });
 
   const options = useMemo(
@@ -48,16 +54,21 @@ export function ProductGrid({
         <div className="flex flex-wrap gap-3">
           {FILTERS.map((filter) => (
             <label key={filter.key} className="flex items-center gap-2">
-              <span className="text-xs uppercase tracking-widest2 text-muted">{filter.label}</span>
+              <EditableText
+                id={`products-filter-label-${filter.key}`}
+                defaultValue={filter.label}
+                as="span"
+                className="text-xs uppercase tracking-widest2 text-muted"
+              />
               <select
                 value={selected[filter.key]}
                 onChange={(e) => setSelected((prev) => ({ ...prev, [filter.key]: e.target.value }))}
                 className="rounded-md border border-border bg-card px-4 py-2 text-sm text-text focus:outline-none focus:ring-1 focus:ring-accent"
               >
-                <option value="">All</option>
+                <option value="">{allLabel}</option>
                 {options[filter.key].map((o) => (
                   <option key={o} value={o}>
-                    {o}
+                    {text[`products-filter-${filter.key}-${textSlug(o)}`] ?? o}
                   </option>
                 ))}
               </select>
@@ -66,7 +77,7 @@ export function ProductGrid({
         </div>
         <div className="flex items-center gap-4 text-xs uppercase tracking-widest2 text-muted">
           <span>
-            {visible.length} {visible.length === 1 ? "design" : "designs"}
+            {visible.length} {visible.length === 1 ? countOne : countMany}
           </span>
           {filtering && (
             <button
@@ -74,7 +85,7 @@ export function ProductGrid({
               onClick={() => setSelected({ style: "", finishing: "" })}
               className="text-accent hover:underline"
             >
-              Clear filters
+              <EditableText id="products-clear-filters" defaultValue="Clear filters" as="span" />
             </button>
           )}
         </div>
@@ -82,11 +93,10 @@ export function ProductGrid({
 
       {visible.length === 0 ? (
         <p className="mt-12 border border-dashed border-border p-10 text-center text-sm text-text-secondary">
-          No designs match these filters yet.{" "}
+          <EditableText id="products-empty" defaultValue="No designs match these filters yet." as="span" />{" "}
           <Link href="/customization" className="text-accent hover:underline">
-            Design your own instead
+            <EditableText id="products-empty-link" defaultValue="Design your own instead" as="span" />
           </Link>
-          .
         </p>
       ) : (
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -126,7 +136,7 @@ export function ProductGrid({
                     className="mb-5 mt-1 text-sm text-text-secondary"
                   />
                   <span className="mt-auto flex items-center justify-between border-t border-border pt-4 text-xs uppercase tracking-widest2 text-text">
-                    View details
+                    <EditableText id="products-card-cta" defaultValue="View details" as="span" />
                     <span aria-hidden className="text-accent transition-transform duration-300 group-hover:translate-x-1">→</span>
                   </span>
                 </div>

@@ -5,14 +5,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { EditableText } from "@/components/EditableText";
+import { useRegistryText } from "@/components/OverridesProvider";
 
-const NAV_LINKS = [
-  { href: "/products", label: "Products" },
-  { href: "/customization", label: "Customization" },
-  { href: "/craft", label: "Our Craft" },
-  { href: "/gallery", label: "Gallery" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
+// Menu names are edited on Admin > All other text (not by clicking, so the
+// menu still navigates in admin mode). The footer reuses these ids.
+export const NAV_LINKS = [
+  { href: "/products", id: "nav-products", label: "Products" },
+  { href: "/customization", id: "nav-customization", label: "Customization" },
+  { href: "/craft", id: "nav-craft", label: "Our Craft" },
+  { href: "/gallery", id: "nav-gallery", label: "Gallery" },
+  { href: "/about", id: "nav-about", label: "About" },
+  { href: "/contact", id: "nav-contact", label: "Contact" },
 ];
 
 export function Header() {
@@ -53,10 +57,10 @@ export function Header() {
           </span>
           <span className="flex flex-col justify-center leading-none">
             <span className="block font-display text-base leading-none tracking-widest2 uppercase text-text">
-              Giriraj
+              <EditableText id="brand-name" defaultValue="Giriraj" as="span" />
             </span>
             <span className="mt-1.5 block text-[10px] leading-none tracking-widest2 uppercase text-text-secondary">
-              Woodencrafts
+              <EditableText id="brand-subname" defaultValue="Woodencrafts" as="span" />
             </span>
           </span>
         </Link>
@@ -71,7 +75,7 @@ export function Header() {
                 isActive(link.href) ? "text-accent" : "text-text-secondary"
               }`}
             >
-              {link.label}
+              <NavLabel id={link.id} />
             </Link>
           ))}
         </nav>
@@ -82,7 +86,7 @@ export function Header() {
             href="/customization"
             className="hidden rounded-md bg-brand px-5 py-2.5 text-sm text-white transition-colors duration-300 hover:bg-brand-secondary md:inline-block"
           >
-            Customize Yours
+            <EditableText id="header-cta" defaultValue="Customize Yours" as="span" />
           </Link>
           <button
             type="button"
@@ -115,7 +119,7 @@ export function Header() {
                     isActive(link.href) ? "text-accent" : "text-text"
                   }`}
                 >
-                  {link.label}
+                  <NavLabel id={link.id} />
                   <span aria-hidden className="text-muted">→</span>
                 </Link>
               </li>
@@ -126,11 +130,16 @@ export function Header() {
               href="/customization"
               className="block rounded-md bg-brand px-5 py-3 text-center text-sm text-white"
             >
-              Customize Yours
+              <EditableText id="header-cta" defaultValue="Customize Yours" as="span" />
             </Link>
           </div>
         </nav>
       )}
     </header>
   );
+}
+
+/** A menu item's current name (default or the admin's edit). */
+export function NavLabel({ id }: { id: string }) {
+  return <>{useRegistryText(id)}</>;
 }

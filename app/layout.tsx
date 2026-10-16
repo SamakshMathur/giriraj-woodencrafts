@@ -3,10 +3,9 @@ import { Cormorant_Garamond, Cinzel, Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AdminModeProvider } from "@/components/AdminModeProvider";
 import { SaveStatusProvider } from "@/components/SaveStatusToast";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
-import { WhatsAppButton } from "@/components/WhatsAppButton";
 import "./globals.css";
+import { getOverrides } from "@/lib/content";
+import { registryDefault } from "@/lib/textRegistry";
 
 // Every page reads the admin cookie (see app/template.tsx), so the whole
 // app renders per request. Set here at the root so pages that can't
@@ -37,11 +36,14 @@ const inter = Inter({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "Giriraj Woodencrafts — Handcrafted Divine Spaces",
-  description:
-    "Every home deserves its own temple. Handcrafted wooden mandirs made with generations of craftsmanship.",
-};
+// Tab title and search description are editable (Admin > All other text).
+export async function generateMetadata(): Promise<Metadata> {
+  const { text } = await getOverrides();
+  return {
+    title: text["site-title"] ?? registryDefault("site-title"),
+    description: text["site-description"] ?? registryDefault("site-description"),
+  };
+}
 
 export default function RootLayout({
   children,
@@ -78,10 +80,7 @@ export default function RootLayout({
         <ThemeProvider>
           <AdminModeProvider>
             <SaveStatusProvider>
-              <Header />
-              <main>{children}</main>
-              <Footer />
-              <WhatsAppButton />
+              {children}
             </SaveStatusProvider>
           </AdminModeProvider>
         </ThemeProvider>

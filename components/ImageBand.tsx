@@ -50,7 +50,7 @@ export function ImageBand({
               href={cta.href}
               className="mt-8 inline-flex items-center gap-2 rounded-md border border-white/40 px-6 py-3 text-sm text-white transition-colors hover:border-accent hover:bg-accent hover:text-brand-secondary"
             >
-              {cta.label}
+              <EditableText id={`${id}-cta`} defaultValue={cta.label} as="span" />
               <span aria-hidden>→</span>
             </Link>
           )}

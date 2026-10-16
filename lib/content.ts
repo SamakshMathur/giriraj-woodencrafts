@@ -183,6 +183,16 @@ export async function setImageOverrideEmpty(id: string): Promise<void> {
   await invalidateOverrides();
 }
 
+/** Drops this id's override entirely, so the built-in photo shows again. */
+export async function clearImageOverride(id: string): Promise<void> {
+  const db = await getDb();
+  const previous = await db.collection<ImageDoc>(IMAGE_COLLECTION).findOneAndDelete({ _id: id });
+  if (previous?.fileId) {
+    await deleteImage(previous.fileId);
+  }
+  await invalidateOverrides();
+}
+
 export async function clearAllImageOverrides(): Promise<void> {
   const db = await getDb();
   const docs = await db

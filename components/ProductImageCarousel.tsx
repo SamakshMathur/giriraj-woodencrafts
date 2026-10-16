@@ -9,6 +9,8 @@ export type CarouselSlide = {
   src?: string;
   alt: string;
   label?: string;
+  /** Admin-editable id for the label (Admin > All other text). */
+  labelId?: string;
 };
 
 /**
@@ -26,7 +28,7 @@ export type CarouselSlide = {
  */
 export function ProductImageCarousel({ slides }: { slides: CarouselSlide[] }) {
   const [index, setIndex] = useState(0);
-  const { images } = useOverrides();
+  const { images, text } = useOverrides();
   const count = slides.length;
 
   const prev = () => setIndex((i) => (i - 1 + count) % count);
@@ -61,7 +63,7 @@ export function ProductImageCarousel({ slides }: { slides: CarouselSlide[] }) {
 
         {slides[index]?.label && (
           <span className="pointer-events-none absolute left-0 top-0 z-30 bg-black/60 px-3 py-1.5 text-[10px] uppercase tracking-widest2 text-white">
-            {slides[index].label}
+            {(slides[index].labelId && text[slides[index].labelId]) || slides[index].label}
           </span>
         )}
 

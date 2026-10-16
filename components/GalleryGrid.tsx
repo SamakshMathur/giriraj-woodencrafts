@@ -3,6 +3,12 @@
 import { useState } from "react";
 import { EditableImage } from "@/components/EditableImage";
 import { Reveal } from "@/components/Reveal";
+import { EditableText } from "@/components/EditableText";
+import { useOverrides } from "@/components/OverridesProvider";
+
+// Category names are editable by clicking the chips in admin mode; the
+// caption on each photo shows the same (edited) name.
+const categoryId = (cat: string) => `gallery-category-${cat.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
 
 export type GalleryItem = {
   /** Stable admin id for this slot (e.g. "gallery-3"). */
@@ -21,6 +27,7 @@ const ASPECTS = ["4/5", "1/1", "3/4"];
 export function GalleryGrid({ items }: { items: GalleryItem[] }) {
   const categories = Array.from(new Set(items.map((item) => item.label)));
   const [active, setActive] = useState<string>("All");
+  const { text } = useOverrides();
 
   return (
     <>
@@ -39,7 +46,8 @@ export function GalleryGrid({ items }: { items: GalleryItem[] }) {
                   : "border-border text-muted hover:border-accent hover:text-text"
               }`}
             >
-              {cat} <span className="opacity-60">({count})</span>
+              <EditableText id={categoryId(cat)} defaultValue={cat} as="span" />{" "}
+              <span className="opacity-60">({count})</span>
             </button>
           );
         })}
@@ -57,7 +65,7 @@ export function GalleryGrid({ items }: { items: GalleryItem[] }) {
           >
             <EditableImage id={item.id} src={item.src} alt={item.label} className="object-cover" />
             <span className="pointer-events-none absolute bottom-0 left-0 z-10 bg-black/55 px-3 py-1.5 text-[10px] uppercase tracking-widest2 text-white">
-              {item.label}
+              {text[categoryId(item.label)] ?? item.label}
             </span>
           </Reveal>
         ))}

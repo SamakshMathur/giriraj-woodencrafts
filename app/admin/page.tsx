@@ -89,6 +89,20 @@ export default function AdminPage() {
         </div>
 
         <Link
+          href="/admin/text"
+          className="mt-10 flex items-center justify-between rounded-md border border-border bg-card p-6 shadow-warm-sm transition-transform duration-300 ease-reverent hover:-translate-y-0.5"
+        >
+          <div>
+            <p className="font-heading text-xl text-text">All other text</p>
+            <p className="mt-2 text-sm text-text-secondary">
+              Menu names, form hints, dropdown choices, photo labels, WhatsApp messages and the browser tab
+              title. Everything else is edited by clicking it on the page.
+            </p>
+          </div>
+          <span aria-hidden className="text-accent">→</span>
+        </Link>
+
+        <Link
           href="/admin/submissions"
           className="mt-10 flex items-center justify-between rounded-md border border-accent bg-accent/10 p-6 shadow-warm-sm transition-transform duration-300 ease-reverent hover:-translate-y-0.5"
         >

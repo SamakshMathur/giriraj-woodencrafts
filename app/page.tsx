@@ -10,7 +10,10 @@ import { HorizontalScroller } from "@/components/HorizontalScroller";
 import { ImageBand } from "@/components/ImageBand";
 import { PRODUCTS } from "@/lib/products";
 import { CRAFT_STAGES, GALLERY_IMAGES } from "@/lib/craft";
-import { whatsAppLink } from "@/lib/whatsapp";
+import { whatsAppLink, resolveContact } from "@/lib/whatsapp";
+import { getOverrides } from "@/lib/content";
+import { isAdminRequest } from "@/lib/adminAuth";
+import { registryDefault } from "@/lib/textRegistry";
 
 // See app/about/page.tsx for why this is explicit here rather than relied
 // on cascading from app/template.tsx.
@@ -44,7 +47,10 @@ const CATEGORIES = [
   { slug: "maharaja", name: "Luxury Maharaja Series", image: "/images/mandirs/swarna-hero.webp" },
 ];
 
-export default function Home() {
+export default async function Home() {
+  // Saved admin edits, for text that ends up inside links (WhatsApp message).
+  const { text: saved } = await getOverrides({ fresh: await isAdminRequest() });
+
   return (
     <>
       {/* Hero */}
@@ -85,13 +91,13 @@ export default function Home() {
                 href="/products"
                 className="rounded-md bg-accent px-7 py-3.5 text-sm text-brand-secondary transition-all duration-300 ease-reverent hover:scale-[1.02] hover:shadow-[0_0_28px_rgba(198,156,69,0.5)]"
               >
-                Explore Collection
+                <EditableText id="home-hero-cta-primary" defaultValue="Explore Collection" as="span" />
               </Link>
               <Link
                 href="/customization"
                 className="rounded-md border border-white/40 px-7 py-3.5 text-sm text-white transition-all duration-300 hover:bg-white/10 hover:shadow-[0_0_24px_rgba(198,156,69,0.35)]"
               >
-                Customize Yours
+                <EditableText id="home-hero-cta-secondary" defaultValue="Customize Yours" as="span" />
               </Link>
             </div>
           </div>
@@ -200,8 +206,8 @@ export default function Home() {
                   className="font-heading text-xl"
                 />
                 <p className="mt-1 text-xs text-white/70">
-                  <EditableText id={`product-${product.slug}-wood`} defaultValue={product.wood} as="span" /> &middot; Made
-                  to order
+                  <EditableText id={`product-${product.slug}-wood`} defaultValue={product.wood} as="span" /> &middot;{" "}
+                  <EditableText id="home-showcase-made-to-order" defaultValue="Made to order" as="span" />
                 </p>
               </div>
             </Link>
@@ -270,7 +276,7 @@ export default function Home() {
             (step, i, arr) => (
               <span key={step} className="flex items-center gap-3">
                 <span className="rounded-md border border-white/30 px-4 py-2">
-                  {step}
+                  <EditableText id={`home-customize-step-${i}`} defaultValue={step} as="span" />
                 </span>
                 {i < arr.length - 1 && <span className="text-accent">&rarr;</span>}
               </span>
@@ -282,7 +288,7 @@ export default function Home() {
             href="/customization"
             className="inline-block rounded-md bg-accent px-8 py-3.5 text-sm text-brand-secondary transition-all duration-300 ease-reverent hover:scale-[1.02] hover:shadow-[0_0_28px_rgba(198,156,69,0.5)]"
           >
-            Start Customizing
+            <EditableText id="home-customize-cta" defaultValue="Start Customizing" as="span" />
           </Link>
         </div>
       </Section>
@@ -357,7 +363,7 @@ export default function Home() {
             href="/gallery"
             className="text-sm text-accent underline-offset-4 hover:underline"
           >
-            View Full Gallery
+            <EditableText id="home-gallery-cta" defaultValue="View Full Gallery" as="span" />
           </Link>
         </div>
       </Section>
@@ -476,7 +482,7 @@ export default function Home() {
           ].map(({ q, a }, i) => (
             <details key={q} className="group py-5">
               <summary className="flex cursor-pointer list-none items-center justify-between text-sm text-text">
-                {q}
+                <EditableText id={`home-faq-${i}-question`} defaultValue={q} as="span" />
                 <span className="ml-4 text-accent transition-transform duration-300 group-open:rotate-45">
                   +
                 </span>
@@ -514,18 +520,21 @@ export default function Home() {
           />
           <div className="mt-10 flex flex-wrap justify-center gap-4">
           <a
-            href={whatsAppLink("Hi Giriraj, I'd like to talk to an expert about a mandir.")}
+            href={whatsAppLink(
+              saved["whatsapp-msg-expert"] ?? registryDefault("whatsapp-msg-expert"),
+              resolveContact(saved).whatsappNumber
+            )}
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-md bg-accent px-8 py-3.5 text-sm text-brand-secondary transition-all duration-300 hover:shadow-[0_0_28px_rgba(198,156,69,0.5)]"
           >
-            Talk to Our Expert
+            <EditableText id="home-contact-cta-primary" defaultValue="Talk to Our Expert" as="span" />
           </a>
           <Link
             href="/customization"
             className="rounded-md border border-white/50 px-8 py-3.5 text-sm text-white transition-all duration-300 hover:border-accent hover:bg-accent hover:text-brand-secondary"
           >
-            Request Quote
+            <EditableText id="home-contact-cta-secondary" defaultValue="Request Quote" as="span" />
           </Link>
         </div>
         </div>

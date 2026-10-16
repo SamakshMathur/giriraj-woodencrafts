@@ -2,13 +2,11 @@
 
 import { useState } from "react";
 import { openPendingWindow, sendToWhatsApp } from "@/lib/whatsapp";
+import { EditableText } from "@/components/EditableText";
+import { useContact, useRegistryText } from "@/components/OverridesProvider";
 
-const INTERESTS = [
-  "Requesting a Quote",
-  "Video Consultation",
-  "Booking a Showroom Visit",
-  "Bulk / Temple Setup Order",
-];
+// The dropdown choices are edited on Admin > All other text.
+const INTEREST_IDS = ["contact-form-interest-1", "contact-form-interest-2", "contact-form-interest-3", "contact-form-interest-4"];
 
 const fieldClass =
   "w-full rounded-md border border-border bg-card px-4 py-3 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-accent";
@@ -26,10 +24,33 @@ export function ContactForm() {
   const [error, setError] = useState<string | null>(null);
   const [sent, setSent] = useState(false);
 
+  const contact = useContact();
+  const t = {
+    namePlaceholder: useRegistryText("contact-form-name-placeholder"),
+    phonePlaceholder: useRegistryText("contact-form-phone-placeholder"),
+    interestPrompt: useRegistryText("contact-form-interest-placeholder"),
+    interests: [
+      useRegistryText(INTEREST_IDS[0]),
+      useRegistryText(INTEREST_IDS[1]),
+      useRegistryText(INTEREST_IDS[2]),
+      useRegistryText(INTEREST_IDS[3]),
+    ],
+    messagePlaceholder: useRegistryText("contact-form-message-placeholder"),
+    errorRequired: useRegistryText("contact-form-error-required"),
+    sending: useRegistryText("contact-form-sending"),
+    intro: useRegistryText("whatsapp-msg-contact-intro"),
+    interestLabel: useRegistryText("whatsapp-label-interest"),
+    nameLabel: useRegistryText("whatsapp-label-name"),
+    phoneLabel: useRegistryText("whatsapp-label-phone"),
+    thanksTitle: useRegistryText("contact-thanks-title"),
+    thanksBody: useRegistryText("contact-thanks-body"),
+    thanksAgain: useRegistryText("contact-thanks-again"),
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !phone.trim()) {
-      setError("Please add your name and phone number so we can reach you.");
+      setError(t.errorRequired);
       return;
     }
     setError(null);
@@ -48,11 +69,11 @@ export function ContactForm() {
       // WhatsApp still opens below, so the enquiry isn't lost.
     }
 
-    const lines = ["Hello Giriraj Woodencrafts, I have an enquiry."];
-    if (interest) lines.push("", `I'm interested in: ${interest}`);
+    const lines = [t.intro];
+    if (interest) lines.push("", `${t.interestLabel} ${interest}`);
     if (message.trim()) lines.push("", message.trim());
-    lines.push("", `Name: ${name.trim()}`, `Phone: ${phone.trim()}`);
-    sendToWhatsApp(pending, lines.join("\n"));
+    lines.push("", `${t.nameLabel} ${name.trim()}`, `${t.phoneLabel} ${phone.trim()}`);
+    sendToWhatsApp(pending, lines.join("\n"), contact.whatsappNumber);
 
     setSending(false);
     setSent(true);
@@ -62,17 +83,16 @@ export function ContactForm() {
     return (
       <div className="flex flex-col items-start justify-center rounded-md border border-border bg-card p-8">
         <span className="text-3xl text-accent">✓</span>
-        <p className="mt-4 font-heading text-2xl text-text">Thank you, {name.trim()}</p>
+        <p className="mt-4 font-heading text-2xl text-text">{t.thanksTitle.replace("{name}", name.trim())}</p>
         <p className="mt-2 max-w-sm text-sm leading-relaxed text-text-secondary">
-          WhatsApp has opened with your enquiry. Press send there and our team will reply shortly.
-          We&rsquo;ve also kept a copy, so we can call you on {phone.trim()} if needed.
+          {t.thanksBody.replace("{phone}", phone.trim())}
         </p>
         <button
           type="button"
           onClick={() => setSent(false)}
           className="mt-6 text-sm text-accent underline-offset-4 hover:underline"
         >
-          Send another enquiry
+          {t.thanksAgain}
         </button>
       </div>
     );
@@ -88,7 +108,7 @@ export function ContactForm() {
             autoComplete="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Full Name*"
+            placeholder={t.namePlaceholder}
             className={fieldClass}
           />
         </label>
@@ -100,7 +120,7 @@ export function ContactForm() {
             autoComplete="tel"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            placeholder="Phone / WhatsApp Number*"
+            placeholder={t.phonePlaceholder}
             className={fieldClass}
           />
         </label>
@@ -108,9 +128,9 @@ export function ContactForm() {
       <label className="block">
         <span className="sr-only">What are you interested in?</span>
         <select value={interest} onChange={(e) => setInterest(e.target.value)} className={fieldClass}>
-          <option value="">I&apos;m interested in&hellip;</option>
-          {INTERESTS.map((option) => (
-            <option key={option} value={option}>
+          <option value="">{t.interestPrompt}</option>
+          {t.interests.map((option, i) => (
+            <option key={INTEREST_IDS[i]} value={option}>
               {option}
             </option>
           ))}
@@ -121,7 +141,7 @@ export function ContactForm() {
         <textarea
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="Tell us about your space and vision"
+          placeholder={t.messagePlaceholder}
           rows={5}
           className={fieldClass}
         />
@@ -132,11 +152,15 @@ export function ContactForm() {
         disabled={sending}
         className="w-full rounded-md bg-brand px-10 py-3.5 text-sm font-medium text-white transition-colors hover:bg-brand-secondary disabled:opacity-60 sm:w-auto"
       >
-        {sending ? "Sending…" : "Send Enquiry on WhatsApp"}
+        {sending ? t.sending : <EditableText id="contact-form-button" defaultValue="Send Enquiry on WhatsApp" as="span" />}
       </button>
-      <p className="text-xs text-muted">
-        Opens WhatsApp with your enquiry ready to send. We also keep a copy so our team can call you back.
-      </p>
+      <EditableText
+        id="contact-form-footnote"
+        defaultValue="Opens WhatsApp with your enquiry ready to send. We also keep a copy so our team can call you back."
+        as="p"
+        multiline
+        className="text-xs text-muted"
+      />
     </form>
   );
 }

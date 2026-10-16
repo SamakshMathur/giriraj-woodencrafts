@@ -7,6 +7,9 @@ import { GALLERY_IMAGES } from "@/lib/craft";
 import { whatsAppLink } from "@/lib/whatsapp";
 import { getOverrides } from "@/lib/content";
 import { isAdminRequest } from "@/lib/adminAuth";
+import { registryDefault, textSlug } from "@/lib/textRegistry";
+import { resolveContact } from "@/lib/whatsapp";
+import { NavLabel } from "@/components/Header";
 
 // No generateStaticParams here on purpose. This page has 44 EditableImage
 // slots across the 4 products (hero + 10 gallery labels each) — the exact
@@ -120,7 +123,10 @@ export default async function ProductDetailPage({
   const name = current("name", product.name);
   const wood = current("wood", product.wood);
   const dimensions = current("dimensions", product.dimensions);
-  const enquiry = `Hi Giriraj, I'm interested in the ${name} mandir (${dimensions}). Could you share the price and details?`;
+  const enquiry = (savedText["whatsapp-msg-product"] ?? registryDefault("whatsapp-msg-product"))
+    .replace("{name}", name)
+    .replace("{dimensions}", dimensions);
+  const whatsappNumber = resolveContact(savedText).whatsappNumber;
 
   // Hero + the same five shots that used to live in a separate thumbnail
   // grid further down the page — now reachable via the carousel's </>
@@ -140,6 +146,7 @@ export default async function ProductDetailPage({
     src: productOverrides?.[i] ?? (productOverrides ? undefined : GALLERY_IMAGES[i % GALLERY_IMAGES.length].src),
     alt: `${product.name} — ${label}`,
     label,
+    labelId: `product-photo-label-${textSlug(label)}`,
   })).filter((slide) => slide.src);
 
   const slides: CarouselSlide[] = [
@@ -156,11 +163,11 @@ export default async function ProductDetailPage({
       <section className="pb-16 pt-28 md:pb-24 md:pt-32">
         <div className="mx-auto max-w-content px-6 md:px-10">
           <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-2 text-xs uppercase tracking-widest2 text-muted">
-            <Link href="/" className="transition-colors hover:text-accent">Home</Link>
+            <Link href="/" className="transition-colors hover:text-accent"><NavLabel id="breadcrumb-home" /></Link>
             <span aria-hidden>/</span>
-            <Link href="/products" className="transition-colors hover:text-accent">Products</Link>
+            <Link href="/products" className="transition-colors hover:text-accent"><NavLabel id="nav-products" /></Link>
             <span aria-hidden>/</span>
-            <span className="text-text">{product.name}</span>
+            <span className="text-text">{name}</span>
           </nav>
 
           <div className="grid gap-8 lg:grid-cols-12 lg:items-start lg:gap-10">
@@ -183,16 +190,18 @@ export default async function ProductDetailPage({
                   className="mt-3 font-heading text-4xl leading-tight text-text md:text-5xl"
                 />
                 <p className="mt-3 text-sm text-text-secondary">
-                  Handcrafted in {wood} · {dimensions}
+                  <EditableText id="product-subtitle-prefix" defaultValue="Handcrafted in" as="span" /> {wood} · {dimensions}
                 </p>
               </div>
 
               <div className="p-6 md:p-8">
-                <h2 className="text-xs uppercase tracking-widest2 text-muted">Specifications</h2>
+                <EditableText id="product-specs-title" defaultValue="Specifications" as="h2" className="text-xs uppercase tracking-widest2 text-muted" />
                 <dl className="mt-4 grid grid-cols-2 border-l border-t border-border">
                   {specs.map(({ label, field, value }) => (
                     <div key={field} className="border-b border-r border-border p-4">
-                      <dt className="text-[10px] uppercase tracking-widest2 text-muted">{label}</dt>
+                      <dt className="text-[10px] uppercase tracking-widest2 text-muted">
+                        <EditableText id={`product-spec-label-${field}`} defaultValue={label} as="span" />
+                      </dt>
                       <dd className="mt-1.5">
                         <EditableText
                           id={`product-${product.slug}-${field}`}
@@ -210,15 +219,15 @@ export default async function ProductDetailPage({
                     href="/contact"
                     className="flex items-center justify-center bg-brand px-6 py-3.5 text-sm font-medium text-white transition-colors hover:bg-brand-secondary"
                   >
-                    Request Quote
+                    <EditableText id="product-btn-quote" defaultValue="Request Quote" as="span" />
                   </Link>
                   <a
-                    href={whatsAppLink(enquiry)}
+                    href={whatsAppLink(enquiry, whatsappNumber)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center border border-text/20 px-6 py-3.5 text-sm font-medium text-text transition-colors hover:border-accent hover:bg-accent hover:text-brand-secondary"
                   >
-                    WhatsApp
+                    <EditableText id="product-btn-whatsapp" defaultValue="WhatsApp" as="span" />
                   </a>
                 </div>
               </div>
@@ -251,15 +260,15 @@ export default async function ProductDetailPage({
               href="/contact"
               className="text-center bg-accent px-8 py-3.5 text-sm font-medium text-brand-secondary transition-opacity hover:opacity-90"
             >
-              Request Quote
+              <EditableText id="product-btn-quote" defaultValue="Request Quote" as="span" />
             </Link>
             <a
-              href={whatsAppLink(enquiry)}
+              href={whatsAppLink(enquiry, whatsappNumber)}
               target="_blank"
               rel="noopener noreferrer"
               className="text-center border border-white/30 px-8 py-3.5 text-sm font-medium text-white transition-colors hover:border-white hover:bg-white/10"
             >
-              WhatsApp
+              <EditableText id="product-btn-whatsapp" defaultValue="WhatsApp" as="span" />
             </a>
           </div>
         </div>

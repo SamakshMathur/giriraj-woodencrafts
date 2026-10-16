@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isAdminRequest } from "@/lib/adminAuth";
 import { withErrorHandling } from "@/lib/api";
-import { setImageOverride, setImageOverrideEmpty } from "@/lib/content";
+import { clearImageOverride, setImageOverride, setImageOverrideEmpty } from "@/lib/content";
 import { validateImageFile } from "@/lib/images";
 
 export const POST = withErrorHandling(async (req: NextRequest) => {
@@ -36,6 +36,11 @@ export const DELETE = withErrorHandling(async (req: NextRequest) => {
     return NextResponse.json({ ok: false, error: "id is required" }, { status: 400 });
   }
 
-  await setImageOverrideEmpty(id);
+  // restore: bring back the built-in photo. Otherwise: leave the box empty.
+  if (body?.restore === true) {
+    await clearImageOverride(id);
+  } else {
+    await setImageOverrideEmpty(id);
+  }
   return NextResponse.json({ ok: true });
 });

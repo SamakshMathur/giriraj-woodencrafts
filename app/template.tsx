@@ -1,6 +1,9 @@
 import { OverridesProvider } from "@/components/OverridesProvider";
 import { getOverrides } from "@/lib/content";
 import { isAdminRequest } from "@/lib/adminAuth";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 // A template (not a layout) on purpose: layouts persist across client-side
 // navigation and do NOT re-run their data fetching when you click a <Link>
@@ -22,8 +25,14 @@ export default async function Template({ children }: { children: React.ReactNode
   const { text, images } = await getOverrides({ fresh: await isAdminRequest() });
 
   return (
+    // Header, footer and the floating WhatsApp button live here, inside the
+    // provider, so their text is editable too (in the root layout they sat
+    // outside it and always showed the built-in text).
     <OverridesProvider text={text} images={images}>
-      {children}
+      <Header />
+      <main>{children}</main>
+      <Footer />
+      <WhatsAppButton />
     </OverridesProvider>
   );
 }

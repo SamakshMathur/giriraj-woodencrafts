@@ -39,7 +39,8 @@ export default function CraftPage() {
               </div>
               <div>
                 <span className="font-display text-xs uppercase tracking-widest2 text-accent">
-                  Stage {String(i + 1).padStart(2, "0")}
+                  <EditableText id="craft-stage-label" defaultValue="Stage" as="span" />{" "}
+                  {String(i + 1).padStart(2, "0")}
                 </span>
                 <EditableText
                   id={`craft-stage-${stage.slug}-name`}
