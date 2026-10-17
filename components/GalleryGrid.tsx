@@ -5,6 +5,7 @@ import { EditableImage } from "@/components/EditableImage";
 import { Reveal } from "@/components/Reveal";
 import { EditableText } from "@/components/EditableText";
 import { useOverrides } from "@/components/OverridesProvider";
+import { AddPhotoTile, useAddedPhotos } from "@/components/AddablePhotos";
 
 // Category names are editable by clicking the chips in admin mode; the
 // caption on each photo shows the same (edited) name.
@@ -13,8 +14,10 @@ const categoryId = (cat: string) => `gallery-category-${cat.toLowerCase().replac
 export type GalleryItem = {
   /** Stable admin id for this slot (e.g. "gallery-3"). */
   id: string;
-  src: string;
+  src?: string;
   label: string;
+  /** True for photos the admin added (removable as a whole). */
+  added?: boolean;
 };
 
 const ASPECTS = ["4/5", "1/1", "3/4"];
@@ -24,7 +27,14 @@ const ASPECTS = ["4/5", "1/1", "3/4"];
  * own labels, so every chip shows at least one photo. Filtering hides
  * photos rather than unmounting them, so each keeps its admin upload state.
  */
-export function GalleryGrid({ items }: { items: GalleryItem[] }) {
+export function GalleryGrid({ items: builtIn }: { items: GalleryItem[] }) {
+  // Photos the admin added (Admin mode: "+ Add photo" tile at the end).
+  const added = useAddedPhotos("gallery");
+  const items: GalleryItem[] = [
+    ...builtIn,
+    ...added.slots.map((slot) => ({ id: slot.id, src: added.urlFor(slot.id), label: slot.label ?? "Showroom", added: true })),
+  ];
+  const builtInCategories = Array.from(new Set(builtIn.map((item) => item.label)));
   const categories = Array.from(new Set(items.map((item) => item.label)));
   const [active, setActive] = useState<string>("All");
   const { text } = useOverrides();
@@ -63,12 +73,24 @@ export function GalleryGrid({ items }: { items: GalleryItem[] }) {
             style={{ aspectRatio: ASPECTS[i % ASPECTS.length] }}
             delay={(i % 6) * 0.06}
           >
-            <EditableImage id={item.id} src={item.src} alt={item.label} className="object-cover" />
+            <EditableImage
+              id={item.id}
+              src={item.src}
+              alt={item.label}
+              className="object-cover"
+              onRemove={item.added ? () => added.remove(item.id) : undefined}
+            />
             <span className="pointer-events-none absolute bottom-0 left-0 z-10 bg-black/55 px-3 py-1.5 text-[10px] uppercase tracking-widest2 text-white">
               {text[categoryId(item.label)] ?? item.label}
             </span>
           </Reveal>
         ))}
+        <AddPhotoTile
+          onAdd={added.add}
+          busy={added.busy}
+          categories={builtInCategories}
+          className="mb-4 aspect-[4/5] break-inside-avoid"
+        />
       </div>
     </>
   );

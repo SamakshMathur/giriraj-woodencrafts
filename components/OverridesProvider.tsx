@@ -1,16 +1,17 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import type { TextOverrides, ImageOverrides } from "@/lib/content";
+import type { TextOverrides, ImageOverrides, ImageSlots } from "@/lib/content";
 import { registryDefault } from "@/lib/textRegistry";
 import { resolveContact } from "@/lib/whatsapp";
 
 type OverridesContextValue = {
   text: TextOverrides;
   images: ImageOverrides;
+  slots: ImageSlots;
 };
 
-const OverridesContext = createContext<OverridesContextValue>({ text: {}, images: {} });
+const OverridesContext = createContext<OverridesContextValue>({ text: {}, images: {}, slots: {} });
 
 /**
  * Holds the site's current text/image overrides, fetched server-side fresh
@@ -21,14 +22,16 @@ const OverridesContext = createContext<OverridesContextValue>({ text: {}, images
 export function OverridesProvider({
   text,
   images,
+  slots,
   children,
 }: {
   text: TextOverrides;
   images: ImageOverrides;
+  slots: ImageSlots;
   children: React.ReactNode;
 }) {
   return (
-    <OverridesContext.Provider value={{ text, images }}>{children}</OverridesContext.Provider>
+    <OverridesContext.Provider value={{ text, images, slots }}>{children}</OverridesContext.Provider>
   );
 }
 

@@ -2,6 +2,7 @@ import { PageHero } from "@/components/PageHero";
 import { Section, SectionHeading } from "@/components/Section";
 import { EditableImage } from "@/components/EditableImage";
 import { EditableText } from "@/components/EditableText";
+import { PhotoGrid } from "@/components/PhotoGrid";
 
 // Explicit per-page, not just relying on app/template.tsx's
 // dynamic = "force-dynamic": the template-level setting alone does not
@@ -112,21 +113,7 @@ export default function AboutPage() {
 
       <Section className="bg-bg">
         <SectionHeading id="about-workshop" eyebrow="The Workshop" title="Where It All Comes Together" />
-        <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {FACTORY_IMAGES.map((src, i) => (
-            <div
-              key={src}
-              className="relative aspect-[4/5] overflow-hidden rounded-md shadow-warm-sm"
-            >
-              <EditableImage
-                id={`about-factory-${i}`}
-                src={src}
-                alt="Inside the Giriraj workshop"
-                className="object-cover object-top"
-              />
-            </div>
-          ))}
-        </div>
+        <PhotoGrid section="about-workshop" idPrefix="about-factory" photos={FACTORY_IMAGES} alt="Inside the Giriraj workshop" />
       </Section>
     </>
   );

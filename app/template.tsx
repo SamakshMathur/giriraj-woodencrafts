@@ -22,13 +22,13 @@ export const fetchCache = "force-no-store";
 export default async function Template({ children }: { children: React.ReactNode }) {
   // Admins always read fresh so their own edits show immediately; visitors
   // get the briefly cached copy (see getOverrides in lib/content.ts).
-  const { text, images } = await getOverrides({ fresh: await isAdminRequest() });
+  const { text, images, slots } = await getOverrides({ fresh: await isAdminRequest() });
 
   return (
     // Header, footer and the floating WhatsApp button live here, inside the
     // provider, so their text is editable too (in the root layout they sat
     // outside it and always showed the built-in text).
-    <OverridesProvider text={text} images={images}>
+    <OverridesProvider text={text} images={images} slots={slots}>
       <Header />
       <main>{children}</main>
       <Footer />

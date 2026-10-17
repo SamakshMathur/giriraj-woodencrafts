@@ -8,12 +8,12 @@ import { PasswordGate } from "@/components/admin/PasswordGate";
 const EDITABLE_PAGES = [
   { href: "/", label: "Home", note: "Hero, showcase, categories, craftsmanship journey, gallery preview" },
   { href: "/products", label: "Products", note: "Product card photos" },
-  { href: "/products/shreeji", label: "Product Detail", note: "Photos, name, collection, and every spec: dimensions, wood, finish, storage, lighting, marble, availability" },
-  { href: "/customization", label: "Customization", note: "Header text" },
+  { href: "/products/shreeji", label: "Product Detail", note: "Photos (add as many as you like with the + tile after the thumbnails), name, collection, and every spec" },
+  { href: "/customization", label: "Customization", note: "Every heading, step, option and button" },
   { href: "/craft", label: "Our Craft", note: "Process stage photos" },
-  { href: "/gallery", label: "Gallery", note: "Full masonry gallery" },
-  { href: "/about", label: "About", note: "Story photo, factory grid, values" },
-  { href: "/contact", label: "Contact", note: "Header text" },
+  { href: "/gallery", label: "Gallery", note: "Every photo and category name. Add unlimited photos with the + Add photo tile at the end" },
+  { href: "/about", label: "About", note: "Story photo, values, and the workshop grid (add unlimited photos with + Add photo)" },
+  { href: "/contact", label: "Contact", note: "Headings, contact details, form text and buttons" },
 ];
 
 export default function AdminPage() {

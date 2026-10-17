@@ -4,13 +4,22 @@ import { deleteImage, imageUrl, uploadImage } from "./images";
 
 const TEXT_COLLECTION = "textOverrides";
 const IMAGE_COLLECTION = "imageOverrides";
+const SLOTS_COLLECTION = "imageSlots";
 
 export type TextOverrides = Record<string, string>;
 /** null means explicitly emptied (blank container), missing key means "use the default". */
 export type ImageOverrides = Record<string, string | null>;
+/**
+ * Photos the admin has added to a section (beyond the built-in ones), in
+ * order. Keyed by section, e.g. "gallery", "product-swarna", "about-workshop".
+ * Each slot's photo is an ordinary image override under the slot's id.
+ */
+export type ExtraSlot = { id: string; label?: string };
+export type ImageSlots = Record<string, ExtraSlot[]>;
 
 type TextDoc = { _id: string; value: string; updatedAt: Date };
 type ImageDoc = { _id: string; fileId: ObjectId | null; updatedAt: Date };
+type SlotsDoc = { _id: string; slots: ExtraSlot[]; updatedAt: Date };
 
 // MongoDB's findOneAndUpdate is atomic per document, so two simultaneous
 // admin edits to the same id are serialized by the database itself, with
@@ -20,17 +29,20 @@ type ImageDoc = { _id: string; fileId: ObjectId | null; updatedAt: Date };
 // page: a connectivity hiccup should show default content, not a 500.
 // Writes (below) deliberately do NOT catch errors: a failed save must
 // surface as a failure to the admin, not silently pretend to succeed.
-async function readOverrides(): Promise<{ text: TextOverrides; images: ImageOverrides }> {
+async function readOverrides(): Promise<Overrides> {
   const db = await getDb();
-  const [textDocs, imageDocs] = await Promise.all([
+  const [textDocs, imageDocs, slotDocs] = await Promise.all([
     db.collection<TextDoc>(TEXT_COLLECTION).find().toArray(),
     db.collection<ImageDoc>(IMAGE_COLLECTION).find().toArray(),
+    db.collection<SlotsDoc>(SLOTS_COLLECTION).find().toArray(),
   ]);
   const text: TextOverrides = {};
   for (const doc of textDocs) text[doc._id] = doc.value;
   const images: ImageOverrides = {};
   for (const doc of imageDocs) images[doc._id] = doc.fileId ? imageUrl(doc.fileId) : null;
-  return { text, images };
+  const slots: ImageSlots = {};
+  for (const doc of slotDocs) slots[doc._id] = doc.slots;
+  return { text, images, slots };
 }
 
 // Every page reads the overrides. Loading them from MongoDB is costly on
@@ -45,9 +57,9 @@ async function readOverrides(): Promise<{ text: TextOverrides; images: ImageOver
 // shared copy. Only plain data is cached, never a database connection.
 const OVERRIDES_TTL_MS = 60_000;
 const FAILURE_TTL_MS = 15_000;
-const SHARED_CACHE_KEY = "https://girirajwoodencrafts.com/__cache/overrides-v1";
+const SHARED_CACHE_KEY = "https://girirajwoodencrafts.com/__cache/overrides-v2";
 
-type Overrides = { text: TextOverrides; images: ImageOverrides };
+export type Overrides = { text: TextOverrides; images: ImageOverrides; slots: ImageSlots };
 let overridesCache: { value: Overrides; expiresAt: number } | null = null;
 
 function sharedCache(): Cache | null {
@@ -99,7 +111,7 @@ export async function getOverrides({ fresh = false } = {}): Promise<Overrides> {
     console.error("Could not load overrides, showing defaults:", err);
     // Remember the failure briefly so an outage doesn't make every page
     // wait for the database timeout.
-    const value = overridesCache?.value ?? { text: {}, images: {} };
+    const value = overridesCache?.value ?? { text: {}, images: {}, slots: {} };
     overridesCache = { value, expiresAt: now + FAILURE_TTL_MS };
     return value;
   }
@@ -191,6 +203,36 @@ export async function clearImageOverride(id: string): Promise<void> {
     await deleteImage(previous.fileId);
   }
   await invalidateOverrides();
+}
+
+/**
+ * Adds a photo to a section: uploads it, stores it as the image for a new
+ * slot id, and appends that slot to the section's list. Returns the slot.
+ */
+export async function addImageSlot(
+  section: string,
+  file: File,
+  contentType: string,
+  label?: string
+): Promise<{ slot: ExtraSlot; url: string }> {
+  const id = `${section}-extra-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+  const url = await setImageOverride(id, file, contentType);
+  const slot: ExtraSlot = label ? { id, label } : { id };
+  const db = await getDb();
+  await db
+    .collection<SlotsDoc>(SLOTS_COLLECTION)
+    .updateOne({ _id: section }, { $push: { slots: slot }, $set: { updatedAt: new Date() } }, { upsert: true });
+  await invalidateOverrides();
+  return { slot, url };
+}
+
+/** Removes an added photo entirely: the slot, its stored image and the file. */
+export async function removeImageSlot(section: string, id: string): Promise<void> {
+  const db = await getDb();
+  await db
+    .collection<SlotsDoc>(SLOTS_COLLECTION)
+    .updateOne({ _id: section }, { $pull: { slots: { id } }, $set: { updatedAt: new Date() } });
+  await clearImageOverride(id);
 }
 
 export async function clearAllImageOverrides(): Promise<void> {

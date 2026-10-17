@@ -172,7 +172,7 @@ export default async function ProductDetailPage({
 
           <div className="grid gap-8 lg:grid-cols-12 lg:items-start lg:gap-10">
             <div className="lg:col-span-7">
-              <ProductImageCarousel slides={slides} />
+              <ProductImageCarousel slides={slides} section={`product-${product.slug}`} productName={name} />
             </div>
 
             <div className="border border-border bg-card lg:sticky lg:top-28 lg:col-span-5">

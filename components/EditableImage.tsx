@@ -28,6 +28,7 @@ export function EditableImage({
   alt,
   className = "",
   backdrop = false,
+  onRemove,
 }: {
   id: string;
   /** Omit when there's no default photo yet (e.g. a slot waiting on real content). */
@@ -40,6 +41,11 @@ export function EditableImage({
    * its shape, without leaving bare bars around it.
    */
   backdrop?: boolean;
+  /**
+   * For photos the admin added: the × removes the whole photo slot instead
+   * of leaving an empty box.
+   */
+  onRemove?: () => void;
 }) {
   const { isAdmin } = useAdminMode();
   const { images } = useOverrides();
@@ -178,7 +184,15 @@ export function EditableImage({
           {effectiveSrc && !uploading && (
             <button
               type="button"
-              onClick={handleRemove}
+              onClick={(e) => {
+                if (onRemove) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onRemove();
+                } else {
+                  handleRemove(e);
+                }
+              }}
               title="Remove image"
               aria-label="Remove image"
               className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/70 text-sm leading-none text-white transition-colors hover:bg-red-500/90"

@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { EditableImage } from "@/components/EditableImage";
 import { useOverrides } from "@/components/OverridesProvider";
+import { useAdminMode } from "@/components/AdminModeProvider";
+import { AddPhotoTile, useAddedPhotos } from "@/components/AddablePhotos";
 
 export type CarouselSlide = {
   id: string;
@@ -11,6 +13,8 @@ export type CarouselSlide = {
   label?: string;
   /** Admin-editable id for the label (Admin > All other text). */
   labelId?: string;
+  /** True for photos the admin added (removable as a whole). */
+  added?: boolean;
 };
 
 /**
@@ -26,10 +30,26 @@ export type CarouselSlide = {
  * (opacity-toggled) so each keeps its own upload state while you browse.
  * Thumbnails are read-only previews that resolve the same admin overrides.
  */
-export function ProductImageCarousel({ slides }: { slides: CarouselSlide[] }) {
-  const [index, setIndex] = useState(0);
+export function ProductImageCarousel({
+  slides: builtIn,
+  section,
+  productName,
+}: {
+  slides: CarouselSlide[];
+  /** Where admin-added photos are stored, e.g. "product-swarna". */
+  section: string;
+  productName: string;
+}) {
+  const [rawIndex, setIndex] = useState(0);
   const { images, text } = useOverrides();
+  const { isAdmin } = useAdminMode();
+  const added = useAddedPhotos(section);
+  const slides: CarouselSlide[] = [
+    ...builtIn,
+    ...added.slots.map((slot) => ({ id: slot.id, src: added.urlFor(slot.id), alt: productName, added: true })),
+  ];
   const count = slides.length;
+  const index = Math.min(rawIndex, count - 1);
 
   const prev = () => setIndex((i) => (i - 1 + count) % count);
   const next = () => setIndex((i) => (i + 1) % count);
@@ -57,6 +77,7 @@ export function ProductImageCarousel({ slides }: { slides: CarouselSlide[] }) {
               alt={slide.alt}
               backdrop
               className="object-contain p-4 md:p-6"
+              onRemove={slide.added ? () => added.remove(slide.id) : undefined}
             />
           </div>
         ))}
@@ -92,7 +113,7 @@ export function ProductImageCarousel({ slides }: { slides: CarouselSlide[] }) {
         )}
       </div>
 
-      {count > 1 && (
+      {(count > 1 || isAdmin) && (
         <div className="mt-3 grid grid-cols-6 gap-2">
           {slides.map((slide, i) => {
             const src = thumbSrc(slide);
@@ -116,6 +137,15 @@ export function ProductImageCarousel({ slides }: { slides: CarouselSlide[] }) {
               </button>
             );
           })}
+          <AddPhotoTile
+            compact
+            onAdd={async (file) => {
+              await added.add(file);
+              setIndex(count); // jump to the new photo
+            }}
+            busy={added.busy}
+            className="aspect-square !p-1"
+          />
         </div>
       )}
     </div>
